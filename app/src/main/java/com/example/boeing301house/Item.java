@@ -3,15 +3,15 @@ package com.example.boeing301house;
 public class Item {
     private String make;
     private String model;
-    private String cost;
+    private int cost;
     private String description;
-    private String date;
+    private long date;
 
     private String SN;
     private String comment;
 
 
-    public Item(String make, String model, String cost, String description, String date, String SN, String comment) {
+    public Item(String make, String model, int cost, String description, long date, String SN, String comment) {
         this.make = make;
         this.model = model;
         this.cost = cost;
@@ -37,11 +37,11 @@ public class Item {
         this.model = model;
     }
 
-    public String getCost() {
+    public int getCost() {
         return cost;
     }
 
-    public void setCost(String cost) {
+    public void setCost(int cost) {
         this.cost = cost;
     }
 
@@ -53,11 +53,17 @@ public class Item {
         this.description = description;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public String getDateString() {
+        return String.valueOf(date);
+    }
+
+    public String getCostString(){return String.valueOf(cost);}
+
+    public void setDate(long date) {
         this.date = date;
     }
 

@@ -48,8 +48,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         //updates all the information from given expense to the expensecel, to be displayed in the main listView
         itemModel.setText(item.getModel());
-        itemCost.setText(item.getCost());
-        itemDate.setText(item.getDate());
+        itemCost.setText(item.getCostString());
+        itemDate.setText(item.getDateString());
         itemSN.setText(item.getSN());
         itemComment.setText(item.getComment());
         itemDesc.setText(item.getDescription());
