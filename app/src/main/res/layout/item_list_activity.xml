@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ItemListActivity">
 
     <Button
         android:id="@+id/addButton"
@@ -20,9 +20,11 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="285dp"
+        android:layout_marginEnd="260dp"
+        android:layout_marginBottom="620dp"
         android:text="Items"
         android:textSize="50sp"
+        app:layout_constraintBottom_toBottomOf="@+id/subtotalText"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button

@@ -21,6 +21,19 @@ public class Item {
         this.comment = comment;
     }
 
+    /**
+     * default contructor so that we can construct an item without any given attributes
+     */
+    public Item(){
+        this.make = "make";
+        this.model = "model";
+        this.cost = 0;
+        this.description = "description";
+        this.date = 0;
+        this.SN = "SN";
+        this.comment = "comment";
+    }
+
     public String getMake() {
         return make;
     }
