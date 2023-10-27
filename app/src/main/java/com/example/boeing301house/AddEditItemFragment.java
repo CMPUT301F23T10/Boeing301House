@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,7 +71,10 @@ public class AddEditItemFragment extends Fragment {
         View view = binding.getRoot();
 
         //this sets the current text of the edit expense fragment to the current expense name, cost, date and summary
-        binding.editCost.setText(currentItem.getCost());
+//        View view = inflater.inflate(R.layout.add_edit_item_fragment, container, false);
+//        EditText editCost = view.findViewById(R.id.editCost);
+//        editCost.setText(currentItem.getCostString());
+        binding.editCost.setText(currentItem.getCostString());
         binding.editMake.setText(currentItem.getMake());
         binding.editModel.setText(currentItem.getModel());
         binding.editDate.setText(currentItem.getDateString());
