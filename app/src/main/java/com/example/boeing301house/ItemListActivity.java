@@ -67,7 +67,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 isSelectMultiple= true;
                 selectedItemViews.add(view);
                 selectedItems.add((Item) itemList.getItemAtPosition(position));
-                view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select 
+                view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 
                 // for testing
                 CharSequence text = "Selecting multiple";
