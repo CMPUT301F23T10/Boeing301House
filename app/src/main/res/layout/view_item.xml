@@ -3,7 +3,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.appbar.AppBarLayout
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/itemViewAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/back_button_24dp"
+            app:title="Item"
+            app:menu="@menu/item_view_bar"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            android:backgroundTint="@color/colorTitleBar"
+            app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            >
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+
+
+    </com.google.android.material.appbar.AppBarLayout>
     <TextView
+        app:layout_constraintTop_toBottomOf="@id/itemViewAppBar"
         android:id="@+id/itemViewSN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,7 +33,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:text="SN: XXXXXXXXXXXX"
-        app:layout_constraintTop_toTopOf="parent"
+
         app:layout_constraintStart_toStartOf="parent"
         android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
 
@@ -40,9 +62,9 @@
         android:text="Make"
         android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
         app:layout_constraintTop_toBottomOf="@id/itemViewModel">
-        
+
     </TextView>
-    
+
     <TextView
         android:layout_marginTop="15dp"
         android:id="@+id/itemViewDate"
@@ -55,7 +77,7 @@
         android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
         app:layout_constraintTop_toBottomOf="@id/itemViewMake"
         >
-        
+
     </TextView>
     <TextView
         android:id="@+id/itemViewDesc"
@@ -83,7 +105,7 @@
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:text="Comment"
         android:textStyle="italic">
-        
+
     </TextView>
 
 
