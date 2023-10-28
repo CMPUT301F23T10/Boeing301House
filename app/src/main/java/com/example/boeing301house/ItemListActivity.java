@@ -67,12 +67,14 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 isSelectMultiple= true;
                 selectedItemViews.add(view);
                 selectedItems.add((Item) itemList.getItemAtPosition(position));
+                view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select 
+
+                // for testing
                 CharSequence text = "Selecting multiple";
                 int duration = Toast.LENGTH_SHORT;
-
                 Toast toast = Toast.makeText(getBaseContext(), text, duration);
                 toast.show();
-                view.setBackgroundColor(getResources().getColor(R.color.colorHighlight));
+
 
 
 //                itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,21 +132,24 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     if (selectedItemViews.contains(view)) {
                         selectedItemViews.remove(view);
                         selectedItems.remove((Item) itemList.getItemAtPosition(i));
-                        view.setBackgroundColor(getResources().getColor(R.color.white));
+                        view.setBackgroundColor(getResources().getColor(R.color.white)); // visually deselect
 
                         text = "removing existing";
                     } else {
                         selectedItemViews.add(view);
                         selectedItems.add((Item) itemList.getItemAtPosition(i));
-                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight));
+                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
                         text = "adding another";
                     }
 
                     int duration = Toast.LENGTH_SHORT;
                     selectedItemViews.size();
+                    // for testing
                     Toast toast = Toast.makeText(getBaseContext(), text, duration);
                     toast.show();
 
+
+                    // deselect all items -> no longer selecting multiple
                     if (selectedItems.size() == 0) {
                         isSelectMultiple = false;
                     }
