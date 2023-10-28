@@ -82,7 +82,9 @@
         android:layout_marginTop="15dp"
         android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
         android:text="Comment"
-        android:textStyle="italic"
+        android:textStyle="italic">
+        
+    </TextView>
 
 
 
