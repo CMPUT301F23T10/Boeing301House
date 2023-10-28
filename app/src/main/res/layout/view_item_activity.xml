@@ -133,7 +133,9 @@
             android:layout_height="wrap_content"
             android:text="EST. VAL: $0.00"
             android:textColor="@color/white"
-            style="@style/TextAppearance.Material3.TitleMedium"
+            style="@style/TextAppearance.Material3.TitleMedium">
+
+        </TextView>
     </com.google.android.material.bottomappbar.BottomAppBar>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
