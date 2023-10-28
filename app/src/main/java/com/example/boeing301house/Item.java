@@ -9,7 +9,7 @@ public class Item {
 
     private String SN;
     private String comment;
-
+    private boolean isSelected = false; // for multiselect
 
     public Item(String make, String model, int cost, String description, long date, String SN, String comment) {
         this.make = make;
@@ -94,5 +94,15 @@ public class Item {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void select() {
+        isSelected = true;
+    }
+    public void deselect() {
+        isSelected = false;
+    }
+    public boolean isSelected() {
+        return isSelected;
     }
 }

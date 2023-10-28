@@ -12,41 +12,48 @@ import androidx.annotation.Nullable;
 
 import com.example.boeing301house.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
-
+    private final Context context;
+    private ArrayList<Item> items;
     /**
      *
      * @param context
      * @param resource
-     * @param expenseList
+     * @param itemList
      *
      * This class is for taking the information from the given array list of items, and using the item_cell xml to populate the list in item_list_activity
      */
-    public ItemAdapter(Context context, int resource, List<Item>expenseList){
-        super(context,resource,expenseList);
+    public ItemAdapter(Context context, int resource, ArrayList<Item> itemList){
+        super(context, resource, itemList);
+        this.items = itemList;
+        this.context = context;
     }
 
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Item item = getItem(position);
+        Item item = items.get(position);
 
-        if(convertView == null){ //if its not initialized, initalize it
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_cell, parent, false);
+        View view = convertView;
+
+        if(view == null){ //if its not initialized, initalize it
+            view = LayoutInflater.from(getContext()).inflate(R.layout.item_cell, parent, false);
+
         }
 
         //finds all the widgets in itemcell
-        TextView itemCost = convertView.findViewById(R.id.cost);
-        TextView itemDate = convertView.findViewById(R.id.date);
-        TextView itemSN = convertView.findViewById(R.id.SN);
-        TextView itemComment = convertView.findViewById(R.id.comment);
-        TextView itemDesc = convertView.findViewById(R.id.description);
-        TextView itemModel = convertView.findViewById(R.id.model);
-        TextView itemMake = convertView.findViewById(R.id.make);
+        TextView itemCost = view.findViewById(R.id.cost);
+        TextView itemDate = view.findViewById(R.id.date);
+        TextView itemSN = view.findViewById(R.id.SN);
+        TextView itemComment = view.findViewById(R.id.comment);
+        TextView itemDesc = view.findViewById(R.id.description);
+        TextView itemModel = view.findViewById(R.id.model);
+        TextView itemMake = view.findViewById(R.id.make);
 
-        //updates all the information from given expense to the expensecel, to be displayed in the main listView
+        //updates all the information from given item to the itemcell, to be displayed in the main listView
         itemModel.setText(item.getModel());
         itemCost.setText(item.getCostString());
         itemDate.setText(item.getDateString());
@@ -57,6 +64,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
 
 
-        return convertView;
+        return view;
     }
+
+
 }

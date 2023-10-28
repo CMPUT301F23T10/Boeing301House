@@ -9,13 +9,17 @@ import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnFragmentInteractionListener{
     /**
@@ -25,24 +29,28 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
 
     private ListView itemList;
-    private Button addButton;
+    private FloatingActionButton addButton;
     private ItemAdapter adapter;
     private Item selectItem;
     private TextView subTotalText;
-    public ArrayList<Item> items = new ArrayList<Item>();
+    public ArrayList<Item> items = new ArrayList<>();
 
+    private ArrayList<View> selectedItemViews = new ArrayList<>();
+    private ArrayList<Item> selectedItems = new ArrayList<>();
+    private boolean isSelectMultiple;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
         setContentView(R.layout.item_list_activity);
-        subTotalText = findViewById(R.id.subtotalText);
+//        subTotalText = findViewById(R.id.subtotalText);
 
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
         //sets up item list
-        itemList = findViewById(R.id.item_List); //binds the city list to the xml file
+//        itemList = findViewById(R.id.item_List); // binds the city list to the xml file
+        itemList = findViewById(R.id.itemList); // binds the city list to the xml file
         adapter = new ItemAdapter(getApplicationContext(), 0, items);
         itemList.setAdapter(adapter);
 
@@ -52,7 +60,29 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
-        addButton = (Button)findViewById(R.id.addButton);
+        addButton = (FloatingActionButton) findViewById(R.id.addButton);
+
+        // select multiple initialization:
+        itemList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            /**
+             * When an item is long pressed
+             */
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // begin select multiple
+                isSelectMultiple= true;
+                selectedItemViews.add(view);
+                selectedItems.add((Item) itemList.getItemAtPosition(position));
+                view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+
+                // for testing
+                CharSequence text = "Selecting multiple";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(getBaseContext(), text, duration);
+                toast.show();
+                return true;
+            }
+        });
 
 
         //setup for the list
@@ -62,25 +92,59 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              * When an item is clicked from the list
              */
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (!isSelectMultiple) {
+                    selectItem = (Item) (itemList.getItemAtPosition(i));
 
-                selectItem = (Item) (itemList.getItemAtPosition(i));
-
-                //initalizes the detail frag, given the clicked item
-                Fragment detailFrag = new AddEditItemFragment(selectItem); //this is passed along so it can display the proper information
-
-
-                //inflates the detailFragment
-
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction
-                        .add(R.id.content_frame, detailFrag, null)
-                        .addToBackStack("Details")
-                        .commit();
+                    //initializes the detail frag, given the clicked item
+                    Fragment detailFrag = new AddEditItemFragment(selectItem); //this is passed along so it can display the proper information
 
 
+                    //inflates the detailFragment
+
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction
+//                            .add(R.id.content_frame, detailFrag, null)
+                            .add(R.id.itemListContent, detailFrag, null)
+                            .addToBackStack("Details")
+                            .commit();
 
 
-                adapter.notifyDataSetChanged(); //this notifiys the adapter of either the removal of an item
+                    adapter.notifyDataSetChanged(); //this notifies the adapter of either the removal of an item
+                } else { // select multiple + delete multiple functionality
+                    CharSequence text;
+                    int temp = i;
+                    ListView tempItems = itemList;
+                    selectedItemViews.size();
+                    Item current = (Item) itemList.getItemAtPosition(i);
+                    // TODO: FIX VISUAL REPRESENTATION (view items recycled -> highlights repeated)
+                    if (selectedItems.contains(current)) {
+                        selectedItemViews.remove(view);
+                        selectedItems.remove(current);
+                        view.setBackgroundColor(0); // visually deselect
+
+                        text = "removing existing";
+                    } else {
+                        selectedItemViews.add(view);
+                        selectedItems.add(current);
+                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+                        text = "adding another";
+                    }
+
+                    selectedItemViews.size();
+
+
+
+                    // deselect all items -> no longer selecting multiple
+                    if (selectedItems.size() == 0) {
+                        isSelectMultiple = false;
+                    }
+                    // if delete multiple btn pressed -> isSelectMultiple = false
+                        // selectedItems.clear();
+                        // reset background colors
+                        // selectedItemViews.clear();
+
+                }
+
 
             //updateSubtotal(); //update subtotal
         }
@@ -102,7 +166,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 //initalizes the detail fragment so that the newly created (empty) item can be filled with user data
                 FragmentTransaction transaction= fragmentManager.beginTransaction();
                 transaction
-                        .add(R.id.content_frame, detailFrag, null)
+//                        .add(R.id.content_frame, detailFrag, null)
+                        .add(R.id.itemListContent, detailFrag, null)
                         .addToBackStack("Details")
                         .commit();
 
