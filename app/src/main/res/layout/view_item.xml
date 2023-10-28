@@ -10,11 +10,13 @@
         android:layout_height="wrap_content">
         <com.google.android.material.appbar.MaterialToolbar
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/back_button_24dp"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/back_button_36dp"
             app:title="Item"
+            app:titleMarginBottom="10dp"
             app:menu="@menu/item_view_bar"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            style="@style/Widget.Material3.Toolbar"
             android:backgroundTint="@color/colorTitleBar"
             app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
             >

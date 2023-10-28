@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
 
     private ListView itemList;
-    private Button addButton;
+    private FloatingActionButton addButton;
     private ItemAdapter adapter;
     private Item selectItem;
     private TextView subTotalText;
@@ -42,12 +44,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
         setContentView(R.layout.item_list_activity);
-        subTotalText = findViewById(R.id.subtotalText);
+//        subTotalText = findViewById(R.id.subtotalText);
 
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
         //sets up item list
-        itemList = findViewById(R.id.item_List); // binds the city list to the xml file
+//        itemList = findViewById(R.id.item_List); // binds the city list to the xml file
+        itemList = findViewById(R.id.itemList); // binds the city list to the xml file
         adapter = new ItemAdapter(getApplicationContext(), 0, items);
         itemList.setAdapter(adapter);
 
@@ -57,11 +60,14 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
-        addButton = (Button)findViewById(R.id.addButton);
+        addButton = (FloatingActionButton) findViewById(R.id.addButton);
 
         // select multiple initialization:
         itemList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
+            /**
+             * When an item is long pressed
+             */
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // begin select multiple
                 isSelectMultiple= true;
@@ -74,29 +80,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast = Toast.makeText(getBaseContext(), text, duration);
                 toast.show();
-
-
-
-//                itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        CharSequence text;
-//                        if (selectedItemViews.contains(view)) {
-//                            selectedItemViews.remove(view);
-//                            text = "removing existing";
-//                        } else {
-//                            selectedItemViews.add(view);
-//                            text = "adding another";
-//                        }
-//
-//                        int duration = Toast.LENGTH_SHORT;
-//
-//                        Toast toast = Toast.makeText(getBaseContext(), text, duration);
-//                        toast.show();
-//
-//                    }
-//                });
-//                return false;
                 return true;
             }
         });
@@ -120,7 +103,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                     transaction
-                            .add(R.id.content_frame, detailFrag, null)
+//                            .add(R.id.content_frame, detailFrag, null)
+                            .add(R.id.itemListContent, detailFrag, null)
                             .addToBackStack("Details")
                             .commit();
 
@@ -128,25 +112,26 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     adapter.notifyDataSetChanged(); //this notifies the adapter of either the removal of an item
                 } else { // select multiple + delete multiple functionality
                     CharSequence text;
+                    int temp = i;
+                    ListView tempItems = itemList;
                     selectedItemViews.size();
-                    if (selectedItemViews.contains(view)) {
+                    Item current = (Item) itemList.getItemAtPosition(i);
+                    // TODO: FIX VISUAL REPRESENTATION (view items recycled -> highlights repeated)
+                    if (selectedItems.contains(current)) {
                         selectedItemViews.remove(view);
-                        selectedItems.remove((Item) itemList.getItemAtPosition(i));
-                        view.setBackgroundColor(getResources().getColor(R.color.white)); // visually deselect
+                        selectedItems.remove(current);
+                        view.setBackgroundColor(0); // visually deselect
 
                         text = "removing existing";
                     } else {
                         selectedItemViews.add(view);
-                        selectedItems.add((Item) itemList.getItemAtPosition(i));
+                        selectedItems.add(current);
                         view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
                         text = "adding another";
                     }
 
-                    int duration = Toast.LENGTH_SHORT;
                     selectedItemViews.size();
-                    // for testing
-                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
-                    toast.show();
+
 
 
                     // deselect all items -> no longer selecting multiple
@@ -181,7 +166,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 //initalizes the detail fragment so that the newly created (empty) item can be filled with user data
                 FragmentTransaction transaction= fragmentManager.beginTransaction();
                 transaction
-                        .add(R.id.content_frame, detailFrag, null)
+//                        .add(R.id.content_frame, detailFrag, null)
+                        .add(R.id.itemListContent, detailFrag, null)
                         .addToBackStack("Details")
                         .commit();
 
