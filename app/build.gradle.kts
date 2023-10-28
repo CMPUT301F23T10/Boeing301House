@@ -6,6 +6,10 @@ android {
     namespace = "com.example.boeing301house"
     compileSdk = 34
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.boeing301house"
         minSdk = 24
