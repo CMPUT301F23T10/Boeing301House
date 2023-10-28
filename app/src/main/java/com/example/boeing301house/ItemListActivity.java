@@ -145,6 +145,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     Toast toast = Toast.makeText(getBaseContext(), text, duration);
                     toast.show();
 
+                    if (selectedItems.size() == 0) {
+                        isSelectMultiple = false;
+                    }
                     // if delete multiple btn pressed -> isSelectMultiple = false
                         // selectedItems.clear();
                         // reset background colors
