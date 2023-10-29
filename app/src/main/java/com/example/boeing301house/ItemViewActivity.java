@@ -97,7 +97,9 @@ public class ItemViewActivity extends AppCompatActivity {
         // TODO: add gallery carousel and tags
 
         // TODO: add delete and edit buttons
-
+        // during call back: send item and position back via intent
+        //      delete -> delete item at given position
+        //      edit -> set item in list as newly returned item
 
 
     }
