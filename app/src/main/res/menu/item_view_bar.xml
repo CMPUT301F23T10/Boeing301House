@@ -6,7 +6,7 @@
         android:title="edit"
         app:showAsAction="always"
         android:contentDescription="Edit Item"
-        android:icon="@drawable/edit_button_24dp">
+        android:icon="@drawable/edit_button_36dp">
 
     </item>
 
@@ -15,7 +15,7 @@
         android:title="delete"
         android:contentDescription="Delete Item"
         app:showAsAction="always"
-        android:icon="@drawable/delete_button_24dp"
+        android:icon="@drawable/delete_button_36dp"
         >
 
     </item>
