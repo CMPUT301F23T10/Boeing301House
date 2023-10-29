@@ -1,2 +1,14 @@
-package com.example.boeing301house;public class ItemViewActivity {
+package com.example.boeing301house;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
+
+public class ItemViewActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_item_view);
+    }
 }

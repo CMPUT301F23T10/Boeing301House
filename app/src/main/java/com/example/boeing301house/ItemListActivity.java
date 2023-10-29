@@ -1,5 +1,6 @@
 package com.example.boeing301house;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -93,6 +94,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              */
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!isSelectMultiple) {
+                    Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
+
+                    /*
                     selectItem = (Item) (itemList.getItemAtPosition(i));
 
                     //initializes the detail frag, given the clicked item
@@ -110,13 +114,15 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
                     itemAdapter.notifyDataSetChanged(); //this notifies the adapter of either the removal of an item
+
+                     */
                 } else { // select multiple + delete multiple functionality
                     CharSequence text;
                     int temp = i;
                     ListView tempItems = itemList;
 //                    selectedItemViews.size();
                     Item current = (Item) itemList.getItemAtPosition(i);
-                    
+
                     if (selectedItems.contains(current)) {
                         current.deselect();
 //                        selectedItemViews.remove(view);
