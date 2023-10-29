@@ -33,8 +33,8 @@ public class ItemViewActivity extends AppCompatActivity {
     private TextView tDescription;
     private TextView tComment;
     private TextView tEstimatedValue;
-    private ExtendedFloatingActionButton deleteButton = findViewById(R.id.itemViewDeleteButton);
-    private ExtendedFloatingActionButton editButton = findViewById(R.id.itemViewEditButton);
+    private ExtendedFloatingActionButton deleteButton;
+    private ExtendedFloatingActionButton editButton;
     private int pos; // position of item in list, send back during deletion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +54,7 @@ public class ItemViewActivity extends AppCompatActivity {
             throw new IllegalArgumentException();
         }
 
+        // textviews
         tSN = findViewById(R.id.itemViewSN); // can be empty
         tModel = findViewById(R.id.itemViewModel);
         tMake = findViewById(R.id.itemViewMake);
@@ -61,6 +62,10 @@ public class ItemViewActivity extends AppCompatActivity {
         tDescription = findViewById(R.id.itemViewDesc); // can be empty
         tComment = findViewById(R.id.itemViewComment); // can be empty
         tEstimatedValue = findViewById(R.id.itemViewEstVal);
+
+        // buttons
+        deleteButton = findViewById(R.id.itemViewDeleteButton);
+        editButton = findViewById(R.id.itemViewEditButton);
 
         // TODO: use spannable strings
         if (StringUtils.isBlank(selectedItem.getSN())) {
