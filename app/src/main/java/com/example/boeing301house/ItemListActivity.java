@@ -179,7 +179,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { //if the text isn't empty
-                view.requestLayout();
+//                view.requestLayout();
                 selectItem = new Item(); //creates a new city to be created
                 items.add(selectItem); //adds the empty city to the list (with no details)
 
