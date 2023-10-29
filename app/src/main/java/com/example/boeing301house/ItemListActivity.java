@@ -34,12 +34,14 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems = new ArrayList<>();
     private boolean isSelectMultiple;
+
+    private int pos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        setContentView(R.layout.item_list_activity);
+        setContentView(R.layout.activity_item_list);
 //        subTotalText = findViewById(R.id.subtotalText);
 
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
@@ -95,6 +97,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!isSelectMultiple) {
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
+                    intent.putExtra("Selected Item", (Item) itemList.getItemAtPosition(i));
+                    pos = i;
+                    intent.putExtra("pos", pos);
 
                     /*
                     selectItem = (Item) (itemList.getItemAtPosition(i));

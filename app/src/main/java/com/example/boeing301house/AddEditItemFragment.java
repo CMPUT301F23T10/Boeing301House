@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.boeing301house.databinding.AddEditItemFragmentBinding;
+import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;
@@ -22,7 +22,7 @@ public class AddEditItemFragment extends Fragment {
 
 
 
-    private AddEditItemFragmentBinding binding; //used to accsess the things in add_edit_item_fragment_view.xml
+    private FragmentAddEditItemBinding binding; //used to accsess the things in add_edit_item_fragment_view.xml
 
     private String newMake;
     private String newModel;
@@ -67,7 +67,7 @@ public class AddEditItemFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = AddEditItemFragmentBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
+        binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
 
         //this sets the current text of the edit expense fragment to the current expense name, cost, date and summary

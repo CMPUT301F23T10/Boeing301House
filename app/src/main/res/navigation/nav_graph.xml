@@ -9,7 +9,7 @@
         android:id="@+id/mainActivity"
         android:name="com.example.boeing301house.MainActivity"
         android:label="item_list_activity"
-        tools:layout="@layout/item_list_activity" />
+        tools:layout="@layout/activity_item_list" />
     <activity
         android:id="@+id/itemViewActivity2"
         android:name="com.example.boeing301house.ItemViewActivity"

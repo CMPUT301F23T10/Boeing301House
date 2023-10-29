@@ -1,6 +1,14 @@
 package com.example.boeing301house;
 
-public class Item {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+/**
+ * Class representing item object
+ */
+public class Item implements Parcelable {
     private String make;
     private String model;
     private int cost;
@@ -11,6 +19,16 @@ public class Item {
     private String comment;
     private boolean isSelected = false; // for multiselect
 
+    /**
+     * Constructor with args
+     * @param make
+     * @param model
+     * @param cost
+     * @param description
+     * @param date
+     * @param SN
+     * @param comment
+     */
     public Item(String make, String model, int cost, String description, long date, String SN, String comment) {
         this.make = make;
         this.model = model;
@@ -22,7 +40,7 @@ public class Item {
     }
 
     /**
-     * default contructor so that we can construct an item without any given attributes
+     * Default constructor so that we can construct an item without any given attributes
      */
     public Item(){
         this.make = "make";
@@ -33,6 +51,44 @@ public class Item {
         this.SN = "SN";
         this.comment = "comment";
     }
+
+    /**
+     * Constructor for parcelable
+     * @param in
+     */
+    protected Item(Parcel in) {
+        make = in.readString();
+        model = in.readString();
+        cost = in.readInt();
+        description = in.readString();
+        date = in.readLong();
+        SN = in.readString();
+        comment = in.readString();
+        isSelected = in.readByte() != 0;
+    }
+
+
+    public static final Creator<Item> CREATOR = new Creator<Item>() {
+        /**
+         * Creates new instance of the Parcelable class
+         * @param in The Parcel to read the object's data from.
+         * @return
+         */
+        @Override
+        public Item createFromParcel(Parcel in) {
+            return new Item(in);
+        }
+
+        /**
+         * Create array of Parcelable class
+         * @param size Size of the array.
+         * @return
+         */
+        @Override
+        public Item[] newArray(int size) {
+            return new Item[size];
+        }
+    };
 
     public String getMake() {
         return make;
@@ -104,5 +160,32 @@ public class Item {
     }
     public boolean isSelected() {
         return isSelected;
+    }
+
+    /**
+     * Describe the kinds of special objects contained in this Parcelable instance's marshaled representation.
+     * @return
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * Adds content to parcel, creator uses constructor to read content back in
+     * @param dest The Parcel in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     * May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeString(make);
+        dest.writeString(model);
+        dest.writeInt(cost);
+        dest.writeString(description);
+        dest.writeLong(date);
+        dest.writeString(SN);
+        dest.writeString(comment);
+        dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 }
