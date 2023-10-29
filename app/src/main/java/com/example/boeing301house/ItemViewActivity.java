@@ -150,9 +150,14 @@ public class ItemViewActivity extends AppCompatActivity {
         int itemId = item.getItemId();
         if (itemId == R.id.itemViewEditButton) {
             // begin editing item
+            //      open edit screen
+            //      send back updated item and position
+            //      set item from list activity 
             return true;
         } else if (itemId == R.id.itemViewDeleteButton) {
             // delete item
+            //      delete -> delete item at given position
+            //      probably just send item or position back to list activity and delete from there
             return true;
         }
         // action not recognized
