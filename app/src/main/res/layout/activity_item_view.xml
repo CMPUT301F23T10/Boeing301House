@@ -133,38 +133,39 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/itemViewDeleteButton"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorDelete"
-        android:text="DELETE"
-        android:layout_gravity="top"
-        app:layout_anchor="@id/itemViewScrollView"
-        app:layout_anchorGravity="bottom|end"
-        android:layout_marginBottom="?actionBarSize"
 
-        >
+<!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+<!--        android:id="@+id/itemViewDeleteButton"-->
+<!--        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="@color/colorDelete"-->
+<!--        android:text="DELETE"-->
+<!--        android:layout_gravity="top"-->
+<!--        app:layout_anchor="@id/itemViewScrollView"-->
+<!--        app:layout_anchorGravity="bottom|end"-->
+<!--        android:layout_marginBottom="?actionBarSize"-->
 
-    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
+<!--        >-->
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-        android:id="@+id/itemViewEditButton"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorButton"
-        android:text="EDIT"
-        android:layout_gravity="top"
-        app:layout_anchor="@id/itemViewDeleteButton"
-        app:layout_anchorGravity="end|top"
-        android:layout_marginBottom="?actionBarSize"
+<!--    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
+
+<!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+<!--        android:id="@+id/itemViewEditButton"-->
+<!--        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="@color/colorButton"-->
+<!--        android:text="EDIT"-->
+<!--        android:layout_gravity="top"-->
+<!--        app:layout_anchor="@id/itemViewDeleteButton"-->
+<!--        app:layout_anchorGravity="end|top"-->
+<!--        android:layout_marginBottom="?actionBarSize"-->
 
 
-        >
+<!--        >-->
 
-    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
+<!--    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/itemViewBottomBar"
