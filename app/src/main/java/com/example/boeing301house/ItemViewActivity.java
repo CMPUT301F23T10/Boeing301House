@@ -172,7 +172,6 @@ public class ItemViewActivity extends AppCompatActivity {
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there
-            //      startActivityForResult
             return true;
         }
         // action not recognized
