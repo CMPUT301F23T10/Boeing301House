@@ -27,12 +27,12 @@ public class AddEditItemFragment extends Fragment {
     private String newMake;
     private String newModel;
 
-    private int newCost;
+    private Float newCost;
 
     private String newComment;
     private String newDescription;
 
-    private long newDate;
+    private Long newDate;
 
     private String newSN;
 
@@ -87,7 +87,7 @@ public class AddEditItemFragment extends Fragment {
             public void onClick(View view) {
                 newMake = binding.editMake.getText().toString();
                 newModel = binding.editModel.getText().toString();
-                newCost = Integer.parseInt(binding.editCost.getText().toString());
+                newCost = Float.parseFloat(binding.editCost.getText().toString());
                 newComment = binding.editComment.getText().toString();
                 newDate = Long.parseLong(binding.editDate.getText().toString());
                 newSN = binding.editSN.getText().toString();

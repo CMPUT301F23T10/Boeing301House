@@ -14,8 +14,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnFragmentInteractionListener{
     /**
@@ -23,16 +26,17 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      *
      *
      */
-
+    private FirebaseFirestore db;
+    private CollectionReference itemsRef;
     private ListView itemList;
 //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
     private TextView subTotalText;
-    public ArrayList<Item> items = new ArrayList<>();
+    public ArrayList<Item> items;
 
 //    private ArrayList<View> selectedItemViews = new ArrayList<>();
-    private ArrayList<Item> selectedItems = new ArrayList<>();
+    private ArrayList<Item> selectedItems;
     private boolean isSelectMultiple;
 
     private int pos;
@@ -48,7 +52,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
         //sets up item list
-//        itemList = findViewById(R.id.item_List); // binds the city list to the xml file
+        db = FirebaseFirestore.getInstance(); // get instance for firestore db
+        itemsRef = db.collection("items");
+
+        items = new ArrayList<>();
+
         itemList = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, items);
         itemList.setAdapter(itemAdapter);
@@ -62,6 +70,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         final FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addButton);
 
         // select multiple initialization:
+        selectedItems = new ArrayList<>();
         itemList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             /**
@@ -220,6 +229,16 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     @Override
     public void onConfirmPressed(Item updatedItem) {
+        HashMap<String, String> stringData = new HashMap<>();
+        HashMap<String, Float> numData = new HashMap<>();
+        HashMap<String, Long> dateData = new HashMap<>();
+        stringData.put("Make", updatedItem.getMake());
+        stringData.put("Model", updatedItem.getModel());
+        dateData.put("Date", updatedItem.getDate());
+        stringData.put("SN", updatedItem.getSN());
+        numData.put("Est Value", updatedItem.getCost());
+
+
         selectItem.setModel(updatedItem.getModel()); //this updated the item post-editting!
         selectItem.setCost(updatedItem.getCost());
         selectItem.setMake(updatedItem.getMake());
