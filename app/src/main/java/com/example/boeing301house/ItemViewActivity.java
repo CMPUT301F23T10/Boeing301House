@@ -45,6 +45,7 @@ public class ItemViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         selectedItem = intent.getParcelableExtra("Selected Item");
+        pos = intent.getIntExtra("pos", 0);
 
         MaterialToolbar topbar = findViewById(R.id.itemViewMaterialToolBar);
         setSupportActionBar(topbar);
