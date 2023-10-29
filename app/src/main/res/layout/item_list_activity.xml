@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:liftOnScrollTargetViewId="@id/itemList"
+        app:liftOnScroll="true"
         >
 <!--        TODO: ADD LIFT ON SCROLL -->
         <com.google.android.material.appbar.MaterialToolbar
