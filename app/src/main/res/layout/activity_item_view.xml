@@ -2,12 +2,20 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ItemViewActivity">
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/itemViewAppBarLayout"
+        app:liftOnScroll="true"
+        app:liftOnScrollTargetViewId="@id/itemViewScrollView"
+        app:liftOnScrollColor="@color/colorTitleBar"
+
         >
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/itemViewMaterialToolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
@@ -16,9 +24,8 @@
             app:titleMarginBottom="10dp"
             app:menu="@menu/item_view_bar"
             style="@style/Widget.Material3.Toolbar"
-            android:backgroundTint="@color/colorTitleBar"
             app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
-            android:background="@color/colorTitleBar"
+
 
             >
 
@@ -30,9 +37,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_marginBottom="?actionBarSize">
+        android:layout_marginBottom="?actionBarSize"
+        android:id="@+id/itemViewScrollView"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/itemViewConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp">
             <TextView
@@ -61,6 +71,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
                 android:textStyle="bold"
+
                 >
 
             </TextView>
@@ -115,14 +126,48 @@
                 android:layout_marginTop="15dp"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:text="Comment"
-                android:textStyle="italic">
+                >
 
             </TextView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/itemViewDeleteButton"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorDelete"
+        android:text="DELETE"
+        android:layout_gravity="top"
+        app:layout_anchor="@id/itemViewScrollView"
+        app:layout_anchorGravity="bottom|end"
+        android:layout_marginBottom="?actionBarSize"
+
+        >
+
+    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/itemViewEditButton"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorButton"
+        android:text="EDIT"
+        android:layout_gravity="top"
+        app:layout_anchor="@id/itemViewDeleteButton"
+        app:layout_anchorGravity="end|top"
+        android:layout_marginBottom="?actionBarSize"
+
+
+        >
+
+    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
+
     <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/itemViewBottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
@@ -131,6 +176,7 @@
         android:backgroundTint="@color/colorBottomBar"
         >
         <TextView
+            android:id="@+id/itemViewEstVal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="EST. VAL: $0.00"

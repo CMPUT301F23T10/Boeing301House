@@ -1,11 +1,12 @@
 package com.example.boeing301house;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.Toast; // for testing
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -30,15 +31,17 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private TextView subTotalText;
     public ArrayList<Item> items = new ArrayList<>();
 
-    private ArrayList<View> selectedItemViews = new ArrayList<>();
+//    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems = new ArrayList<>();
     private boolean isSelectMultiple;
+
+    private int pos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
-        setContentView(R.layout.item_list_activity);
+        setContentView(R.layout.activity_item_list);
 //        subTotalText = findViewById(R.id.subtotalText);
 
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
@@ -74,10 +77,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 
                     // for testing
-                    CharSequence text = "Selecting multiple";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
-                    toast.show();
+//                    CharSequence text = "Selecting multiple";
+//                    int duration = Toast.LENGTH_SHORT;
+//                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
+//                    toast.show();
 
                 }
                 return true;
@@ -93,6 +96,22 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              */
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!isSelectMultiple) {
+//                    CharSequence text = "Selecting item";
+//                    int duration = Toast.LENGTH_SHORT;
+//                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
+//                    toast.show();
+                    Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
+                    intent.putExtra("Selected Item", (Item) itemList.getItemAtPosition(i));
+
+                    pos = i;
+                    intent.putExtra("pos", pos);
+
+                    startActivity(intent);
+                    // during call back: return item + position
+                    // delete -> delete item at given position
+                    // edit -> set item in list as newly returned item
+
+                    /*
                     selectItem = (Item) (itemList.getItemAtPosition(i));
 
                     //initializes the detail frag, given the clicked item
@@ -110,29 +129,31 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
                     itemAdapter.notifyDataSetChanged(); //this notifies the adapter of either the removal of an item
+
+                     */
                 } else { // select multiple + delete multiple functionality
                     CharSequence text;
                     int temp = i;
                     ListView tempItems = itemList;
-                    selectedItemViews.size();
+//                    selectedItemViews.size();
                     Item current = (Item) itemList.getItemAtPosition(i);
-                    // TODO: FIX VISUAL REPRESENTATION (view items recycled -> highlights repeated)
+
                     if (selectedItems.contains(current)) {
                         current.deselect();
 //                        selectedItemViews.remove(view);
                         selectedItems.remove(current);
                         view.setBackgroundColor(0); // visually deselect
 
-                        text = "removing existing";
+//                        text = "removing existing";
                     } else {
                         current.select();
 //                        selectedItemViews.add(view);
                         selectedItems.add(current);
                         view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
-                        text = "adding another";
+//                        text = "adding another";
                     }
 
-                    selectedItemViews.size();
+//                    selectedItemViews.size();
 
 
 
