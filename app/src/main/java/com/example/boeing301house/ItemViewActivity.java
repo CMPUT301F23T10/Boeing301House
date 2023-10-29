@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,6 +33,8 @@ public class ItemViewActivity extends AppCompatActivity {
     private TextView tDescription;
     private TextView tComment;
     private TextView tEstimatedValue;
+    private ExtendedFloatingActionButton deleteButton = findViewById(R.id.itemViewDeleteButton);
+    private ExtendedFloatingActionButton editButton = findViewById(R.id.itemViewEditButton);
     private int pos; // position of item in list, send back during deletion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class ItemViewActivity extends AppCompatActivity {
 
         MaterialToolbar topbar = findViewById(R.id.itemViewMaterialToolBar);
         setSupportActionBar(topbar);
-        topbar.setNavigationIconTint(getResources().getColor(R.color.white));
+        // topbar.setNavigationIconTint(getResources().getColor(R.color.white));
         // assert selectedItem != null;
         if (selectedItem == null) {
             throw new IllegalArgumentException();
@@ -90,6 +93,8 @@ public class ItemViewActivity extends AppCompatActivity {
         tModel.setText(model);
         tMake.setText(make);
         tEstimatedValue.setText(estimatedValue);
+
+
 
 
 //        topbar.setOnClickListener();
