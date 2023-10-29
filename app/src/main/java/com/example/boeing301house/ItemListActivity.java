@@ -107,6 +107,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     intent.putExtra("pos", pos);
 
                     startActivity(intent);
+                    // during call back: return item + position
+                    // delete -> delete item at given position
+                    // edit -> set item in list as newly returned item
+
                     /*
                     selectItem = (Item) (itemList.getItemAtPosition(i));
 

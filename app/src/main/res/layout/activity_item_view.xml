@@ -8,8 +8,10 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/itemViewAppBarLayout"
         >
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/itemViewMaterialToolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
@@ -63,6 +65,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
                 android:textStyle="bold"
+
                 >
 
             </TextView>
@@ -117,7 +120,7 @@
                 android:layout_marginTop="15dp"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:text="Comment"
-                android:textStyle="italic">
+                >
 
             </TextView>
 

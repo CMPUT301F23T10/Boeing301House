@@ -1,10 +1,14 @@
 package com.example.boeing301house;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,9 +38,14 @@ public class ItemViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_view);
 
+
+
         Intent intent = getIntent();
         selectedItem = intent.getParcelableExtra("Selected Item");
 
+        MaterialToolbar topbar = findViewById(R.id.itemViewMaterialToolBar);
+        setSupportActionBar(topbar);
+        topbar.setNavigationIconTint(getResources().getColor(R.color.white));
         // assert selectedItem != null;
         if (selectedItem == null) {
             throw new IllegalArgumentException();
@@ -50,25 +59,29 @@ public class ItemViewActivity extends AppCompatActivity {
         tComment = findViewById(R.id.itemViewComment); // can be empty
         tEstimatedValue = findViewById(R.id.itemViewEstVal);
 
+        // TODO: use spannable strings
         if (StringUtils.isBlank(selectedItem.getSN())) {
             SN = "";
         } else {
-            SN = String.format("<b>SN:</b> %s", selectedItem.getSN());
+            SN = String.format("SN: %s", selectedItem.getSN());
         }
         if (StringUtils.isBlank(selectedItem.getDescription())) {
             description = "";
         } else {
-            description = String.format("<b>Desc:</b> %s", selectedItem.getDescription());
+            // TODO: make "Desc:" bold, rest regular
+            description = String.format("Desc: %s", selectedItem.getDescription());
         }
         if (StringUtils.isBlank(selectedItem.getComment())) {
             comment = "";
         } else {
-            comment = String.format("<i><b>Comment:</b> %s</i>", selectedItem.getComment());
+            // TODO: make "Comment" bold + italic, rest italic
+            comment = String.format("Comment: %s", selectedItem.getComment());
         }
         model = selectedItem.getModel();
         make = selectedItem.getMake();
-        date = String.format("<b>Date:</b> %s", selectedItem.getDateString());
-        estimatedValue = String.format("<b>EST VAL:</b> %s", selectedItem.getCostString());
+        // TODO: make "Date:" bold, rest normal
+        date = String.format("Date: %s", selectedItem.getDateString());
+        estimatedValue = String.format("EST VAL: $%s", selectedItem.getCostString());
 
 
         tSN.setText(SN);
@@ -77,12 +90,30 @@ public class ItemViewActivity extends AppCompatActivity {
         tModel.setText(model);
         tMake.setText(make);
         tEstimatedValue.setText(estimatedValue);
+
+
+//        topbar.setOnClickListener();
+
         // TODO: add gallery carousel and tags
 
-
+        // TODO: add delete and edit buttons
 
 
 
     }
 
+    /**
+     * Go back to previous activity on navigation button press
+     * @return true if successful
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+//        return super.onSupportNavigateUp();
+        onBackPressed();
+        return true;
+    }
+    //    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        return super.onOptionsItemSelected(item);
+//    }
 }
