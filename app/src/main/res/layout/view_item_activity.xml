@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/back_button_36dp"
+            app:title="Item"
+            app:titleMarginBottom="10dp"
+            app:menu="@menu/item_view_bar"
+            style="@style/Widget.Material3.Toolbar"
+            android:backgroundTint="@color/colorTitleBar"
+            app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            android:background="@color/colorTitleBar"
+
+            >
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginBottom="?actionBarSize">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+            <TextView
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/itemViewSN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:text="SN: XXXXXXXXXXXX"
+
+                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+
+                >
+            </TextView>
+            <TextView
+                android:id="@+id/itemViewModel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Model"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:layout_constraintTop_toBottomOf="@id/itemViewSN"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+                android:textStyle="bold"
+                >
+
+            </TextView>
+            <TextView
+                android:id="@+id/itemViewMake"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Make"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                app:layout_constraintTop_toBottomOf="@id/itemViewModel">
+
+            </TextView>
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:id="@+id/itemViewDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="14sp"
+                android:text="Date: mm/dd/yy"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                app:layout_constraintTop_toBottomOf="@id/itemViewMake"
+                >
+
+            </TextView>
+            <TextView
+                android:id="@+id/itemViewDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="14sp"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                android:text="Desc: "
+                app:layout_constraintTop_toBottomOf="@id/itemViewDate"
+                android:layout_marginTop="15dp"
+                >
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/itemViewComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/itemViewDesc"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:text="Comment"
+                android:textStyle="italic">
+
+            </TextView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        style="@style/Widget.MaterialComponents.Toolbar"
+        android:minHeight="?actionBarSize"
+        android:backgroundTint="@color/colorBottomBar"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="EST. VAL: $0.00"
+            android:textColor="@color/white"
+            style="@style/TextAppearance.Material3.TitleMedium">
+
+        </TextView>
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

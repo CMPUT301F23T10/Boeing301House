@@ -52,15 +52,20 @@
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        style="@style/Widget.MaterialComponents.Toolbar"
+        android:backgroundTint="@color/colorBottomBar"
         android:id="@+id/itemListTotalBar"
-        android:layout_gravity="bottom">
+        android:minHeight="?actionBarSize"
+        >
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Total: $0.00"
             android:id="@+id/itemListTotalText"
-            android:textSize="32sp">
+            android:textColor="@color/white"
+            style="@style/TextAppearance.Material3.TitleMedium">
             <!--    TODO: SEPARATE "Total: $" from actual cost (or just string format)   -->
         </TextView>
 
