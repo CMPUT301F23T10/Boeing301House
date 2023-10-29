@@ -44,6 +44,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         }
 
+        if (item.isSelected()) {
+            view.setBackgroundResource(R.color.colorHighlight);
+        } else {
+            view.setBackgroundColor(0);
+        }
+
         //finds all the widgets in itemcell
         TextView itemCost = view.findViewById(R.id.cost);
         TextView itemDate = view.findViewById(R.id.date);
