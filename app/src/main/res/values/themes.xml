@@ -3,6 +3,8 @@
     <style name="Base.Theme.Boeing301House" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/colorHighlight</item>
+        <item name="android:statusBarColor">@color/colorTitleBar</item>
     </style>
     <style name="Theme.Boeing301House" parent="Base.Theme.Boeing301House" />
 </resources>
