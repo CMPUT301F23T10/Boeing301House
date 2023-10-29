@@ -101,6 +101,7 @@ public class ItemViewActivity extends AppCompatActivity {
         date = String.format("Date: %s", selectedItem.getDateString());
         estimatedValue = String.format("EST VAL: $%s", selectedItem.getCostString());
 
+        // topbar.setTitle(String.format("%.5s %.8s", make, model)); // too big :(
         tSN.setText(SN);
         tDescription.setText(description);
         tComment.setText(comment);
