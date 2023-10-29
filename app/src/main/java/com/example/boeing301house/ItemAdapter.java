@@ -44,6 +44,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         }
         // https://stackoverflow.com/questions/50649534/how-to-change-the-color-background-of-one-item-of-listview
+
+        // render items outside screen correctly
         if (item.isSelected()) {
             view.setBackgroundResource(R.color.colorHighlight);
         } else {
