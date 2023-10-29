@@ -134,11 +134,16 @@ public class ItemViewActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
 //        return super.onSupportNavigateUp();
 
+        // if edits made -> send new items + pos of item back
+        // TODO: write if statement
+        // if sending back
+        //      resultIntent.putExtra ... | add item and position
+        //      setResult(RESULT_OK, resultIntent)
+
         // if no edits or anything
-        // setResult(RESULT_CANCELED);
-        onBackPressed();
-        // finish();
-        // otherwise send new items + pos of item back
+        setResult(RESULT_CANCELED);
+        // onBackPressed();
+        finish();
         return true;
     }
 
@@ -174,7 +179,7 @@ public class ItemViewActivity extends AppCompatActivity {
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there
-            // setResult(RESULT_OK);
+            setResult(RESULT_OK);
             return true;
         }
         // action not recognized
