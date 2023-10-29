@@ -121,14 +121,14 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         current.deselect();
 //                        selectedItemViews.remove(view);
                         selectedItems.remove(current);
-//                        view.setBackgroundColor(0); // visually deselect
+                        view.setBackgroundColor(0); // visually deselect
 
                         text = "removing existing";
                     } else {
                         current.select();
 //                        selectedItemViews.add(view);
                         selectedItems.add(current);
-//                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
                         text = "adding another";
                     }
 

@@ -43,7 +43,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             view = LayoutInflater.from(getContext()).inflate(R.layout.item_cell, parent, false);
 
         }
-
+        // https://stackoverflow.com/questions/50649534/how-to-change-the-color-background-of-one-item-of-listview
         if (item.isSelected()) {
             view.setBackgroundResource(R.color.colorHighlight);
         } else {
