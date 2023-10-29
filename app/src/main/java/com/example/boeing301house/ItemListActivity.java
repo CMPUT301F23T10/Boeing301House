@@ -30,7 +30,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private TextView subTotalText;
     public ArrayList<Item> items = new ArrayList<>();
 
-    private ArrayList<View> selectedItemViews = new ArrayList<>();
+//    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems = new ArrayList<>();
     private boolean isSelectMultiple;
     @Override
@@ -114,9 +114,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     CharSequence text;
                     int temp = i;
                     ListView tempItems = itemList;
-                    selectedItemViews.size();
+//                    selectedItemViews.size();
                     Item current = (Item) itemList.getItemAtPosition(i);
-                    // TODO: FIX VISUAL REPRESENTATION (view items recycled -> highlights repeated)
+                    
                     if (selectedItems.contains(current)) {
                         current.deselect();
 //                        selectedItemViews.remove(view);
@@ -132,7 +132,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         text = "adding another";
                     }
 
-                    selectedItemViews.size();
+//                    selectedItemViews.size();
 
 
 
