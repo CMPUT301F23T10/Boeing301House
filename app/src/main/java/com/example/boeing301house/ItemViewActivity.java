@@ -28,6 +28,7 @@ public class ItemViewActivity extends AppCompatActivity {
     private TextView tDescription;
     private TextView tComment;
     private TextView tEstimatedValue;
+    private int pos; // position of item in list, send back during deletion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

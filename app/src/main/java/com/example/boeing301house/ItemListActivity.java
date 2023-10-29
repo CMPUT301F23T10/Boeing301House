@@ -77,10 +77,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 
                     // for testing
-                    CharSequence text = "Selecting multiple";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
-                    toast.show();
+//                    CharSequence text = "Selecting multiple";
+//                    int duration = Toast.LENGTH_SHORT;
+//                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
+//                    toast.show();
 
                 }
                 return true;
@@ -96,11 +96,17 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              */
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!isSelectMultiple) {
+//                    CharSequence text = "Selecting item";
+//                    int duration = Toast.LENGTH_SHORT;
+//                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
+//                    toast.show();
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
                     intent.putExtra("Selected Item", (Item) itemList.getItemAtPosition(i));
+
                     pos = i;
                     intent.putExtra("pos", pos);
 
+                    startActivity(intent);
                     /*
                     selectItem = (Item) (itemList.getItemAtPosition(i));
 
@@ -134,13 +140,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         selectedItems.remove(current);
                         view.setBackgroundColor(0); // visually deselect
 
-                        text = "removing existing";
+//                        text = "removing existing";
                     } else {
                         current.select();
 //                        selectedItemViews.add(view);
                         selectedItems.add(current);
                         view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
-                        text = "adding another";
+//                        text = "adding another";
                     }
 
 //                    selectedItemViews.size();
