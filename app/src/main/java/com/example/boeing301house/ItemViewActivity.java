@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -72,27 +73,33 @@ public class ItemViewActivity extends AppCompatActivity {
         // TODO: use spannable strings
         if (StringUtils.isBlank(selectedItem.getSN())) {
             SN = "";
+            tSN.setVisibility(View.GONE);
         } else {
             SN = String.format("SN: %s", selectedItem.getSN());
+            tSN.setVisibility(View.VISIBLE);
         }
         if (StringUtils.isBlank(selectedItem.getDescription())) {
             description = "";
+            tDescription.setVisibility(View.GONE);
         } else {
             // TODO: make "Desc:" bold, rest regular
             description = String.format("Desc: %s", selectedItem.getDescription());
+            tDescription.setVisibility(View.VISIBLE);
         }
         if (StringUtils.isBlank(selectedItem.getComment())) {
             comment = "";
+            tComment.setVisibility(View.GONE);
         } else {
             // TODO: make "Comment" bold + italic, rest italic
             comment = String.format("Comment: %s", selectedItem.getComment());
+            tComment.setVisibility(View.VISIBLE);
+
         }
         model = selectedItem.getModel();
         make = selectedItem.getMake();
         // TODO: make "Date:" bold, rest normal
         date = String.format("Date: %s", selectedItem.getDateString());
         estimatedValue = String.format("EST VAL: $%s", selectedItem.getCostString());
-
 
         tSN.setText(SN);
         tDescription.setText(description);
@@ -152,12 +159,13 @@ public class ItemViewActivity extends AppCompatActivity {
             // begin editing item
             //      open edit screen
             //      send back updated item and position
-            //      set item from list activity 
+            //      set item from list activity
             return true;
         } else if (itemId == R.id.itemViewDeleteButton) {
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there
+            //      startActivityForResult
             return true;
         }
         // action not recognized
