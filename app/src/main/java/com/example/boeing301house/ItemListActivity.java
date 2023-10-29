@@ -36,6 +36,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private boolean isSelectMultiple;
 
     private int pos;
+    private static int deleteCode = 1; // for startActivityForResult
+    private static int editCode = 2; // for startActivityForResult
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
