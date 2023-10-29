@@ -1,13 +1,9 @@
 package com.example.boeing301house;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +15,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnFragmentInteractionListener{
     /**
@@ -29,8 +24,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
 
     private ListView itemList;
-    private FloatingActionButton addButton;
-    private ItemAdapter adapter;
+//    private FloatingActionButton addButton;
+    private ItemAdapter itemAdapter;
     private Item selectItem;
     private TextView subTotalText;
     public ArrayList<Item> items = new ArrayList<>();
@@ -51,8 +46,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         //sets up item list
 //        itemList = findViewById(R.id.item_List); // binds the city list to the xml file
         itemList = findViewById(R.id.itemList); // binds the city list to the xml file
-        adapter = new ItemAdapter(getApplicationContext(), 0, items);
-        itemList.setAdapter(adapter);
+        itemAdapter = new ItemAdapter(getApplicationContext(), 0, items);
+        itemList.setAdapter(itemAdapter);
 
 
         //used to swap the fragment in to edit/add fragments
@@ -60,7 +55,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
-        addButton = (FloatingActionButton) findViewById(R.id.addButton);
+        final FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addButton);
 
         // select multiple initialization:
         itemList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -70,16 +65,21 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              */
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // begin select multiple
-                isSelectMultiple= true;
-                selectedItemViews.add(view);
-                selectedItems.add((Item) itemList.getItemAtPosition(position));
-                view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+                if (!isSelectMultiple) {
+                    Item current = (Item) itemList.getItemAtPosition(position);
+                    current.select();
+                    isSelectMultiple= true;
+//                    selectedItemViews.add(view);
+                    selectedItems.add(current);
+                    view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 
-                // for testing
-                CharSequence text = "Selecting multiple";
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(getBaseContext(), text, duration);
-                toast.show();
+                    // for testing
+                    CharSequence text = "Selecting multiple";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
+                    toast.show();
+
+                }
                 return true;
             }
         });
@@ -109,7 +109,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                             .commit();
 
 
-                    adapter.notifyDataSetChanged(); //this notifies the adapter of either the removal of an item
+                    itemAdapter.notifyDataSetChanged(); //this notifies the adapter of either the removal of an item
                 } else { // select multiple + delete multiple functionality
                     CharSequence text;
                     int temp = i;
@@ -118,15 +118,17 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     Item current = (Item) itemList.getItemAtPosition(i);
                     // TODO: FIX VISUAL REPRESENTATION (view items recycled -> highlights repeated)
                     if (selectedItems.contains(current)) {
-                        selectedItemViews.remove(view);
+                        current.deselect();
+//                        selectedItemViews.remove(view);
                         selectedItems.remove(current);
-                        view.setBackgroundColor(0); // visually deselect
+//                        view.setBackgroundColor(0); // visually deselect
 
                         text = "removing existing";
                     } else {
-                        selectedItemViews.add(view);
+                        current.select();
+//                        selectedItemViews.add(view);
                         selectedItems.add(current);
-                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+//                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
                         text = "adding another";
                     }
 
@@ -202,7 +204,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         selectItem.setDate(updatedItem.getDate());
         selectItem.setComment(updatedItem.getComment());
 
-        adapter.notifyDataSetChanged();
+        itemAdapter.notifyDataSetChanged();
         updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
     }
 }
