@@ -135,7 +135,9 @@ public class ItemViewActivity extends AppCompatActivity {
 //        return super.onSupportNavigateUp();
 
         // if no edits or anything
+        // setResult(RESULT_CANCELED);
         onBackPressed();
+        // finish();
         // otherwise send new items + pos of item back
         return true;
     }
@@ -172,6 +174,7 @@ public class ItemViewActivity extends AppCompatActivity {
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there
+            // setResult(RESULT_OK);
             return true;
         }
         // action not recognized
