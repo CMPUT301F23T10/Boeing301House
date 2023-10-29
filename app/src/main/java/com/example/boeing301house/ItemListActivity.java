@@ -132,9 +132,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                      */
                 } else { // select multiple + delete multiple functionality
-                    CharSequence text;
-                    int temp = i;
-                    ListView tempItems = itemList;
+//                    CharSequence text;
+//                    int temp = i;
+//                    ListView tempItems = itemList;
 //                    selectedItemViews.size();
                     Item current = (Item) itemList.getItemAtPosition(i);
 
@@ -179,6 +179,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) { //if the text isn't empty
+                view.requestLayout();
                 selectItem = new Item(); //creates a new city to be created
                 items.add(selectItem); //adds the empty city to the list (with no details)
 
