@@ -133,6 +133,7 @@
         android:backgroundTint="@color/colorBottomBar"
         >
         <TextView
+            android:id="@+id/itemViewEstVal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="EST. VAL: $0.00"

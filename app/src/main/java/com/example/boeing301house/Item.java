@@ -19,6 +19,7 @@ public class Item implements Parcelable {
     private String comment;
     private boolean isSelected = false; // for multiselect
 
+    // TODO: add tag array and image array (?)
     /**
      * Constructor with args
      * @param make
