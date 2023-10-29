@@ -36,8 +36,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private boolean isSelectMultiple;
 
     private int pos;
-    private static int deleteCode = 1; // for startActivityForResult
-    private static int editCode = 2; // for startActivityForResult
+    private static int select = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +107,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     pos = i;
                     intent.putExtra("pos", pos);
 
-                    startActivity(intent);
+                    startActivityForResult(intent, select);
+
                     // during call back: return item + position
                     // delete -> delete item at given position
                     // edit -> set item in list as newly returned item
