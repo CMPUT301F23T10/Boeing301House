@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -33,8 +34,6 @@ public class ItemViewActivity extends AppCompatActivity {
     private TextView tDescription;
     private TextView tComment;
     private TextView tEstimatedValue;
-    private ExtendedFloatingActionButton deleteButton;
-    private ExtendedFloatingActionButton editButton;
     private int pos; // position of item in list, send back during deletion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +47,10 @@ public class ItemViewActivity extends AppCompatActivity {
 
         MaterialToolbar topbar = findViewById(R.id.itemViewMaterialToolBar);
         setSupportActionBar(topbar);
+
+
+
+
         // topbar.setNavigationIconTint(getResources().getColor(R.color.white));
         // assert selectedItem != null;
         if (selectedItem == null) {
@@ -64,8 +67,7 @@ public class ItemViewActivity extends AppCompatActivity {
         tEstimatedValue = findViewById(R.id.itemViewEstVal);
 
         // buttons
-        deleteButton = findViewById(R.id.itemViewDeleteButton);
-        editButton = findViewById(R.id.itemViewEditButton);
+
 
         // TODO: use spannable strings
         if (StringUtils.isBlank(selectedItem.getSN())) {
@@ -106,7 +108,7 @@ public class ItemViewActivity extends AppCompatActivity {
 
         // TODO: add gallery carousel and tags
 
-        // TODO: add delete and edit buttons
+        // TODO: add delete and edit functionality (in onOptionsItemSelected function)
         // during call back: send item and position back via intent
         //      delete -> delete item at given position
         //      edit -> set item in list as newly returned item
@@ -124,6 +126,39 @@ public class ItemViewActivity extends AppCompatActivity {
         onBackPressed();
         return true;
     }
+
+    /**
+     *
+     * @param menu The options menu in which you place your items.
+     *
+     * @return
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.item_view_bar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    /**
+     *
+     * @param item The menu item that was selected.
+     *
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.itemViewEditButton) {
+            // begin editing item
+            return true;
+        } else if (itemId == R.id.itemViewDeleteButton) {
+            // delete item
+            return true;
+        }
+        // action not recognized
+        return super.onOptionsItemSelected(item);
+    }
+
     //    @Override
 //    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 //        return super.onOptionsItemSelected(item);
