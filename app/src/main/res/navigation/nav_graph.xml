@@ -14,4 +14,9 @@
         android:name="com.example.boeing301house.ItemListActivity"
         android:label="activity_item_list"
         tools:layout="@layout/activity_item_list" />
+    <activity
+        android:id="@+id/itemViewActivity2"
+        android:name="com.example.boeing301house.ItemViewActivity"
+        android:label="activity_item_view"
+        tools:layout="@layout/activity_item_view" />
 </navigation>
