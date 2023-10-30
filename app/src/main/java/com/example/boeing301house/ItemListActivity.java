@@ -73,32 +73,32 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
          * update items (list) in real time
          */
         // TODO: FIX
-//        itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    Log.e("Firestore", error.toString());
-//                    return;
-//                }
-//                if (snapshots != null) {
-//                    items.clear();
-//                    for (QueryDocumentSnapshot doc: snapshots) {
-//                        String model = doc.getString("Model");
-//                        String make = doc.getString("Make");
-//                        Long date = doc.getLong("Date");
-//                        String SN = doc.getString("SN");
-//                        Long cost = doc.getLong("Est Val");
-//                        String desc = doc.getString("Description");
-//                        String comment = doc.getString("Comment");
-//
-//                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-//                        items.add(new Item(make, model, cost.floatValue(), desc, date, SN, comment));
-//
-//                    }
-//                    itemAdapter.notifyDataSetChanged();
-//                }
-//            }
-//        });
+        itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Firestore", error.toString());
+                    return;
+                }
+                if (snapshots != null) {
+                    items.clear();
+                    for (QueryDocumentSnapshot doc: snapshots) {
+                        String model = doc.getString("Model");
+                        String make = doc.getString("Make");
+                        Long date = doc.getLong("Date");
+                        String SN = doc.getString("SN");
+                        Long cost = doc.getLong("Est Value");
+                        String desc = doc.getString("Description");
+                        String comment = doc.getString("Comment");
+
+                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+                        items.add(new Item(make, model, cost.floatValue(), desc, date, SN, comment));
+
+                    }
+                    itemAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
         //used to swap the fragment in to edit/add fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
