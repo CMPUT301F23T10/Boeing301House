@@ -5,6 +5,10 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Class representing item object
  */
@@ -129,7 +133,8 @@ public class Item implements Parcelable {
     }
 
     public String getDateString() {
-        return String.valueOf(date);
+        // return String.valueOf(date);
+        String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(new Date(this.date));
     }
 
     public String getCostString(){return String.valueOf(cost);}
