@@ -73,7 +73,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
-        itemsRef = db.collection("items_test3"); // switch to items_test to test adding
+        itemsRef = db.collection("items_test2"); // switch to items_test to test adding
 
         items = new ArrayList<>();
 
@@ -245,11 +245,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             public void onClick(View view) { //if the text isn't empty
 //                view.requestLayout();
                 addButton.hide();
-                selectItem = new Item(); //creates a new city to be created
-                items.add(selectItem); //adds the empty city to the list (with no details)
+                Fragment addFrag = new AddEditItemFragment();
+                Item newItem = new Item(); //creates a new city to be created
+                // items.add(selectItem); //adds the empty city to the list (with no details)
 
-
-                Fragment detailFrag = new AddEditItemFragment(selectItem); //this is passed along so it can display the proper information
+                Bundle itemBundle = new Bundle();
+                itemBundle.putParcelable("ITEM_OBJ", newItem);
+                addFrag.setArguments(itemBundle);
 
 
                 //initalizes the detail fragment so that the newly created (empty) item can be filled with user data
@@ -257,9 +259,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                 transaction
 //                        .add(R.id.content_frame, detailFrag, null)
-                        .add(R.id.itemListContent, detailFrag, null)
-                        .replace(R.id.itemListContent, detailFrag, "LIST_TO_ADD")
-                        .addToBackStack("Details")
+                        .add(R.id.itemListContent, addFrag, null)
+                        .replace(R.id.itemListContent, addFrag, "LIST_TO_ADD")
+                        // .addToBackStack("Add Item")
                         .commit();
 
 
@@ -312,13 +314,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 });
 
 
-        selectItem.setModel(updatedItem.getModel()); //this updated the item post-editing!
-        selectItem.setCost(updatedItem.getCost());
-        selectItem.setMake(updatedItem.getMake());
-        selectItem.setDescription(updatedItem.getDescription());
-        selectItem.setSN(updatedItem.getSN());
-        selectItem.setDate(updatedItem.getDate());
-        selectItem.setComment(updatedItem.getComment());
+        items.add(selectItem);
 
         // items.add(updatedItem); // TODO: change?
 

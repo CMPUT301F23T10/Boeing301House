@@ -22,9 +22,17 @@ import java.util.Date;
 
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;
-    public AddEditItemFragment(Item givenItem){
+    public static String ITEM_KEY = "item_key";
 
-        this.currentItem = givenItem;
+    // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
+    // handle passing through an expense object to fragment from activity
+    public static AddEditItemFragment newInstance(Item item) {
+        AddEditItemFragment fragment = new AddEditItemFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ITEM_KEY, item);
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 
 
@@ -67,6 +75,9 @@ public class AddEditItemFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            currentItem = (Item) getArguments().getParcelable("ITEM_OBJ"); // get item from bundle
+        }
     }
     private void deleteFrag(){ //this deletes the fragment from the screen
 
