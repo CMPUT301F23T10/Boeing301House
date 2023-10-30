@@ -52,6 +52,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     // intent return codes
     private static int select = 1;
+    private static int add = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +65,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
-        itemsRef = db.collection("items_test");
+        itemsRef = db.collection("items"); // switch to items_test to test adding
 
         items = new ArrayList<>();
 
