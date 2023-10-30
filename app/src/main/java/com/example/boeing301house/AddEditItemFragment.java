@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 
+import java.util.HashMap;
+
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;
     public AddEditItemFragment(Item givenItem){
@@ -96,7 +98,7 @@ public class AddEditItemFragment extends Fragment {
 
                 Item newItem = new Item(newMake, newModel, newCost, newDescription, newDate, newSN, newComment);
 
-                listener.onConfirmPressed(newItem); //transfers the new data to main
+                listener.onConfirmPressed(newItem); // transfers the new data to main
 
 
 

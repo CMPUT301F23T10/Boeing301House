@@ -2,17 +2,21 @@ package com.example.boeing301house;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast; // for testing
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -229,17 +233,29 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     @Override
     public void onConfirmPressed(Item updatedItem) {
-        HashMap<String, String> stringData = new HashMap<>();
-        HashMap<String, Float> numData = new HashMap<>();
-        HashMap<String, Long> dateData = new HashMap<>(); // TODO: CHANGE DATATYPE (maybe)
-        stringData.put("Make", updatedItem.getMake());
-        stringData.put("Model", updatedItem.getModel());
-        dateData.put("Date", updatedItem.getDate());
-        stringData.put("SN", updatedItem.getSN());
-        numData.put("Est Value", updatedItem.getCost());
-        stringData.put("Desc", updatedItem.getDescription());
-        stringData.put("Comment", updatedItem.getComment());
-        itemsRef.document(updatedItem.getItemID());
+        HashMap<String, Object> itemData = new HashMap<>();
+        itemData.put("Make", updatedItem.getMake());
+        itemData.put("Model", updatedItem.getModel());
+        itemData.put("Date", updatedItem.getDate());
+        itemData.put("SN", updatedItem.getSN());
+        itemData.put("Est Value", updatedItem.getCost());
+        itemData.put("Desc", updatedItem.getDescription());
+        itemData.put("Comment", updatedItem.getComment());
+
+        itemsRef.document(updatedItem.getItemID())
+                .set(itemData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("Firestore", "DocumentSnapshot successfully written");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Firestore", "db write failed");
+                    }
+                });
 
 
         selectItem.setModel(updatedItem.getModel()); //this updated the item post-editing!
@@ -250,7 +266,12 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         selectItem.setDate(updatedItem.getDate());
         selectItem.setComment(updatedItem.getComment());
 
+        // items.add(updatedItem); // TODO: change?
+
         itemAdapter.notifyDataSetChanged();
         updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
+
+
+
     }
 }
