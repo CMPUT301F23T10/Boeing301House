@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
  * Class representing item object
  */
 public class Item implements Parcelable {
+    // private String iid;
     private String make;
     private String model;
     private float cost;
@@ -111,7 +112,7 @@ public class Item implements Parcelable {
         return cost;
     }
 
-    public void setCost(int cost) {
+    public void setCost(float cost) {
         this.cost = cost;
     }
 
@@ -162,6 +163,7 @@ public class Item implements Parcelable {
     public boolean isSelected() {
         return isSelected;
     }
+    public String getItemID() { return String.format("%s%s", make, model); } // TODO: convert to item id (or not)
 
     /**
      * Describe the kinds of special objects contained in this Parcelable instance's marshaled representation.

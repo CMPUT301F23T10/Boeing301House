@@ -231,15 +231,18 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     public void onConfirmPressed(Item updatedItem) {
         HashMap<String, String> stringData = new HashMap<>();
         HashMap<String, Float> numData = new HashMap<>();
-        HashMap<String, Long> dateData = new HashMap<>();
+        HashMap<String, Long> dateData = new HashMap<>(); // TODO: CHANGE DATATYPE (maybe)
         stringData.put("Make", updatedItem.getMake());
         stringData.put("Model", updatedItem.getModel());
         dateData.put("Date", updatedItem.getDate());
         stringData.put("SN", updatedItem.getSN());
         numData.put("Est Value", updatedItem.getCost());
+        stringData.put("Desc", updatedItem.getDescription());
+        stringData.put("Comment", updatedItem.getComment());
+        itemsRef.document(updatedItem.getItemID());
 
 
-        selectItem.setModel(updatedItem.getModel()); //this updated the item post-editting!
+        selectItem.setModel(updatedItem.getModel()); //this updated the item post-editing!
         selectItem.setCost(updatedItem.getCost());
         selectItem.setMake(updatedItem.getMake());
         selectItem.setDescription(updatedItem.getDescription());
