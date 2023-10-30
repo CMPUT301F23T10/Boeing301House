@@ -257,8 +257,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             }
         });
 
-
-
     }
 
     /**
@@ -316,5 +314,39 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
 
+
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // if we returned RESULT_OK that means we want to delete an item
+        if (resultCode == RESULT_OK) {
+
+            // getting the position data, if it cant find pos it defaults to -1
+            int itemIndexToDelete = data.getIntExtra("pos", -1);
+            if (itemIndexToDelete != -1) {
+                Item itemToDelete = items.get(itemIndexToDelete);
+                items.remove(itemIndexToDelete);
+                deleteItemFromFirestore(itemToDelete);
+            }
+        }
+    }
+    private void deleteItemFromFirestore(Item item) {
+        // Delete the Item from Firestore
+        itemsRef.document(item.getItemID())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firestore", "Item successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Firestore", "Error deleting item: " + e.getMessage());
+                    }
+                });
     }
 }
