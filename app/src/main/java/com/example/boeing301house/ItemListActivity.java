@@ -64,7 +64,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
-        itemsRef = db.collection("items");
+        itemsRef = db.collection("items_test");
 
         items = new ArrayList<>();
 

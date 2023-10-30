@@ -82,6 +82,7 @@ public class AddEditItemFragment extends Fragment {
                 deleteFrag();
             }
         });
+        // TODO: STILL BUGGED
         //this sets the current text of the edit expense fragment to the current expense name, cost, date and summary
 //        View view = inflater.inflate(R.layout.add_edit_item_fragment, container, false);
 //        EditText editCost = view.findViewById(R.id.editCost);
