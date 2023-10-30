@@ -135,6 +135,7 @@ public class Item implements Parcelable {
     public String getDateString() {
         // return String.valueOf(date);
         String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(new Date(this.date));
+        return dateString;
     }
 
     public String getCostString(){return String.valueOf(cost);}
