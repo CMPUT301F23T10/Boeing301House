@@ -65,7 +65,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
-        itemsRef = db.collection("items"); // switch to items_test to test adding
+        itemsRef = db.collection("items_test"); // switch to items_test to test adding
 
         items = new ArrayList<>();
 
@@ -91,7 +91,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         Long date = doc.getLong("Date");
                         String SN = doc.getString("SN");
                         Long cost = doc.getLong("Est Value");
-                        String desc = doc.getString("Description");
+                        String desc = doc.getString("Desc");
                         String comment = doc.getString("Comment");
 
                         Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
@@ -151,6 +151,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int duration = Toast.LENGTH_SHORT;
 //                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
 //                    toast.show();
+                    Item item = (Item) itemList.getItemAtPosition(i);
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
                     intent.putExtra("Selected Item", (Item) itemList.getItemAtPosition(i));
 
