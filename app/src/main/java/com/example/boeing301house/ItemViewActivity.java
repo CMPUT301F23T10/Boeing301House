@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -37,6 +36,8 @@ public class ItemViewActivity extends AppCompatActivity {
     private TextView tEstimatedValue;
     private Intent returnIntent;
     private int pos; // position of item in list, send back during deletion
+
+    private static int update = 1; // for intent (if using activity for add/edit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +111,7 @@ public class ItemViewActivity extends AppCompatActivity {
         tModel.setText(model);
         tMake.setText(make);
         tEstimatedValue.setText(estimatedValue);
+        tDate.setText(date);
 
 
 
@@ -155,7 +157,7 @@ public class ItemViewActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.item_view_bar, menu);
+        getMenuInflater().inflate(R.menu.ab_item_view_bar, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -175,7 +177,6 @@ public class ItemViewActivity extends AppCompatActivity {
             //      set item from list activity
             return true;
         } else if (itemId == R.id.itemViewDeleteButton) {
-
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there

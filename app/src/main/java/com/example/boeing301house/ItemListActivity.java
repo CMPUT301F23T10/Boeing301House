@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.NavHost;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -49,7 +51,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private boolean isSelectMultiple;
 
     private int pos;
+    private FloatingActionButton addButton;
+
+    // intent return codes
     private static int select = 1;
+    private static int add = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,9 +66,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
+
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
-        itemsRef = db.collection("items");
+        itemsRef = db.collection("items_test"); // switch to items_test to test adding
 
         items = new ArrayList<>();
 
@@ -72,7 +79,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         /**
          * update items (list) in real time
          */
-        
+
         itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
@@ -88,7 +95,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         Long date = doc.getLong("Date");
                         String SN = doc.getString("SN");
                         Long cost = doc.getLong("Est Value");
-                        String desc = doc.getString("Description");
+                        String desc = doc.getString("Desc");
                         String comment = doc.getString("Comment");
 
                         Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
@@ -105,7 +112,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
-        final FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addButton);
+        addButton = (FloatingActionButton) findViewById(R.id.addButton);
 
         // select multiple initialization:
         selectedItems = new ArrayList<>();
@@ -116,6 +123,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              */
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // begin select multiple
+
                 if (!isSelectMultiple) {
                     Item current = (Item) itemList.getItemAtPosition(position);
                     current.select();
@@ -148,6 +156,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int duration = Toast.LENGTH_SHORT;
 //                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
 //                    toast.show();
+                    // Item item = (Item) itemList.getItemAtPosition(i); // for debug
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
                     intent.putExtra("Selected Item", (Item) itemList.getItemAtPosition(i));
 
