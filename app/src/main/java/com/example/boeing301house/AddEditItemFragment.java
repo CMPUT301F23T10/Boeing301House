@@ -96,8 +96,7 @@ public class AddEditItemFragment extends Fragment {
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
 
         // TODO: SET UP INPUT VALIDATION
-        // TODO: GET DATE PICKER TO SHOW UP
-        binding.updateDate.setOnClickListener(new View.OnClickListener() {
+        binding.updateDate.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final Calendar c = Calendar.getInstance();

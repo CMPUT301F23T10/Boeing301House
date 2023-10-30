@@ -188,14 +188,14 @@
                 app:helperText="*mm/dd/yyyy"
                 app:helperTextTextColor="@color/required"
                 style="?attr/textInputFilledStyle"
-                android:clickable="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-
                 >
                 <com.google.android.material.textfield.TextInputEditText
-                    android:maxLines="1"
-                    android:inputType="date"
+
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
