@@ -72,7 +72,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         /**
          * update items (list) in real time
          */
-        // TODO: FIX
+        
         itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
