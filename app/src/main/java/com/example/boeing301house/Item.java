@@ -11,9 +11,9 @@ import androidx.annotation.NonNull;
 public class Item implements Parcelable {
     private String make;
     private String model;
-    private Float cost;
+    private float cost;
     private String description;
-    private Long date;
+    private long date;
 
     private String SN;
     private String comment;
@@ -30,7 +30,7 @@ public class Item implements Parcelable {
      * @param SN
      * @param comment
      */
-    public Item(String make, String model, Float cost, String description, Long date, String SN, String comment) {
+    public Item(String make, String model, float cost, String description, long date, String SN, String comment) {
         this.make = make;
         this.model = model;
         this.cost = cost;
@@ -107,7 +107,7 @@ public class Item implements Parcelable {
         this.model = model;
     }
 
-    public int getCost() {
+    public float getCost() {
         return cost;
     }
 
@@ -182,7 +182,7 @@ public class Item implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(make);
         dest.writeString(model);
-        dest.writeInt(cost);
+        dest.writeFloat(cost);
         dest.writeString(description);
         dest.writeLong(date);
         dest.writeString(SN);
