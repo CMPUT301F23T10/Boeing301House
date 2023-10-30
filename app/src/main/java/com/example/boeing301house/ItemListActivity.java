@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast; // for testing
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -19,7 +20,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,7 +69,36 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemList = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, items);
         itemList.setAdapter(itemAdapter);
-
+        /**
+         * update items (list) in real time
+         */
+        // TODO: FIX
+//        itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+//                if (error != null) {
+//                    Log.e("Firestore", error.toString());
+//                    return;
+//                }
+//                if (snapshots != null) {
+//                    items.clear();
+//                    for (QueryDocumentSnapshot doc: snapshots) {
+//                        String model = doc.getString("Model");
+//                        String make = doc.getString("Make");
+//                        Long date = doc.getLong("Date");
+//                        String SN = doc.getString("SN");
+//                        Long cost = doc.getLong("Est Val");
+//                        String desc = doc.getString("Description");
+//                        String comment = doc.getString("Comment");
+//
+//                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+//                        items.add(new Item(make, model, cost.floatValue(), desc, date, SN, comment));
+//
+//                    }
+//                    itemAdapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
 
         //used to swap the fragment in to edit/add fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
