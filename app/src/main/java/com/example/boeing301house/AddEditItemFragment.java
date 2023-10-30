@@ -78,6 +78,7 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
 
+
 //        binding.itemAddEditMaterialToolBar.inflateMenu(R.menu.ab_item_add_edit_bar);
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

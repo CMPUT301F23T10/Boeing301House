@@ -151,7 +151,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int duration = Toast.LENGTH_SHORT;
 //                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
 //                    toast.show();
-                    Item item = (Item) itemList.getItemAtPosition(i);
+                    // Item item = (Item) itemList.getItemAtPosition(i); // for debug
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
                     intent.putExtra("Selected Item", (Item) itemList.getItemAtPosition(i));
 
