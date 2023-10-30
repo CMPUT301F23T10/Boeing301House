@@ -49,6 +49,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private boolean isSelectMultiple;
 
     private int pos;
+
+    // intent return codes
     private static int select = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +74,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         /**
          * update items (list) in real time
          */
-        
+
         itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {

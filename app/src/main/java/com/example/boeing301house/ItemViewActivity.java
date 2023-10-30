@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -155,7 +154,7 @@ public class ItemViewActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.item_view_bar, menu);
+        getMenuInflater().inflate(R.menu.ab_item_view_bar, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

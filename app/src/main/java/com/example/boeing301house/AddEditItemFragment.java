@@ -77,17 +77,17 @@ public class AddEditItemFragment extends Fragment {
 //        EditText editCost = view.findViewById(R.id.editCost);
 //        editCost.setText(currentItem.getCostString());
         binding.editCost.setText(currentItem.getCostString());
-        binding.editMake.setText(currentItem.getMake());
+        binding.inputMake.setText(currentItem.getMake());
         binding.editModel.setText(currentItem.getModel());
         binding.editDate.setText(currentItem.getDateString());
         binding.editSN.setText(currentItem.getSN());
         binding.editComment.setText(currentItem.getComment());
         binding.editDescription.setText(currentItem.getDescription());
 
-        binding.exitButton.setOnClickListener(new View.OnClickListener() { //when clicked confirm button
+        binding.confirmButton.setOnClickListener(new View.OnClickListener() { //when clicked confirm button
             @Override
             public void onClick(View view) {
-                newMake = binding.editMake.getText().toString();
+                newMake = binding.inputMake.getText().toString();
                 newModel = binding.editModel.getText().toString();
                 newCost = Float.parseFloat(binding.editCost.getText().toString());
                 newComment = binding.editComment.getText().toString();
