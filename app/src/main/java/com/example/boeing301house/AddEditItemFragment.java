@@ -22,9 +22,17 @@ import java.util.Date;
 
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;
-    public AddEditItemFragment(Item givenItem){
+    public static String ITEM_KEY = "item_key";
 
-        this.currentItem = givenItem;
+    // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
+    // handle passing through an expense object to fragment from activity
+    public static AddEditItemFragment newInstance(Item item) {
+        AddEditItemFragment fragment = new AddEditItemFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable(ITEM_KEY, item);
+        fragment.setArguments(bundle);
+
+        return fragment;
     }
 
 
@@ -48,6 +56,7 @@ public class AddEditItemFragment extends Fragment {
     private OnFragmentInteractionListener listener;
 
     public interface OnFragmentInteractionListener{
+        void onCancel();
         void onConfirmPressed(Item updatedItem);
     }
     @Override
@@ -66,11 +75,14 @@ public class AddEditItemFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            currentItem = (Item) getArguments().getParcelable("ITEM_OBJ"); // get item from bundle
+        }
     }
-    private void deleteFrag(){ //this deletes the fragment from the screen
-
-        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-    }
+//    private void deleteFrag(){ //this deletes the fragment from the screen
+//
+//        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+//    }
 
 
     @Nullable
@@ -84,7 +96,8 @@ public class AddEditItemFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO: add functionality and check over
-                deleteFrag();
+                listener.onCancel();
+                // deleteFrag();
             }
         });
         // TODO: STILL BUGGED
@@ -148,14 +161,19 @@ public class AddEditItemFragment extends Fragment {
                 newSN = binding.updateSN.getEditText().getText().toString();
                 newDescription = binding.updateDesc.getEditText().getText().toString();
 
+                currentItem.setComment(newComment);
+                currentItem.setMake(newMake);
+                currentItem.setModel(newModel);
+                currentItem.setDate(newDate);
+                currentItem.setSN(newSN);
+                currentItem.setDescription(newDescription);
+                // Item newItem = new Item(newMake, newModel, newValue, newDescription, newDate, newSN, newComment);
 
-                Item newItem = new Item(newMake, newModel, newValue, newDescription, newDate, newSN, newComment);
-
-                listener.onConfirmPressed(newItem); // transfers the new data to main
+                listener.onConfirmPressed(currentItem); // transfers the new data to main
 
 
 
-                deleteFrag(); //this removes the current fragment
+                // deleteFrag(); //this removes the current fragment
             }
         });
 

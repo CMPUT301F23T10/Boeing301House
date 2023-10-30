@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.NavHost;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnFragmentInteractionListener{
+public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnFragmentInteractionListener {
     /**
      * This class is for the list activity, where you can see/interact with items
      *
@@ -66,16 +67,21 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
+        // navgraph
+        // NavController navController = Navigation.findNavController(findViewById(R.id.nav_host_fragment));
+
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
-        itemsRef = db.collection("items_test"); // switch to items_test to test adding
+        itemsRef = db.collection("items_test2"); // switch to items_test to test adding
 
         items = new ArrayList<>();
 
         itemList = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, items);
         itemList.setAdapter(itemAdapter);
+
+
         /**
          * update items (list) in real time
          */
@@ -238,19 +244,24 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             @Override
             public void onClick(View view) { //if the text isn't empty
 //                view.requestLayout();
-                selectItem = new Item(); //creates a new city to be created
-                items.add(selectItem); //adds the empty city to the list (with no details)
+                addButton.hide();
+                Fragment addFrag = new AddEditItemFragment();
+                Item newItem = new Item(); //creates a new city to be created
+                // items.add(selectItem); //adds the empty city to the list (with no details)
 
-
-                Fragment detailFrag = new AddEditItemFragment(selectItem); //this is passed along so it can display the proper information
+                Bundle itemBundle = new Bundle();
+                itemBundle.putParcelable("ITEM_OBJ", newItem);
+                addFrag.setArguments(itemBundle);
 
 
                 //initalizes the detail fragment so that the newly created (empty) item can be filled with user data
                 FragmentTransaction transaction= fragmentManager.beginTransaction();
+
                 transaction
 //                        .add(R.id.content_frame, detailFrag, null)
-                        .add(R.id.itemListContent, detailFrag, null)
-                        .addToBackStack("Details")
+                        .add(R.id.itemListContent, addFrag, null)
+                        .replace(R.id.itemListContent, addFrag, "LIST_TO_ADD")
+                        // .addToBackStack("Add Item")
                         .commit();
 
 
@@ -276,6 +287,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     @Override
     public void onConfirmPressed(Item updatedItem) {
+        exitAddEditFragment();
+        addButton.show();
+
         HashMap<String, Object> itemData = new HashMap<>();
         itemData.put("Make", updatedItem.getMake());
         itemData.put("Model", updatedItem.getModel());
@@ -301,20 +315,27 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 });
 
 
-        selectItem.setModel(updatedItem.getModel()); //this updated the item post-editing!
-        selectItem.setCost(updatedItem.getCost());
-        selectItem.setMake(updatedItem.getMake());
-        selectItem.setDescription(updatedItem.getDescription());
-        selectItem.setSN(updatedItem.getSN());
-        selectItem.setDate(updatedItem.getDate());
-        selectItem.setComment(updatedItem.getComment());
+        items.add(selectItem);
 
         // items.add(updatedItem); // TODO: change?
 
         itemAdapter.notifyDataSetChanged();
-        updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
+        // updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
 
 
 
+    }
+
+    @Override
+    public void onCancel() {
+        addButton.show();
+        exitAddEditFragment();
+    }
+
+    private void exitAddEditFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("LIST_TO_ADD");
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 }
