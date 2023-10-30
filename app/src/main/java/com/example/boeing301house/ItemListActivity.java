@@ -289,6 +289,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     public void onConfirmPressed(Item updatedItem) {
         exitAddEditFragment();
         addButton.show();
+
         HashMap<String, Object> itemData = new HashMap<>();
         itemData.put("Make", updatedItem.getMake());
         itemData.put("Model", updatedItem.getModel());
@@ -319,7 +320,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // items.add(updatedItem); // TODO: change?
 
         itemAdapter.notifyDataSetChanged();
-        updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
+        // updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
 
 
 

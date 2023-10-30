@@ -79,10 +79,10 @@ public class AddEditItemFragment extends Fragment {
             currentItem = (Item) getArguments().getParcelable("ITEM_OBJ"); // get item from bundle
         }
     }
-    private void deleteFrag(){ //this deletes the fragment from the screen
-
-        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-    }
+//    private void deleteFrag(){ //this deletes the fragment from the screen
+//
+//        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+//    }
 
 
     @Nullable
@@ -97,7 +97,7 @@ public class AddEditItemFragment extends Fragment {
             public void onClick(View v) {
                 // TODO: add functionality and check over
                 listener.onCancel();
-                deleteFrag();
+                // deleteFrag();
             }
         });
         // TODO: STILL BUGGED
@@ -161,14 +161,19 @@ public class AddEditItemFragment extends Fragment {
                 newSN = binding.updateSN.getEditText().getText().toString();
                 newDescription = binding.updateDesc.getEditText().getText().toString();
 
+                currentItem.setComment(newComment);
+                currentItem.setMake(newMake);
+                currentItem.setModel(newModel);
+                currentItem.setDate(newDate);
+                currentItem.setSN(newSN);
+                currentItem.setDescription(newDescription);
+                // Item newItem = new Item(newMake, newModel, newValue, newDescription, newDate, newSN, newComment);
 
-                Item newItem = new Item(newMake, newModel, newValue, newDescription, newDate, newSN, newComment);
-
-                listener.onConfirmPressed(newItem); // transfers the new data to main
+                listener.onConfirmPressed(currentItem); // transfers the new data to main
 
 
 
-                deleteFrag(); //this removes the current fragment
+                // deleteFrag(); //this removes the current fragment
             }
         });
 
