@@ -8,6 +8,7 @@
     android:background="@color/white"
     android:clickable="true"
     android:focusable="true"
+    android:id="@+id/itemAddEditContent"
     >
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

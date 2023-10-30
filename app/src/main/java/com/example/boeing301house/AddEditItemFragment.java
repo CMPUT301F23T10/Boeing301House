@@ -48,6 +48,7 @@ public class AddEditItemFragment extends Fragment {
     private OnFragmentInteractionListener listener;
 
     public interface OnFragmentInteractionListener{
+        void onCancel();
         void onConfirmPressed(Item updatedItem);
     }
     @Override
@@ -84,6 +85,7 @@ public class AddEditItemFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO: add functionality and check over
+                listener.onCancel();
                 deleteFrag();
             }
         });
