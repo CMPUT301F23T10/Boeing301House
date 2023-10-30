@@ -109,6 +109,7 @@ public class ItemViewActivity extends AppCompatActivity {
         tModel.setText(model);
         tMake.setText(make);
         tEstimatedValue.setText(estimatedValue);
+        tDate.setText(date);
 
 
 
