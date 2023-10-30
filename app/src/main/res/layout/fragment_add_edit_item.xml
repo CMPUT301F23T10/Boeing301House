@@ -51,14 +51,16 @@
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_make_input"
+                android:id="@+id/update_make"
                 android:hint="Make"
                 app:helperText="@string/required_field_text"
+                app:helperTextTextColor="@color/required"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
 
                 >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -66,20 +68,22 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintTop_toBottomOf="@id/update_make_input"
+                app:layout_constraintTop_toBottomOf="@id/update_make"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_model_input"
+                android:id="@+id/update_model"
                 android:hint="Model"
                 app:helperText="@string/required_field_text"
+                app:helperTextTextColor="@color/required"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
 
                 >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -87,7 +91,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintTop_toBottomOf="@id/update_model_input"
+                app:layout_constraintTop_toBottomOf="@id/update_model"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="10dp"
@@ -96,10 +100,12 @@
                 android:id="@+id/update_value"
                 android:hint="Estimated Value"
                 app:helperText="@string/required_field_text"
+                app:helperTextTextColor="@color/required"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
                 >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
                     android:inputType="numberDecimal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -120,6 +126,7 @@
                 style="?attr/textInputFilledStyle"
                 >
                 <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -161,7 +168,33 @@
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
-            
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toBottomOf="@id/update_comment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/update_date"
+                android:hint="mm/dd/yyyy"
+                app:helperText="*mm/dd/yyyy"
+                app:helperTextTextColor="@color/required"
+                style="?attr/textInputFilledStyle"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
+                    android:inputType="date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
 
 
 
@@ -169,39 +202,16 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:id="@+id/update_item_confirm"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="40dp">
 
-    <!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-    <!--        android:id="@+id/itemViewDeleteButton"-->
-    <!--        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:backgroundTint="@color/colorDelete"-->
-    <!--        android:text="DELETE"-->
-    <!--        android:layout_gravity="top"-->
-    <!--        app:layout_anchor="@id/itemViewScrollView"-->
-    <!--        app:layout_anchorGravity="bottom|end"-->
-    <!--        android:layout_marginBottom="?actionBarSize"-->
-
-    <!--        >-->
-
-    <!--    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
-
-    <!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-    <!--        android:id="@+id/itemViewEditButton"-->
-    <!--        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:backgroundTint="@color/colorButton"-->
-    <!--        android:text="EDIT"-->
-    <!--        android:layout_gravity="top"-->
-    <!--        app:layout_anchor="@id/itemViewDeleteButton"-->
-    <!--        app:layout_anchorGravity="end|top"-->
-    <!--        android:layout_marginBottom="?actionBarSize"-->
-
-
-    <!--        >-->
-
-    <!--    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
+    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

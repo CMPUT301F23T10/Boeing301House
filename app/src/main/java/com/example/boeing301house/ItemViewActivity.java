@@ -174,7 +174,6 @@ public class ItemViewActivity extends AppCompatActivity {
             //      set item from list activity
             return true;
         } else if (itemId == R.id.itemViewDeleteButton) {
-
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there
