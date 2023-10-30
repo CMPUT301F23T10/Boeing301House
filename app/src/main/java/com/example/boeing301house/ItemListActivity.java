@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,6 +64,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //        subTotalText = findViewById(R.id.subtotalText);
 
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
+
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
@@ -120,6 +122,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              */
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 // begin select multiple
+
                 if (!isSelectMultiple) {
                     Item current = (Item) itemList.getItemAtPosition(position);
                     current.select();

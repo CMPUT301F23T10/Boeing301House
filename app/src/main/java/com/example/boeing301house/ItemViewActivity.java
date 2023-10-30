@@ -36,6 +36,8 @@ public class ItemViewActivity extends AppCompatActivity {
     private TextView tEstimatedValue;
     private Intent returnIntent;
     private int pos; // position of item in list, send back during deletion
+
+    private static int update = 1; // for intent (if using activity for add/edit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
