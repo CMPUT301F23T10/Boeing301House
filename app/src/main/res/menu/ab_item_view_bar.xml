@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/itemViewDeleteButton"
+        android:id="@+id/itemViewEditButton"
         android:title="edit"
         app:showAsAction="always"
         android:contentDescription="Edit Item"
@@ -11,7 +11,7 @@
     </item>
 
     <item
-        android:id="@+id/itemViewEditButton"
+        android:id="@+id/itemViewDeleteButton"
         android:title="delete"
         android:contentDescription="Delete Item"
         app:showAsAction="always"
