@@ -7,34 +7,13 @@
     tools:context=".MainActivity"
     android:id="@+id/itemListContent"
     >
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/itemListAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:liftOnScrollTargetViewId="@id/itemList"
-        >
-<!--        TODO: ADD LIFT ON SCROLL -->
-        <com.google.android.material.appbar.MaterialToolbar
-            android:background="@color/colorTitleBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="?attr/actionBarSize"
-            app:title="Items"
-            app:titleTextColor="@color/white"
-            app:menu="@menu/item_list_appbar"
-            app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
-            >
-
-        </com.google.android.material.appbar.MaterialToolbar>
-    </com.google.android.material.appbar.AppBarLayout>
-
-
     <ListView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/itemList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?actionBarSize"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        >
 
     </ListView>
 
@@ -112,6 +91,25 @@
 <!--        &lt;!&ndash; Scrollable content &ndash;&gt;-->
 
 <!--    </androidx.core.widget.NestedScrollView>-->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/itemListAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <!--        TODO: ADD LIFT ON SCROLL -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:background="@color/colorTitleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:title="Items"
+            app:titleTextColor="@color/white"
+            app:menu="@menu/item_list_appbar"
+            app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            >
+
+        </com.google.android.material.appbar.MaterialToolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 <!-- OLD LAYOUT -->

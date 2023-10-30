@@ -35,6 +35,7 @@ public class ItemViewActivity extends AppCompatActivity {
     private TextView tDescription;
     private TextView tComment;
     private TextView tEstimatedValue;
+    private Intent returnIntent;
     private int pos; // position of item in list, send back during deletion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,7 @@ public class ItemViewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         selectedItem = intent.getParcelableExtra("Selected Item");
+        pos = intent.getIntExtra("pos", 0);
 
         MaterialToolbar topbar = findViewById(R.id.itemViewMaterialToolBar);
         setSupportActionBar(topbar);
@@ -131,7 +133,17 @@ public class ItemViewActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
 //        return super.onSupportNavigateUp();
-        onBackPressed();
+
+        // if edits made -> send new items + pos of item back
+        // TODO: write if statement
+        // if sending back
+        //      resultIntent.putExtra ... | add item and position
+        //      setResult(RESULT_OK, resultIntent)
+
+        // if no edits or anything
+        setResult(RESULT_CANCELED);
+        // onBackPressed();
+        finish();
         return true;
     }
 
@@ -163,10 +175,11 @@ public class ItemViewActivity extends AppCompatActivity {
             //      set item from list activity
             return true;
         } else if (itemId == R.id.itemViewDeleteButton) {
+
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there
-            //      startActivityForResult
+            setResult(RESULT_OK);
             return true;
         }
         // action not recognized

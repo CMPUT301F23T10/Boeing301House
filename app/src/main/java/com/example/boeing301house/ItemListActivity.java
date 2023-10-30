@@ -2,20 +2,32 @@ package com.example.boeing301house;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast; // for testing
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnFragmentInteractionListener{
     /**
@@ -23,21 +35,21 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      *
      *
      */
-
+    private FirebaseFirestore db;
+    private CollectionReference itemsRef;
     private ListView itemList;
 //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
     private TextView subTotalText;
-    public ArrayList<Item> items = new ArrayList<>();
+    public ArrayList<Item> items;
 
 //    private ArrayList<View> selectedItemViews = new ArrayList<>();
-    private ArrayList<Item> selectedItems = new ArrayList<>();
+    private ArrayList<Item> selectedItems;
     private boolean isSelectMultiple;
 
     private int pos;
-    private static int deleteCode = 1; // for startActivityForResult
-    private static int editCode = 2; // for startActivityForResult
+    private static int select = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +61,44 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
         //sets up item list
-//        itemList = findViewById(R.id.item_List); // binds the city list to the xml file
+        db = FirebaseFirestore.getInstance(); // get instance for firestore db
+        itemsRef = db.collection("items");
+
+        items = new ArrayList<>();
+
         itemList = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, items);
         itemList.setAdapter(itemAdapter);
+        /**
+         * update items (list) in real time
+         */
+        
+        itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Firestore", error.toString());
+                    return;
+                }
+                if (snapshots != null) {
+                    items.clear();
+                    for (QueryDocumentSnapshot doc: snapshots) {
+                        String model = doc.getString("Model");
+                        String make = doc.getString("Make");
+                        Long date = doc.getLong("Date");
+                        String SN = doc.getString("SN");
+                        Long cost = doc.getLong("Est Value");
+                        String desc = doc.getString("Description");
+                        String comment = doc.getString("Comment");
 
+                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+                        items.add(new Item(make, model, cost.floatValue(), desc, date, SN, comment));
+
+                    }
+                    itemAdapter.notifyDataSetChanged();
+                }
+            }
+        });
 
         //used to swap the fragment in to edit/add fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -63,6 +108,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         final FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addButton);
 
         // select multiple initialization:
+        selectedItems = new ArrayList<>();
         itemList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             /**
@@ -108,7 +154,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     pos = i;
                     intent.putExtra("pos", pos);
 
-                    startActivity(intent);
+                    startActivityForResult(intent, select);
+
                     // during call back: return item + position
                     // delete -> delete item at given position
                     // edit -> set item in list as newly returned item
@@ -220,7 +267,32 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     @Override
     public void onConfirmPressed(Item updatedItem) {
-        selectItem.setModel(updatedItem.getModel()); //this updated the item post-editting!
+        HashMap<String, Object> itemData = new HashMap<>();
+        itemData.put("Make", updatedItem.getMake());
+        itemData.put("Model", updatedItem.getModel());
+        itemData.put("Date", updatedItem.getDate());
+        itemData.put("SN", updatedItem.getSN());
+        itemData.put("Est Value", updatedItem.getCost());
+        itemData.put("Desc", updatedItem.getDescription());
+        itemData.put("Comment", updatedItem.getComment());
+
+        itemsRef.document(updatedItem.getItemID())
+                .set(itemData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("Firestore", "DocumentSnapshot successfully written");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Firestore", "db write failed");
+                    }
+                });
+
+
+        selectItem.setModel(updatedItem.getModel()); //this updated the item post-editing!
         selectItem.setCost(updatedItem.getCost());
         selectItem.setMake(updatedItem.getMake());
         selectItem.setDescription(updatedItem.getDescription());
@@ -228,7 +300,12 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         selectItem.setDate(updatedItem.getDate());
         selectItem.setComment(updatedItem.getComment());
 
+        // items.add(updatedItem); // TODO: change?
+
         itemAdapter.notifyDataSetChanged();
         updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
+
+
+
     }
 }

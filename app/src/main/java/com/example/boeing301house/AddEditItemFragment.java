@@ -13,6 +13,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 
+import java.util.HashMap;
+
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;
     public AddEditItemFragment(Item givenItem){
@@ -27,12 +29,12 @@ public class AddEditItemFragment extends Fragment {
     private String newMake;
     private String newModel;
 
-    private int newCost;
+    private Float newCost;
 
     private String newComment;
     private String newDescription;
 
-    private long newDate;
+    private Long newDate;
 
     private String newSN;
 
@@ -87,7 +89,7 @@ public class AddEditItemFragment extends Fragment {
             public void onClick(View view) {
                 newMake = binding.editMake.getText().toString();
                 newModel = binding.editModel.getText().toString();
-                newCost = Integer.parseInt(binding.editCost.getText().toString());
+                newCost = Float.parseFloat(binding.editCost.getText().toString());
                 newComment = binding.editComment.getText().toString();
                 newDate = Long.parseLong(binding.editDate.getText().toString());
                 newSN = binding.editSN.getText().toString();
@@ -96,7 +98,7 @@ public class AddEditItemFragment extends Fragment {
 
                 Item newItem = new Item(newMake, newModel, newCost, newDescription, newDate, newSN, newComment);
 
-                listener.onConfirmPressed(newItem); //transfers the new data to main
+                listener.onConfirmPressed(newItem); // transfers the new data to main
 
 
 

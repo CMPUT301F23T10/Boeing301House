@@ -9,9 +9,10 @@ import androidx.annotation.NonNull;
  * Class representing item object
  */
 public class Item implements Parcelable {
+    // private String itemID; // TODO: make this
     private String make;
     private String model;
-    private int cost;
+    private float cost;
     private String description;
     private long date;
 
@@ -30,7 +31,7 @@ public class Item implements Parcelable {
      * @param SN
      * @param comment
      */
-    public Item(String make, String model, int cost, String description, long date, String SN, String comment) {
+    public Item(String make, String model, float cost, String description, long date, String SN, String comment) {
         this.make = make;
         this.model = model;
         this.cost = cost;
@@ -107,11 +108,11 @@ public class Item implements Parcelable {
         this.model = model;
     }
 
-    public int getCost() {
+    public float getCost() {
         return cost;
     }
 
-    public void setCost(int cost) {
+    public void setCost(float cost) {
         this.cost = cost;
     }
 
@@ -162,6 +163,7 @@ public class Item implements Parcelable {
     public boolean isSelected() {
         return isSelected;
     }
+    public String getItemID() { return String.format("%s.%s", make, model); } // TODO: convert to item id (or not)
 
     /**
      * Describe the kinds of special objects contained in this Parcelable instance's marshaled representation.
@@ -182,7 +184,7 @@ public class Item implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(make);
         dest.writeString(model);
-        dest.writeInt(cost);
+        dest.writeFloat(cost);
         dest.writeString(description);
         dest.writeLong(date);
         dest.writeString(SN);
