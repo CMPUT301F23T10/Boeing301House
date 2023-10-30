@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -77,7 +78,6 @@ public class AddEditItemFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
-
 
 //        binding.itemAddEditMaterialToolBar.inflateMenu(R.menu.ab_item_add_edit_bar);
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {

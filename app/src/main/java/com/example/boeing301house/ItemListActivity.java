@@ -49,6 +49,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private boolean isSelectMultiple;
 
     private int pos;
+    private FloatingActionButton addButton;
 
     // intent return codes
     private static int select = 1;
@@ -108,7 +109,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
-        final FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.addButton);
+        addButton = (FloatingActionButton) findViewById(R.id.addButton);
 
         // select multiple initialization:
         selectedItems = new ArrayList<>();
