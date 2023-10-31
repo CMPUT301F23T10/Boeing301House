@@ -242,6 +242,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
 
     @Override
     public void onConfirmPressed(Item updatedItem) {
+        // TODO: add functionality
+
         exitAddEditFragment();
     }
 
