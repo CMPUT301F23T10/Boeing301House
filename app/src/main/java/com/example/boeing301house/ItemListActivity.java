@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast; // for testing
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.NavHost;
-import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,12 +28,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnFragmentInteractionListener {
-    /**
-     * This class is for the list activity, where you can see/interact with items
-     *
-     *
-     */
+// TODO: finish javadocs
+/**
+ * This class is for the list activity, where you can see/interact with items
+ */
+public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
+
     private FirebaseFirestore db;
     private CollectionReference itemsRef;
     private ListView itemList;
@@ -60,6 +56,15 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     // action codes
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
+
+    // TODO: finish javadocs
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +93,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         /**
          * update items (list) in real time
          */
-
         itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
@@ -125,6 +129,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         // select multiple initialization:
         selectedItems = new ArrayList<>();
+
+        // Handle multiselect first step
         itemList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             /**
@@ -153,12 +159,18 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         });
 
 
-        //setup for the list
+        // handle item selection during multiselect and regular selection
         itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
+            // TODO: finish javadocs
             /**
              * When an item is clicked from the list
+             * @param adapterView The AdapterView where the click happened.
+             * @param view The view within the AdapterView that was clicked (this
+             *            will be a view provided by the adapter)
+             * @param i The position of the view in the adapter.
+             * @param l The row id of the item that was clicked.
              */
+            @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if (!isSelectMultiple) {
 //                    CharSequence text = "Selecting item";
@@ -242,8 +254,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         });
 
 
-        //for adding new expenses:
+        // for adding new expenses:
         addButton.setOnClickListener(new View.OnClickListener() {
+            // TODO: finish javadocs
+            /**
+             *
+             * @param view The view that was clicked.
+             */
             @Override
             public void onClick(View view) { //if the text isn't empty
 //                view.requestLayout();
@@ -327,6 +344,18 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
     }
+    // TODO: finish javadocs
+    /**
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -345,6 +374,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             }
         }
     }
+    // TODO: finish javadocs
+    /**
+     *
+     * @param item
+     */
     private void deleteItemFromFirestore(Item item) {
         // Delete the Item from Firestore
         itemsRef.document(item.getItemID())
@@ -362,13 +396,19 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     }
                 });
     }
-
+    // TODO: finish javadocs
+    /**
+     *
+     */
     @Override
     public void onCancel() {
         addButton.show();
         exitAddEditFragment();
     }
-
+    // TODO: finish javadocs
+    /**
+     *
+     */
     private void exitAddEditFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("LIST_TO_ADD");
         if (fragment != null) {
