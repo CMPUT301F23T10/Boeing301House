@@ -56,7 +56,7 @@
         android:id="@+id/itemListAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="8dp"
+        android:elevation="12dp"
         >
         <com.google.android.material.appbar.MaterialToolbar
             android:background="@color/colorTitleBar"
@@ -75,7 +75,31 @@
             android:layout_height="wrap_content"
             android:minHeight="40dp"
             android:background="@color/colorBackground"
+            android:visibility="visible"
             >
+            <com.google.android.material.chip.ChipGroup
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/itemListChipGroup">
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:text="SORT"
+                    android:id="@+id/itemListSortChip"
+                    android:backgroundTint="@color/colorBackground"
+                    >
+
+                </com.google.android.material.chip.Chip>
+                <com.google.android.material.chip.Chip
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Chip.Filter">
+
+                </com.google.android.material.chip.Chip>
+
+
+            </com.google.android.material.chip.ChipGroup>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
