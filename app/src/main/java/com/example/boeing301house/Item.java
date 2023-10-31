@@ -73,7 +73,10 @@ public class Item implements Parcelable {
         isSelected = in.readByte() != 0;
     }
 
-
+    // TODO: finish java doc
+    /**
+     *
+     */
     public static final Creator<Item> CREATOR = new Creator<Item>() {
         /**
          * Creates new instance of the Parcelable class

@@ -20,6 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * Fragment for Adding and Editing items
+ */
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;
     public static String ITEM_KEY = "item_key";
@@ -62,6 +65,10 @@ public class AddEditItemFragment extends Fragment {
 
     private OnFragmentInteractionListener listener;
 
+    // TODO: finish javadoc
+    /**
+     *
+     */
     public interface OnFragmentInteractionListener{
         void onCancel();
         void onConfirmPressed(Item updatedItem);
@@ -85,7 +92,7 @@ public class AddEditItemFragment extends Fragment {
             throw new RuntimeException(context.toString() + "must implement onfraglistener");
         }
     }
-
+    // TODO: finish javadoc
     /**
      *
      * @param savedInstanceState If the fragment is being re-created from
@@ -102,7 +109,7 @@ public class AddEditItemFragment extends Fragment {
 //
 //        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 //    }
-
+    // TODO: finish javadoc
     /**
      *
      * @param inflater The LayoutInflater object that can be used to inflate
@@ -212,7 +219,7 @@ public class AddEditItemFragment extends Fragment {
         return view;
 
     }
-
+    // TODO: finish java doc
     /**
      *
      */
