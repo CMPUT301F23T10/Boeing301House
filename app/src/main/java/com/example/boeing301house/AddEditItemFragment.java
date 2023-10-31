@@ -165,6 +165,7 @@ public class AddEditItemFragment extends Fragment {
                 currentItem.setMake(newMake);
                 currentItem.setModel(newModel);
                 currentItem.setDate(newDate);
+                currentItem.setCost(newValue);
                 currentItem.setSN(newSN);
                 currentItem.setDescription(newDescription);
                 // Item newItem = new Item(newMake, newModel, newValue, newDescription, newDate, newSN, newComment);
