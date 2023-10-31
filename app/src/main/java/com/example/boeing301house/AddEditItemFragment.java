@@ -7,18 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Fragment for Adding and Editing items
@@ -63,13 +59,13 @@ public class AddEditItemFragment extends Fragment {
 
     private Calendar itemCalendarDate;
 
-    private OnFragmentInteractionListener listener;
+    private OnAddEditFragmentInteractionListener listener;
 
     // TODO: finish javadoc
     /**
      *
      */
-    public interface OnFragmentInteractionListener{
+    public interface OnAddEditFragmentInteractionListener {
         void onCancel();
         void onConfirmPressed(Item updatedItem);
     }
@@ -84,8 +80,8 @@ public class AddEditItemFragment extends Fragment {
     public void onAttach(Context context){
         super.onAttach(context);
 
-        if(context instanceof OnFragmentInteractionListener){
-            listener = (OnFragmentInteractionListener) context;
+        if(context instanceof OnAddEditFragmentInteractionListener){
+            listener = (OnAddEditFragmentInteractionListener) context;
 
         }
         else{
