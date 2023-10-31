@@ -334,7 +334,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // if we returned RESULT_OK that means we want to delete an item
         if (resultCode == RESULT_OK) {
             String action = data.getStringExtra("action");
-            if (action == DELETE_ITEM) {
+            if (action.contentEquals(DELETE_ITEM)) {
                 // getting the position data, if it cant find pos it defaults to -1
                 int itemIndexToDelete = data.getIntExtra("pos", -1);
                 if (itemIndexToDelete != -1) {
