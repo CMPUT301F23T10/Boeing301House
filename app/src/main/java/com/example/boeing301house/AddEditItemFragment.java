@@ -161,6 +161,7 @@ public class AddEditItemFragment extends Fragment {
                 newSN = binding.updateSN.getEditText().getText().toString();
                 newDescription = binding.updateDesc.getEditText().getText().toString();
 
+                currentItem.setCost(newValue);
                 currentItem.setComment(newComment);
                 currentItem.setMake(newMake);
                 currentItem.setModel(newModel);
