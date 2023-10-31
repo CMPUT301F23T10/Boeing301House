@@ -3,6 +3,7 @@ package com.example.boeing301house;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Class for item view activity (lets user view specific item)
  */
-public class ItemViewActivity extends AppCompatActivity {
+public class ItemViewActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
     private Item selectedItem; // item user selected
     private String SN;
     private String model;
@@ -232,5 +233,22 @@ public class ItemViewActivity extends AppCompatActivity {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onCancel() {
+        exitAddEditFragment();
+    }
+
+    @Override
+    public void onConfirmPressed(Item updatedItem) {
+        exitAddEditFragment();
+    }
+
+    private void exitAddEditFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("VIEW_TO_EDIT");
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 }

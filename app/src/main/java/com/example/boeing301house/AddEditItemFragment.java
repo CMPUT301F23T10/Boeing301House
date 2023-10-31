@@ -21,7 +21,7 @@ import java.util.Calendar;
  */
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;
-    public static String ITEM_KEY = "item_key";
+    public static String ITEM_KEY = "item_key"; // TODO: change (maybe)
 
     // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
     // handle passing through an expense object to fragment from activity
