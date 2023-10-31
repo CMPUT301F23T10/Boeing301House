@@ -56,7 +56,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     // intent return codes
     private static int select = 1;
-    private static int add = 2;
+
+    // action codes
+    private static String DELETE_ITEM = "DELETE_ITEM";
+    private static String EDIT_ITEM = "EDIT_ITEM";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -330,13 +333,15 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         // if we returned RESULT_OK that means we want to delete an item
         if (resultCode == RESULT_OK) {
-
-            // getting the position data, if it cant find pos it defaults to -1
-            int itemIndexToDelete = data.getIntExtra("pos", -1);
-            if (itemIndexToDelete != -1) {
-                Item itemToDelete = items.get(itemIndexToDelete);
-                items.remove(itemIndexToDelete);
-                deleteItemFromFirestore(itemToDelete);
+            String action = data.getStringExtra("action");
+            if (action.contentEquals(DELETE_ITEM)) {
+                // getting the position data, if it cant find pos it defaults to -1
+                int itemIndexToDelete = data.getIntExtra("pos", -1);
+                if (itemIndexToDelete != -1) {
+                    Item itemToDelete = items.get(itemIndexToDelete);
+                    items.remove(itemIndexToDelete);
+                    deleteItemFromFirestore(itemToDelete);
+                }
             }
         }
     }
