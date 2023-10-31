@@ -313,7 +313,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 });
 
 
-        items.add(selectItem);
+        items.add(updatedItem);
 
         // items.add(updatedItem); // TODO: change?
 
