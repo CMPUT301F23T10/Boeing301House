@@ -56,8 +56,8 @@
         android:id="@+id/itemListAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="8dp"
         >
-        <!--        TODO: ADD LIFT ON SCROLL -->
         <com.google.android.material.appbar.MaterialToolbar
             android:background="@color/colorTitleBar"
             android:layout_width="match_parent"
@@ -70,6 +70,13 @@
             >
 
         </com.google.android.material.appbar.MaterialToolbar>
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="40dp"
+            android:background="@color/colorBackground"
+            >
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
