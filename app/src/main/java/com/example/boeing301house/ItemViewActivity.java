@@ -1,8 +1,10 @@
 package com.example.boeing301house;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -180,7 +182,9 @@ public class ItemViewActivity extends AppCompatActivity {
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there
-            setResult(RESULT_OK);
+
+            deleteConfirmationDialog();
+//            setResult(RESULT_OK);
             return true;
         }
         // action not recognized
@@ -191,4 +195,30 @@ public class ItemViewActivity extends AppCompatActivity {
 //    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 //        return super.onOptionsItemSelected(item);
 //    }
+
+    private void deleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to delete this item?");
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent resultIntent = new Intent();
+
+                // adding the position to the intent, can access with key "pos"
+                resultIntent.putExtra("pos", pos);
+                setResult(RESULT_OK, resultIntent);
+
+                // finish closes the activity then goes back to the next activity in stack
+                finish();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }

@@ -14,16 +14,17 @@
         app:liftOnScrollColor="@color/colorTitleBar"
 
         >
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/itemViewMaterialToolBar"
+            style="@style/Widget.Material3.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
+            app:menu="@menu/ab_item_view_bar"
             app:navigationIcon="@drawable/ic_back_button_36dp"
             app:title="Item"
             app:titleMarginBottom="10dp"
-            app:menu="@menu/ab_item_view_bar"
-            style="@style/Widget.Material3.Toolbar"
             app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
 
 
