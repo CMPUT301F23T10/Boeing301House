@@ -13,13 +13,13 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/item_add_edit_app_bar_layout"
+        android:id="@+id/itemAddEditAppBarLayout"
         app:liftOnScroll="true"
         app:liftOnScrollTargetViewId="@id/itemViewScrollView"
         app:liftOnScrollColor="@color/colorTitleBar"
         >
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/item_add_edit_material_tool_bar"
+            android:id="@+id/itemAddEditMaterialToolBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
@@ -54,7 +54,7 @@
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_make"
+                android:id="@+id/updateMake"
                 android:hint="Make"
                 app:helperText="@string/required_field_text"
                 app:helperTextTextColor="@color/required"
@@ -72,13 +72,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintTop_toBottomOf="@id/update_make"
+                app:layout_constraintTop_toBottomOf="@id/updateMake"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_model"
+                android:id="@+id/updateModel"
                 android:hint="Model"
                 app:helperText="@string/required_field_text"
                 app:helperTextTextColor="@color/required"
@@ -96,13 +96,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintTop_toBottomOf="@id/update_model"
+                app:layout_constraintTop_toBottomOf="@id/updateModel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_value"
+                android:id="@+id/updateValue"
                 android:hint="Estimated Value"
                 app:helperText="@string/required_field_text"
                 app:helperTextTextColor="@color/required"
@@ -120,13 +120,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintTop_toBottomOf="@id/update_value"
+                app:layout_constraintTop_toBottomOf="@id/updateValue"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_SN"
+                android:id="@+id/updateSN"
                 android:hint="Serial Number"
                 style="?attr/textInputFilledStyle"
                 >
@@ -140,13 +140,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintTop_toBottomOf="@id/update_SN"
+                app:layout_constraintTop_toBottomOf="@id/updateSN"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_desc"
+                android:id="@+id/updateDesc"
                 android:hint="Description"
                 style="?attr/textInputFilledStyle"
                 >
@@ -159,13 +159,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintTop_toBottomOf="@id/update_desc"
+                app:layout_constraintTop_toBottomOf="@id/updateDesc"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_comment"
+                android:id="@+id/updateComment"
                 android:hint="Comment"
                 style="?attr/textInputFilledStyle"
                 >
@@ -178,13 +178,13 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                app:layout_constraintTop_toBottomOf="@id/update_comment"
+                app:layout_constraintTop_toBottomOf="@id/updateComment"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/update_date"
+                android:id="@+id/updateDate"
                 android:hint="mm/dd/yyyy"
                 app:helperText="*mm/dd/yyyy"
                 app:helperTextTextColor="@color/required"
@@ -214,7 +214,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Confirm"
-        android:id="@+id/update_item_confirm"
+        android:id="@+id/updateItemConfirm"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="40dp">
