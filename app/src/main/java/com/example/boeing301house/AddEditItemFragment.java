@@ -26,6 +26,13 @@ public class AddEditItemFragment extends Fragment {
 
     // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
     // handle passing through an expense object to fragment from activity
+
+    /**
+     * This function creates an instance of the fragment and passes an item to it.
+     * Creates fragment via a no-argument constructor
+     * @param item Parcelable Item object given to fragment
+     * @return fragment instance
+     */
     public static AddEditItemFragment newInstance(Item item) {
         AddEditItemFragment fragment = new AddEditItemFragment();
         Bundle bundle = new Bundle();
@@ -59,8 +66,14 @@ public class AddEditItemFragment extends Fragment {
         void onCancel();
         void onConfirmPressed(Item updatedItem);
     }
+
+
+    // this is the code that will allow the transfer of the updated expense to the main listview
+    /**
+     *
+     * @param context
+     */
     @Override
-    //this is the code that will allow the transfer of the updated expense to the main listview
     public void onAttach(Context context){
         super.onAttach(context);
 
@@ -72,6 +85,12 @@ public class AddEditItemFragment extends Fragment {
             throw new RuntimeException(context.toString() + "must implement onfraglistener");
         }
     }
+
+    /**
+     *
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +103,18 @@ public class AddEditItemFragment extends Fragment {
 //        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 //    }
 
-
+    /**
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -183,6 +213,9 @@ public class AddEditItemFragment extends Fragment {
 
     }
 
+    /**
+     *
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
