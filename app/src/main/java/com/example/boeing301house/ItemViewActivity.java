@@ -39,6 +39,10 @@ public class ItemViewActivity extends AppCompatActivity {
     private Intent returnIntent;
     private int pos; // position of item in list, send back during deletion
 
+    // action codes/constants
+    private static String DELETE_ITEM = "DELETE_ITEM";
+    private static String EDIT_ITEM = "EDIT_ITEM";
+
     private static int update = 1; // for intent (if using activity for add/edit
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,6 +210,7 @@ public class ItemViewActivity extends AppCompatActivity {
 
                 // adding the position to the intent, can access with key "pos"
                 resultIntent.putExtra("pos", pos);
+                resultIntent.putExtra("action", DELETE_ITEM);
                 setResult(RESULT_OK, resultIntent);
 
                 // finish closes the activity then goes back to the next activity in stack
