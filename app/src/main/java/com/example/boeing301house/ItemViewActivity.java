@@ -39,6 +39,7 @@ public class ItemViewActivity extends AppCompatActivity {
     private Intent returnIntent;
     private int pos; // position of item in list, send back during deletion
 
+    private boolean editingItem = false; // only set to true after user presses confirm in edit fragment
     // action codes/constants
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
@@ -144,14 +145,19 @@ public class ItemViewActivity extends AppCompatActivity {
 
         // if edits made -> send new items + pos of item back
         // TODO: write if statement
-        // if sending back
-        //      resultIntent.putExtra ... | add item and position
-        //      setResult(RESULT_OK, resultIntent)
-
-        // if no edits or anything
-        setResult(RESULT_CANCELED);
-        // onBackPressed();
-        finish();
+        if (editingItem) {
+            // if sending back
+            //      send back updated item and position
+            //      resultIntent.putExtra ... | add item and position
+            //      setResult(RESULT_OK, resultIntent)
+            //      set item from list activity (update item properties again)
+        } else {
+            // if no edits or anything
+            setResult(RESULT_CANCELED);
+            // onBackPressed();
+            finish();
+        }
+        
         return true;
     }
 
@@ -179,8 +185,9 @@ public class ItemViewActivity extends AppCompatActivity {
         if (itemId == R.id.itemViewEditButton) {
             // begin editing item
             //      open edit screen
-            //      send back updated item and position
-            //      set item from list activity
+            //      send back updated item
+            //      update item properties here
+            //      finalize edits to list item in navigateup
             return true;
         } else if (itemId == R.id.itemViewDeleteButton) {
             // delete item
