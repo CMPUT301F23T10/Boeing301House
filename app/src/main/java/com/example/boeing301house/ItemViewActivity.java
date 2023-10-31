@@ -41,11 +41,19 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     private int pos; // position of item in list, send back during deletion
 
     private boolean editingItem = false; // only set to true after user presses confirm in edit fragment
-    // action codes/constants
+
+    // action codes/constants to return
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
 
-    private static int update = 1; // for intent (if using activity for add/edit
+    // TODO: finish javadocs
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,6 +157,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         if (editingItem) {
             // if sending back
             //      send back updated item and position
+            //      give confirmation dialog -> RESULT_OK if want, RESULT_CANCELED if not
             //      resultIntent.putExtra ... | add item and position
             //      setResult(RESULT_OK, resultIntent)
             //      set item from list activity (update item properties again)
@@ -162,6 +171,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         return true;
     }
 
+    // TODO: finish javadocs
     /**
      *
      * @param menu The options menu in which you place your items.
@@ -175,7 +185,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     }
 
     /**
-     *
+     * Handle user interaction with app bar menu items
      * @param item The menu item that was selected.
      *
      * @return
@@ -207,7 +217,10 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
 //    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 //        return super.onOptionsItemSelected(item);
 //    }
-
+    // TODO: finish javadocs
+    /**
+     *
+     */
     private void deleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete this item?");
@@ -235,11 +248,27 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         dialog.show();
     }
 
+    // TODO: finish javadocs
+    /**
+     *
+     */
+    private void editConfirmationDialog() {
+        // TODO: add functionality
+    }
+
+    // TODO: finish javadocs
+    /**
+     * Handle if user cancels editing
+     */
     @Override
     public void onCancel() {
         exitAddEditFragment();
     }
 
+    /**
+     * Handle if user edits
+     * @param updatedItem
+     */
     @Override
     public void onConfirmPressed(Item updatedItem) {
         // TODO: add functionality
