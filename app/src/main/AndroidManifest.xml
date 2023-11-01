@@ -21,7 +21,12 @@
             android:name=".ItemListActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"
-            >
+
+            />
+        <activity android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
