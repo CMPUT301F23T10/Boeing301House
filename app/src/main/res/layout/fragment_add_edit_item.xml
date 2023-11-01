@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AddEditItemFragment"
+    android:background="@color/white"
+    android:clickable="true"
+    android:focusable="true"
+    android:id="@+id/itemAddEditContent"
+    >
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/itemAddEditAppBarLayout"
+        app:liftOnScroll="true"
+        app:liftOnScrollTargetViewId="@id/itemViewScrollView"
+        app:liftOnScrollColor="@color/colorTitleBar"
+        >
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/itemAddEditMaterialToolBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_back_button_36dp"
+            app:title="Add/Edit Item"
+            app:titleMarginBottom="10dp"
+            app:menu="@menu/ab_item_add_edit_bar"
+            style="@style/Widget.Material3.Toolbar"
+            app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            >
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_marginBottom="?actionBarSize"
+        android:id="@+id/itemAddEditScrollView"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/itemAddEditConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateMake"
+                android:hint="Make"
+                app:helperText="@string/required_field_text"
+                app:helperTextTextColor="@color/required"
+                app:errorEnabled="true"
+                style="?attr/textInputFilledStyle"
+
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toBottomOf="@id/updateMake"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateModel"
+                android:hint="Model"
+                app:helperText="@string/required_field_text"
+                app:helperTextTextColor="@color/required"
+                app:errorEnabled="true"
+                style="?attr/textInputFilledStyle"
+
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toBottomOf="@id/updateModel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateValue"
+                android:hint="Estimated Value"
+                app:helperText="@string/required_field_text"
+                app:helperTextTextColor="@color/required"
+                app:errorEnabled="true"
+                style="?attr/textInputFilledStyle"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:maxLines="1"
+                    android:inputType="numberDecimal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toBottomOf="@id/updateValue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateSN"
+                android:hint="Serial Number"
+                style="?attr/textInputFilledStyle"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toBottomOf="@id/updateSN"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateDesc"
+                android:hint="Description"
+                style="?attr/textInputFilledStyle"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:inputType="textLongMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toBottomOf="@id/updateDesc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateComment"
+                android:hint="Comment"
+                style="?attr/textInputFilledStyle"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+                    android:inputType="textLongMessage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toBottomOf="@id/updateComment"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateDate"
+                android:hint="mm/dd/yyyy"
+                app:helperText="*mm/dd/yyyy"
+                app:helperTextTextColor="@color/required"
+                style="?attr/textInputFilledStyle"
+                >
+                <com.google.android.material.textfield.TextInputEditText
+
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:id="@+id/updateItemConfirm"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="40dp">
+
+    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+<!--    <Button-->
+<!--        android:id="@+id/confirmButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="confirm"-->
+<!--        android:textSize="12sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/editMake"-->
+<!--        android:layout_width="200sp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignBottom="@id/editModel"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="102dp"-->
+<!--        android:layout_marginBottom="576dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Edit Item Make"-->
+<!--        android:inputType="text"-->
+<!--        android:textAlignment="center" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/itemListTitleText"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="65dp"-->
+<!--        android:layout_marginEnd="63dp"-->
+<!--        android:layout_marginBottom="626dp"-->
+<!--        android:text="Edit/Add Item"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="20sp" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/textView2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="70dp"-->
+<!--        android:layout_marginEnd="58dp"-->
+<!--        android:layout_marginBottom="234dp"-->
+<!--        android:text="Item Comment"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="20sp" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/editComment"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="56dp"-->
+<!--        android:layout_marginEnd="44dp"-->
+<!--        android:layout_marginBottom="19dp"-->
+<!--        android:ems="10"-->
+<!--        android:gravity="top|start"-->
+<!--        android:hint="Edit Comment"-->
+<!--        android:inputType="textMultiLine"-->
+<!--        android:lines="8"-->
+<!--        android:maxLines="10"-->
+<!--        android:scrollbars="vertical"-->
+<!--        android:textSize="10sp" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/editCost"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="53dp"-->
+<!--        android:layout_marginEnd="47dp"-->
+<!--        android:layout_marginBottom="474dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Edit Item Cost"-->
+<!--        android:inputType="number"-->
+<!--        android:textAlignment="center" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/editModel"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_above="@+id/textView2"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginEnd="99dp"-->
+<!--        android:layout_marginBottom="163dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Edit Item Model"-->
+<!--        android:inputType="text"-->
+<!--        android:textAlignment="center" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/editDescription"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_above="@+id/textView2"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginEnd="96dp"-->
+<!--        android:layout_marginBottom="107dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Edit Item Description"-->
+<!--        android:inputType="text|textLongMessage"-->
+<!--        android:textAlignment="center" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/editSN"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_above="@+id/textView2"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginEnd="96dp"-->
+<!--        android:layout_marginBottom="54dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Edit Item SN"-->
+<!--        android:inputType="text|textLongMessage"-->
+<!--        android:textAlignment="center" />-->
+
+<!--    <EditText-->
+<!--        android:id="@+id/editDate"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentStart="true"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginStart="56dp"-->
+<!--        android:layout_marginEnd="44dp"-->
+<!--        android:layout_marginBottom="521dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Edit Item Date"-->
+<!--        android:inputType="date"-->
+<!--        android:textAlignment="center" />-->
+
+

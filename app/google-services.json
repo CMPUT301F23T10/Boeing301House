@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "129874213495",
+    "project_id": "boeing301house",
+    "storage_bucket": "boeing301house.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129874213495:android:3407cc26fd2438926a2472",
+        "android_client_info": {
+          "package_name": "com.example.boeing301house"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnxuuJi2b05K6vXitffDxBajuGJfPT3Ts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
