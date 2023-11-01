@@ -78,7 +78,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private void calculateTotalPrice(){
         float total = 0.0f;
         for(Item item: items){
-            total += item.getCost();
+            total += item.getValue();
         }
         subTotalText.setText(String.format("Total: $%.2f" , total));
     }
