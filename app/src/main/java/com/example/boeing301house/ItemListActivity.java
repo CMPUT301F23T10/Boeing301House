@@ -65,15 +65,31 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      *
      */
+
+    /**
+     * Update the subtotal by calculating the total cost of all items in the list.
+     * This method iterates through the list of items and calculates the sum of their
+     * individual costs to determine the total cost. The result is then displayed to
+     * the user to provide an overview of the total estimated expenses.
+     *
+     * This method should be called when initializing the item list and whenever an item
+     * is added, edited, or deleted to ensure that the total cost is up-to-date.
+     */
+    private void calculateTotalPrice(){
+        float total = 0.0f;
+        for(Item item: items){
+            total += item.getCost();
+        }
+        subTotalText.setText(String.format("Total: $%.2f" , total));
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 
         setContentView(R.layout.activity_item_list);
-//        subTotalText = findViewById(R.id.subtotalText);
+        subTotalText = findViewById(R.id.itemListTotalText);
 
-        updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
         // navgraph
         // NavController navController = Navigation.findNavController(findViewById(R.id.nav_host_fragment));
@@ -88,6 +104,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemList = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, items);
         itemList.setAdapter(itemAdapter);
+//        updateSubtotal(); //sets the subtotal to 0 at the start of the program
+
+
+
 
 
         /**
@@ -116,6 +136,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                     }
                     itemAdapter.notifyDataSetChanged();
+                    calculateTotalPrice();
                 }
             }
         });
@@ -287,7 +308,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
             }
         });
-
+        calculateTotalPrice();
+        itemAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -336,7 +358,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         items.add(updatedItem);
 
         // items.add(updatedItem); // TODO: change?
-
+        calculateTotalPrice();
         itemAdapter.notifyDataSetChanged();
         // updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
 
@@ -370,6 +392,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     Item itemToDelete = items.get(itemIndexToDelete);
                     items.remove(itemIndexToDelete);
                     deleteItemFromFirestore(itemToDelete);
+                    calculateTotalPrice();
                 }
             }
         }
