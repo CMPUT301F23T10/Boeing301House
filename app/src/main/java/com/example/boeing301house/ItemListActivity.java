@@ -107,12 +107,12 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         String make = doc.getString("Make");
                         Long date = doc.getLong("Date");
                         String SN = doc.getString("SN");
-                        Long cost = doc.getLong("Est Value");
+                        Double value = doc.getDouble("Est Value");
                         String desc = doc.getString("Desc");
                         String comment = doc.getString("Comment");
 
                         Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-                        items.add(new Item(make, model, cost.floatValue(), desc, date, SN, comment));
+                        items.add(new Item(make, model, value, desc, date, SN, comment));
 
                     }
                     itemAdapter.notifyDataSetChanged();
@@ -177,9 +177,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int duration = Toast.LENGTH_SHORT;
 //                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
 //                    toast.show();
-                    // Item item = (Item) itemList.getItemAtPosition(i); // for debug
+                     Item item = (Item) itemList.getItemAtPosition(i); // for debug
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
-                    intent.putExtra("Selected Item", (Item) itemList.getItemAtPosition(i));
+                    intent.putExtra("Selected Item", item);
 
                     pos = i;
                     intent.putExtra("pos", pos);
@@ -294,7 +294,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      * UpdateSubtotal just updates the subtotal at the bottom of the screen on the list activity
      */
     private void updateSubtotal(){
-        Float subtotal = 0f;
+        Double subtotal = 0.0;
 
 
     }
@@ -313,7 +313,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemData.put("Model", updatedItem.getModel());
         itemData.put("Date", updatedItem.getDate());
         itemData.put("SN", updatedItem.getSN());
-        itemData.put("Est Value", updatedItem.getCost());
+        itemData.put("Est Value", updatedItem.getValue());
         itemData.put("Desc", updatedItem.getDescription());
         itemData.put("Comment", updatedItem.getComment());
 

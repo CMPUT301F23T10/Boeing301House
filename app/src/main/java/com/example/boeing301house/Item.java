@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -16,7 +17,7 @@ public class Item implements Parcelable {
     // private String itemID; // TODO: make this
     private String make;
     private String model;
-    private float cost;
+    private double value;
     private String description;
     private long date;
 
@@ -29,16 +30,16 @@ public class Item implements Parcelable {
      * Constructor with args
      * @param make
      * @param model
-     * @param cost
+     * @param value
      * @param description
      * @param date
      * @param SN
      * @param comment
      */
-    public Item(String make, String model, float cost, String description, long date, String SN, String comment) {
+    public Item(String make, String model, double value, String description, long date, String SN, String comment) {
         this.make = make;
         this.model = model;
-        this.cost = cost;
+        this.value = value;
         this.description = description;
         this.date = date;
         this.SN = SN;
@@ -49,13 +50,13 @@ public class Item implements Parcelable {
      * Default constructor so that we can construct an item without any given attributes
      */
     public Item(){
-        this.make = "make";
-        this.model = "model";
-        this.cost = 0;
-        this.description = "description";
-        this.date = 0;
-        this.SN = "SN";
-        this.comment = "comment";
+        this.make = "";
+        this.model = "";
+        this.value = 0.0;
+        this.description = "";
+        this.date = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
+        this.SN = "";
+        this.comment = "";
     }
 
     /**
@@ -65,7 +66,7 @@ public class Item implements Parcelable {
     protected Item(Parcel in) {
         make = in.readString();
         model = in.readString();
-        cost = in.readInt();
+        value = in.readDouble();
         description = in.readString();
         date = in.readLong();
         SN = in.readString();
@@ -115,12 +116,12 @@ public class Item implements Parcelable {
         this.model = model;
     }
 
-    public float getCost() {
-        return cost;
+    public double getValue() {
+        return value;
     }
 
-    public void setCost(float cost) {
-        this.cost = cost;
+    public void setValue(double value) {
+        this.value = value;
     }
 
     public String getDescription() {
@@ -141,7 +142,7 @@ public class Item implements Parcelable {
         return dateString;
     }
 
-    public String getCostString(){return String.valueOf(cost);}
+    public String getValueString(){return String.format("%.2f", value);}
 
     public void setDate(long date) {
         this.date = date;
@@ -193,7 +194,7 @@ public class Item implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(make);
         dest.writeString(model);
-        dest.writeFloat(cost);
+        dest.writeDouble(value);
         dest.writeString(description);
         dest.writeLong(date);
         dest.writeString(SN);

@@ -138,7 +138,7 @@ public class AddEditItemFragment extends Fragment {
 //        View view = inflater.inflate(R.layout.add_edit_item_fragment, container, false);
 //        EditText editCost = view.findViewById(R.id.editCost);
 //        editCost.setText(currentItem.getCostString());
-        binding.updateValue.setHint(String.format("Cost: $%s", currentItem.getCostString()));
+        binding.updateValue.setHint(String.format("Cost: $%s", currentItem.getValueString()));
         binding.updateMake.setHint(String.format("Make: %s", currentItem.getMake()));
         binding.updateModel.setHint(String.format("Model: %s", currentItem.getModel()));
         binding.updateDate.setHint(String.format("Date Acquired: %s", currentItem.getDateString()));
@@ -198,7 +198,7 @@ public class AddEditItemFragment extends Fragment {
                 currentItem.setMake(newMake);
                 currentItem.setModel(newModel);
                 currentItem.setDate(newDate);
-                currentItem.setCost(newValue);
+                currentItem.setValue(newValue);
                 currentItem.setSN(newSN);
                 currentItem.setDescription(newDescription);
                 // Item newItem = new Item(newMake, newModel, newValue, newDescription, newDate, newSN, newComment);

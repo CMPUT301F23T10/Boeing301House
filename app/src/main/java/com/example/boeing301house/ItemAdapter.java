@@ -10,10 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.boeing301house.Item;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
     private final Context context;
@@ -63,7 +60,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         //updates all the information from given item to the itemcell, to be displayed in the main listView
         itemModel.setText(item.getModel());
-        itemCost.setText(item.getCostString());
+        itemCost.setText(item.getValueString());
         itemDate.setText(item.getDateString());
         itemSN.setText(item.getSN());
         itemComment.setText(item.getComment());
