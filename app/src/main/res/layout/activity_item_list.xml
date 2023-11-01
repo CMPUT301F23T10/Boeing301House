@@ -49,7 +49,6 @@
             android:id="@+id/itemListTotalText"
             android:textColor="@color/white"
             style="@style/TextAppearance.Material3.TitleMedium">
-            <!--    TODO: SEPARATE "Total: $" from actual cost (or just string format)   -->
         </TextView>
 
     </com.google.android.material.bottomappbar.BottomAppBar>

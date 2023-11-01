@@ -3,6 +3,7 @@ package com.example.boeing301house;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Class for item view activity (lets user view specific item)
  */
-public class ItemViewActivity extends AppCompatActivity {
+public class ItemViewActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
     private Item selectedItem; // item user selected
     private String SN;
     private String model;
@@ -39,7 +40,20 @@ public class ItemViewActivity extends AppCompatActivity {
     private Intent returnIntent;
     private int pos; // position of item in list, send back during deletion
 
-    private static int update = 1; // for intent (if using activity for add/edit
+    private boolean editingItem = false; // only set to true after user presses confirm in edit fragment
+
+    // action codes/constants to return
+    private static String DELETE_ITEM = "DELETE_ITEM";
+    private static String EDIT_ITEM = "EDIT_ITEM";
+
+    // TODO: finish javadocs
+    /**
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,17 +154,24 @@ public class ItemViewActivity extends AppCompatActivity {
 
         // if edits made -> send new items + pos of item back
         // TODO: write if statement
-        // if sending back
-        //      resultIntent.putExtra ... | add item and position
-        //      setResult(RESULT_OK, resultIntent)
+        if (editingItem) {
+            // if sending back
+            //      send back updated item and position
+            //      give confirmation dialog -> RESULT_OK if want, RESULT_CANCELED if not
+            //      resultIntent.putExtra ... | add item and position
+            //      setResult(RESULT_OK, resultIntent)
+            //      set item from list activity (update item properties again)
+        } else {
+            // if no edits or anything
+            setResult(RESULT_CANCELED);
+            // onBackPressed();
+            finish();
+        }
 
-        // if no edits or anything
-        setResult(RESULT_CANCELED);
-        // onBackPressed();
-        finish();
         return true;
     }
 
+    // TODO: finish javadocs
     /**
      *
      * @param menu The options menu in which you place your items.
@@ -164,7 +185,7 @@ public class ItemViewActivity extends AppCompatActivity {
     }
 
     /**
-     *
+     * Handle user interaction with app bar menu items
      * @param item The menu item that was selected.
      *
      * @return
@@ -175,8 +196,9 @@ public class ItemViewActivity extends AppCompatActivity {
         if (itemId == R.id.itemViewEditButton) {
             // begin editing item
             //      open edit screen
-            //      send back updated item and position
-            //      set item from list activity
+            //      send back updated item
+            //      update item properties here
+            //      finalize edits to list item in navigateup
             return true;
         } else if (itemId == R.id.itemViewDeleteButton) {
             // delete item
@@ -195,7 +217,10 @@ public class ItemViewActivity extends AppCompatActivity {
 //    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 //        return super.onOptionsItemSelected(item);
 //    }
-
+    // TODO: finish javadocs
+    /**
+     *
+     */
     private void deleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to delete this item?");
@@ -206,6 +231,7 @@ public class ItemViewActivity extends AppCompatActivity {
 
                 // adding the position to the intent, can access with key "pos"
                 resultIntent.putExtra("pos", pos);
+                resultIntent.putExtra("action", DELETE_ITEM);
                 setResult(RESULT_OK, resultIntent);
 
                 // finish closes the activity then goes back to the next activity in stack
@@ -220,5 +246,40 @@ public class ItemViewActivity extends AppCompatActivity {
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    // TODO: finish javadocs
+    /**
+     *
+     */
+    private void editConfirmationDialog() {
+        // TODO: add functionality
+    }
+
+    // TODO: finish javadocs
+    /**
+     * Handle if user cancels editing
+     */
+    @Override
+    public void onCancel() {
+        exitAddEditFragment();
+    }
+
+    /**
+     * Handle if user edits
+     * @param updatedItem
+     */
+    @Override
+    public void onConfirmPressed(Item updatedItem) {
+        // TODO: add functionality
+
+        exitAddEditFragment();
+    }
+
+    private void exitAddEditFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("VIEW_TO_EDIT");
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
     }
 }
