@@ -91,14 +91,15 @@
                     app:layout_constraintEnd_toStartOf="@id/itemListFilter"
                     android:orientation="horizontal"
                     >
-                    <TextView
+
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="SORT"
-                        style="@style/TextAppearance.Material3.LabelMedium"
+                        style="@style/Widget.Material3.Button.TextButton"
                         >
 
-                    </TextView>
+                    </Button>
                 </LinearLayout>
 
                 <LinearLayout
@@ -112,13 +113,13 @@
                     app:layout_constraintStart_toEndOf="@id/itemListSort"
                     android:orientation="horizontal"
                     >
-                    <TextView
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="FILTER"
-                        style="@style/TextAppearance.Material3.LabelMedium"
+                        style="@style/Widget.Material3.Button.TextButton"
                         >
-                    </TextView>
+                    </Button>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
