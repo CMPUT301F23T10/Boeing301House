@@ -274,6 +274,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     // deselect all items -> no longer selecting multiple
                     if (selectedItems.size() == 0) {
                         isSelectMultiple = false;
+                        itemMultiSelectMode.finish(); // close contextual app bar
                     }
                     // if delete multiple btn pressed -> isSelectMultiple = false
                         // selectedItems.clear();
