@@ -463,6 +463,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      * Create callback functions for actionmode appbar
      */
     private ActionMode.Callback itemMultiSelectModeCallback = new ActionMode.Callback() {
+        // TODO: finish javadocs
+        /**
+         *
+         * @param mode ActionMode being created
+         * @param menu Menu used to populate action buttons
+         * @return
+         */
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
@@ -474,12 +481,24 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             }
             return true;
         }
-
+        // TODO: finish javadocs
+        /**
+         *
+         * @param mode ActionMode being prepared
+         * @param menu Menu used to populate action buttons
+         * @return
+         */
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
         }
-
+        // TODO: finish javadocs
+        /**
+         *
+         * @param mode The current ActionMode
+         * @param item The item that was clicked
+         * @return
+         */
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             // handle user tap on delete
@@ -502,7 +521,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             }
             return false;
         }
-
+        // TODO: finish javadocs
+        /**
+         *
+         * @param mode The current ActionMode being destroyed
+         */
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             isSelectMultiple = false;
