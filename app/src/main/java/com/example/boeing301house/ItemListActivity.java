@@ -401,6 +401,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // if we returned RESULT_OK that means we want to delete an item
         if (resultCode == RESULT_OK) {
             String action = data.getStringExtra("action");
+            assert action != null;
             if (action.contentEquals(DELETE_ITEM)) {
                 // getting the position data, if it cant find pos it defaults to -1
                 int itemIndexToDelete = data.getIntExtra("pos", -1);
@@ -469,6 +470,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
          */
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
+
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
             int n = selectedItems.size();
             if (n == 0) {
@@ -533,6 +536,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             selectedItems.clear();
             itemMultiSelectMode = null;
             itemAdapter.notifyDataSetChanged();
+            findViewById(R.id.itemListSFBar).setVisibility(View.VISIBLE); // temp
         }
     };
 

@@ -76,6 +76,7 @@
             android:minHeight="40dp"
             android:background="@color/colorBackground"
             android:visibility="visible"
+            android:id="@+id/itemListSFBar"
             >
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

@@ -298,6 +298,12 @@ public class AddEditItemFragment extends Fragment {
 
     private boolean checkFields() {
         boolean isFilled = true;
+        // reset errors
+        binding.updateModel.setError("");
+        binding.updateMake.setError("");
+        binding.updateValue.setError("");
+        binding.updateDate.setError("");
+
         if (Objects.requireNonNull(binding.updateModel.getEditText()).length() == 0) {
             binding.updateModel.setError("This field is required");
             isFilled = false;
