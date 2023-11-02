@@ -3,10 +3,14 @@ package com.example.boeing301house;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,6 +60,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     // action codes
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
+
+    // for contextual appbar
+    private ActionMode itemMultiSelectMode;
 
     // TODO: finish javadocs
     /**
@@ -167,6 +174,12 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    selectedItemViews.add(view);
                     selectedItems.add(current);
                     view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+
+                    // contextual app bar
+                    if (itemMultiSelectMode != null) {
+                        return false;
+                    }
+                    itemMultiSelectMode = startActionMode(itemMultiSelectModeCallback); // TODO: convert to startSupportActionBar
 
                     // for testing
 //                    CharSequence text = "Selecting multiple";
@@ -438,4 +451,44 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
     }
+
+    // TODO: FINISH JAVADOCS
+    /**
+     * Create callback functions for actionmode appbar
+     */
+    private ActionMode.Callback itemMultiSelectModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
+            int n = selectedItems.size();
+            if (n == 0) {
+                mode.setTitle("Select Items"); // tell user to select items (when none selected yet)
+            } else {
+                mode.setTitle(String.format("Selected %d Items", n)); // show user how many items selected
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // handle user tap on delete
+            if (item.getItemId() == R.id.itemMultiselectDelete) {
+                Toast.makeText(ItemListActivity.this, String.format("Deleting %d items", selectedItems.size()),
+                        Toast.LENGTH_SHORT).show(); // for testing
+                mode.finish(); // end
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            itemMultiSelectMode = null;
+        }
+    };
 }
