@@ -41,15 +41,16 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     private FirebaseFirestore db;
     private CollectionReference itemsRef;
-    private ListView itemList;
+    private ListView itemListView;
 //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
     private TextView subTotalText;
-    public ArrayList<Item> items;
+    public ArrayList<Item> itemList;
 
 //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
+    private ArrayList<Integer> selectedItemsPositions; // TODO: just get these values from adapter (via tags or sum)
     private boolean isSelectMultiple;
 
     private int pos;
@@ -85,7 +86,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     private void calculateTotalPrice(){
         float total = 0.0f;
-        for(Item item: items){
+        for(Item item: itemList){
             total += item.getValue();
         }
         subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
@@ -107,11 +108,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
         itemsRef = db.collection("items"); // switch to items_test to test adding
 
-        items = new ArrayList<>();
+        itemList = new ArrayList<>();
 
-        itemList = findViewById(R.id.itemList); // binds the city list to the xml file
-        itemAdapter = new ItemAdapter(getApplicationContext(), 0, items);
-        itemList.setAdapter(itemAdapter);
+        itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
+        itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
+        itemListView.setAdapter(itemAdapter);
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
 
@@ -129,7 +130,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     return;
                 }
                 if (snapshots != null) {
-                    items.clear();
+                    itemList.clear();
                     for (QueryDocumentSnapshot doc: snapshots) {
                         String model = doc.getString("Model");
                         String make = doc.getString("Make");
@@ -140,7 +141,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         String comment = doc.getString("Comment");
 
                         Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-                        items.add(new Item(make, model, value, desc, date, SN, comment));
+                        itemList.add(new Item(make, model, value, desc, date, SN, comment));
 
                     }
                     itemAdapter.notifyDataSetChanged();
@@ -158,9 +159,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         // select multiple initialization:
         selectedItems = new ArrayList<>();
-
+        selectedItemsPositions = new ArrayList<>();
         // Handle multiselect first step
-        itemList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        itemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             /**
              * When an item is long pressed
@@ -169,11 +170,12 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 // begin select multiple
 
                 if (!isSelectMultiple) {
-                    Item current = (Item) itemList.getItemAtPosition(position);
+                    Item current = (Item) itemListView.getItemAtPosition(position);
                     current.select();
-                    isSelectMultiple= true;
+                    isSelectMultiple = true;
 //                    selectedItemViews.add(view);
                     selectedItems.add(current);
+                    selectedItemsPositions.add(position);
                     view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 
                     // contextual app bar
@@ -195,7 +197,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
         // handle item selection during multiselect and regular selection
-        itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             // TODO: finish javadocs
             /**
              * When an item is clicked from the list
@@ -212,7 +214,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int duration = Toast.LENGTH_SHORT;
 //                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
 //                    toast.show();
-                    Item item = (Item) itemList.getItemAtPosition(i); // for debug
+                    Item item = (Item) itemListView.getItemAtPosition(i); // for debug
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
                     intent.putExtra("Selected Item", item);
 
@@ -250,10 +252,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int temp = i;
 //                    ListView tempItems = itemList;
 //                    selectedItemViews.size();
-                    Item current = (Item) itemList.getItemAtPosition(i);
+                    Item current = (Item) itemListView.getItemAtPosition(i);
 
                     if (selectedItems.contains(current)) {
                         current.deselect();
+                        selectedItemsPositions.remove( (Integer) i);
 //                        selectedItemViews.remove(view);
                         selectedItems.remove(current);
                         view.setBackgroundColor(0); // visually deselect
@@ -263,6 +266,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         current.select();
 //                        selectedItemViews.add(view);
                         selectedItems.add(current);
+                        selectedItemsPositions.add(i);
                         view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 //                        text = "adding another";
                     }
@@ -370,7 +374,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 });
 
 
-        items.add(updatedItem);
+        itemList.add(updatedItem);
 
         // items.add(updatedItem); // TODO: change?
         calculateTotalPrice();
@@ -404,8 +408,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 // getting the position data, if it cant find pos it defaults to -1
                 int itemIndexToDelete = data.getIntExtra("pos", -1);
                 if (itemIndexToDelete != -1) {
-                    Item itemToDelete = items.get(itemIndexToDelete);
-                    items.remove(itemIndexToDelete);
+                    Item itemToDelete = itemList.get(itemIndexToDelete);
+                    itemList.remove(itemIndexToDelete);
                     deleteItemFromFirestore(itemToDelete);
                     calculateTotalPrice();
                 }
@@ -485,12 +489,39 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 mode.finish(); // end
                 return true;
             }
+            // handle user tap on tag
+            else if (item.getItemId() == R.id.itemMultiselectTag) {
+                // TODO: add tag dialog (pref maybe bottomsheet)
+
+                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Add tags to %d items", selectedItems.size()),
+                        Toast.LENGTH_SHORT).show(); // for testing
+                return true;
+            }
             return false;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            isSelectMultiple = false;
+            for (Item item : selectedItems) {
+                // selectedItems.get(i).deselect();
+                item.deselect();
+            }
+            selectedItems.clear();
+            selectedItemsPositions.clear();
             itemMultiSelectMode = null;
+            itemAdapter.notifyDataSetChanged();
         }
     };
+
+    /**
+     * This function deletes selected items
+     */
+    private void deleteSelectedItems() {
+        for (Item item : selectedItems) {
+            
+        }
+        selectedItems.clear();
+        selectedItemsPositions.clear();
+    }
 }
