@@ -53,6 +53,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      *     previously being shut down then this Bundle contains the data it most
      *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      *
+     * @throws IllegalArgumentException If no item is given
+     *
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
