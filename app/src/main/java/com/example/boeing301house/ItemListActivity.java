@@ -486,6 +486,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             if (item.getItemId() == R.id.itemMultiselectDelete) {
                 Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
                         Toast.LENGTH_SHORT).show(); // for testing
+
+                // TODO: add confirmation prompt
                 deleteSelectedItems();
                 mode.finish(); // end
                 return true;
