@@ -515,7 +515,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                }
 //
 //
-//                // TODO: add confirmation prompt
 //
 //                return false;
             }
