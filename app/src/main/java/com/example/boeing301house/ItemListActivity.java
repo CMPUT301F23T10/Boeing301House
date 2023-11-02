@@ -50,7 +50,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
-    private ArrayList<Integer> selectedItemsPositions; // TODO: just get these values from adapter (via tags or sum)
+
     private boolean isSelectMultiple;
 
     private int pos;
@@ -159,7 +159,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         // select multiple initialization:
         selectedItems = new ArrayList<>();
-        selectedItemsPositions = new ArrayList<>();
+
         // Handle multiselect first step
         itemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -175,7 +175,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     isSelectMultiple = true;
 //                    selectedItemViews.add(view);
                     selectedItems.add(current);
-                    selectedItemsPositions.add(position);
                     view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 
                     // contextual app bar
@@ -256,7 +255,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                     if (selectedItems.contains(current)) {
                         current.deselect();
-                        selectedItemsPositions.remove( (Integer) i);
 //                        selectedItemViews.remove(view);
                         selectedItems.remove(current);
                         view.setBackgroundColor(0); // visually deselect
@@ -266,7 +264,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         current.select();
 //                        selectedItemViews.add(view);
                         selectedItems.add(current);
-                        selectedItemsPositions.add(i);
                         view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 //                        text = "adding another";
                     }
@@ -534,7 +531,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 item.deselect();
             }
             selectedItems.clear();
-            selectedItemsPositions.clear();
             itemMultiSelectMode = null;
             itemAdapter.notifyDataSetChanged();
         }
@@ -549,6 +545,5 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             deleteItemFromFirestore(item);
         }
         selectedItems.clear();
-        selectedItemsPositions.clear();
     }
 }
