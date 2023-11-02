@@ -204,7 +204,7 @@ public class AddEditItemFragment extends Fragment {
 
                 if (isAdd)
                 {
-                    if(checkFields()) {
+                    if(!checkFields()) {
                         newValue = Double.parseDouble(newValueString);
 
                         currentItem.setComment(newComment);
@@ -297,30 +297,35 @@ public class AddEditItemFragment extends Fragment {
     }
 
     private boolean checkFields() {
-        boolean isFilled = true;
+        boolean isError = false;
         // reset errors
         binding.updateModel.setError("");
         binding.updateMake.setError("");
         binding.updateValue.setError("");
         binding.updateDate.setError("");
 
+        Long currentDate = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
+
         if (Objects.requireNonNull(binding.updateModel.getEditText()).length() == 0) {
             binding.updateModel.setError("This field is required");
-            isFilled = false;
+            isError = true;
         }
         if (Objects.requireNonNull(binding.updateMake.getEditText()).length() == 0) {
             binding.updateMake.setError("This field is required");
-            isFilled = false;
+            isError = true;
         }
         if (Objects.requireNonNull(binding.updateValue.getEditText()).length() == 0) {
             binding.updateValue.setError("This field is required");
-            isFilled = false;
+            isError = true;
         }
         if (Objects.requireNonNull(binding.updateDate.getEditText()).length() == 0) {
             binding.updateDate.setError("This field is required");
-            isFilled = false;
+            isError = true;
+        } else if (newDate > currentDate) {
+            binding.updateDate.setError("Invalid Date");
+            isError = true;
         }
 
-        return isFilled;
+        return isError;
     }
 }
