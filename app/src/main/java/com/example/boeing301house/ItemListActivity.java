@@ -486,6 +486,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             if (item.getItemId() == R.id.itemMultiselectDelete) {
                 Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
                         Toast.LENGTH_SHORT).show(); // for testing
+                deleteSelectedItems();
                 mode.finish(); // end
                 return true;
             }
@@ -519,7 +520,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     private void deleteSelectedItems() {
         for (Item item : selectedItems) {
-            
+            itemList.remove(item);
+            deleteItemFromFirestore(item);
         }
         selectedItems.clear();
         selectedItemsPositions.clear();
