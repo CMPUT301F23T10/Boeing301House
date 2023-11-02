@@ -31,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 // TODO: finish javadocs
 /**
@@ -87,7 +88,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         for(Item item: items){
             total += item.getValue();
         }
-        subTotalText.setText(String.format("Total: $%.2f" , total));
+        subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,7 +212,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int duration = Toast.LENGTH_SHORT;
 //                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
 //                    toast.show();
-                     Item item = (Item) itemList.getItemAtPosition(i); // for debug
+                    Item item = (Item) itemList.getItemAtPosition(i); // for debug
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
                     intent.putExtra("Selected Item", item);
 
@@ -267,7 +268,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     }
 
 //                    selectedItemViews.size();
-
+                    itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", selectedItems.size()));
 
 
                     // deselect all items -> no longer selecting multiple
@@ -325,14 +326,14 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * UpdateSubtotal just updates the subtotal at the bottom of the screen on the list activity
-     */
-    private void updateSubtotal(){
-        Double subtotal = 0.0;
-
-
-    }
+//    /**
+//     * UpdateSubtotal just updates the subtotal at the bottom of the screen on the list activity
+//     */
+//    private void updateSubtotal(){
+//        Double subtotal = 0.0;
+//
+//
+//    }
 
     /**
      * This function calls when the confirm button is pressed in the listActivity, and the new updated information is passed down from the edit/add screen to this class
@@ -464,7 +465,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             if (n == 0) {
                 mode.setTitle("Select Items"); // tell user to select items (when none selected yet)
             } else {
-                mode.setTitle(String.format("Selected %d Items", n)); // show user how many items selected
+                mode.setTitle(String.format(Locale.CANADA,"Selected %d Items", n)); // show user how many items selected
             }
             return true;
         }
@@ -478,7 +479,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             // handle user tap on delete
             if (item.getItemId() == R.id.itemMultiselectDelete) {
-                Toast.makeText(ItemListActivity.this, String.format("Deleting %d items", selectedItems.size()),
+                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
                         Toast.LENGTH_SHORT).show(); // for testing
                 mode.finish(); // end
                 return true;
