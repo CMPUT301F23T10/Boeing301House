@@ -142,7 +142,7 @@ public class Item implements Parcelable {
         return dateString;
     }
 
-    public String getValueString(){return String.format("%.2f", value);}
+    public String getValueString(){return String.format(Locale.CANADA,"%.2f", value);}
 
     public void setDate(long date) {
         this.date = date;
