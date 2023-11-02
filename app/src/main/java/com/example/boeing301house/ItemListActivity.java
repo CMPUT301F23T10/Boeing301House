@@ -1,5 +1,6 @@
 package com.example.boeing301house;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -503,13 +505,19 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             // handle user tap on delete
             if (item.getItemId() == R.id.itemMultiselectDelete) {
-                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
-                        Toast.LENGTH_SHORT).show(); // for testing
-
-                // TODO: add confirmation prompt
-                deleteSelectedItems();
-                mode.finish(); // end
-                return true;
+                deleteConfirmationDialog(mode);
+//                if (deleteConfirmationDialog())
+//                {
+//                    Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
+//                            Toast.LENGTH_SHORT).show(); // for testing
+//                    mode.finish(); // end
+//                    return true;
+//                }
+//
+//
+//                // TODO: add confirmation prompt
+//
+//                return false;
             }
             // handle user tap on tag
             else if (item.getItemId() == R.id.itemMultiselectTag) {
@@ -549,5 +557,34 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             deleteItemFromFirestore(item);
         }
         selectedItems.clear();
+    }
+
+    private boolean deleteConfirmationDialog(ActionMode mode) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Delete");
+        builder.setMessage(String.format(Locale.CANADA, "Are you sure you want to delete %d items?", selectedItems.size()));
+        final boolean[] isDelete = new boolean[1];
+        isDelete[0] = false;
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteSelectedItems();
+                mode.finish();
+                isDelete[0] = true;
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                isDelete[0] = false;
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        return isDelete[0];
     }
 }

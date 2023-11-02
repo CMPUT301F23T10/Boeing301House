@@ -223,6 +223,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      */
     private void deleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Delete");
         builder.setMessage("Are you sure you want to delete this item?");
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
