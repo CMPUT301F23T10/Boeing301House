@@ -187,6 +187,7 @@ public class AddEditItemFragment extends Fragment {
 
                         }, year, month, day // initial state
                 );
+                datePickerDialog.getDatePicker().setMaxDate(itemCalendarDate.getTimeInMillis() + 1000);
                 datePickerDialog.show();
 
             }
@@ -321,10 +322,11 @@ public class AddEditItemFragment extends Fragment {
         if (Objects.requireNonNull(binding.updateDate.getEditText()).length() == 0) {
             binding.updateDate.setError("This field is required");
             isError = true;
-        } else if (newDate > currentDate) {
-            binding.updateDate.setError("Invalid Date");
-            isError = true;
         }
+//        } else if (newDate > currentDate) {
+//            binding.updateDate.setError("Invalid Date");
+//            isError = true;
+//        }
 
         return isError;
     }
