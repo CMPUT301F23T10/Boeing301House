@@ -12,6 +12,7 @@
     <color name="colorDelete">#DD3028</color>
     <color name="colorScanButtonOn">#56CCFB</color>
     <color name="required">#DD3028</color>
+    <color name="textBoxColor">#DFF1F0</color>
 
     <!--  might not use  -->
     <color name="colorBackground">#DFF1F0</color>
