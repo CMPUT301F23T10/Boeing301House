@@ -505,7 +505,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             // handle user tap on delete
             if (item.getItemId() == R.id.itemMultiselectDelete) {
-                deleteConfirmationDialog(mode);
+                return deleteConfirmationDialog(mode);
 //                if (deleteConfirmationDialog())
 //                {
 //                    Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
