@@ -19,19 +19,9 @@
 
     </ListView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/addButton"
 
-        app:srcCompat = "@drawable/ic_add_button_24dp"
-        android:layout_marginBottom="?actionBarSize"
-        app:layout_anchor="@id/itemList"
-        app:layout_anchorGravity="bottom|right"
-        android:contentDescription="Add item"
-        >
 <!--        TODO: FIX POSITION -->
-    </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:layout_width="match_parent"
@@ -52,6 +42,19 @@
         </TextView>
 
     </com.google.android.material.bottomappbar.BottomAppBar>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addButton"
+        android:backgroundTint="@color/colorHighlight"
+
+        app:srcCompat = "@drawable/ic_add_button_24dp"
+
+        app:layout_anchor="@id/itemListTotalBar"
+        app:layout_anchorGravity="bottom|right"
+        android:contentDescription="Add item"
+        />
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/itemListAppBar"
         android:layout_width="match_parent"
@@ -76,6 +79,7 @@
             android:minHeight="40dp"
             android:background="@color/colorBackground"
             android:visibility="visible"
+            android:id="@+id/itemListSFBar"
             >
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -91,14 +95,15 @@
                     app:layout_constraintEnd_toStartOf="@id/itemListFilter"
                     android:orientation="horizontal"
                     >
-                    <TextView
+
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="SORT"
-                        style="@style/TextAppearance.Material3.LabelMedium"
+                        style="@style/Widget.Material3.Button.TextButton"
                         >
 
-                    </TextView>
+                    </Button>
                 </LinearLayout>
 
                 <LinearLayout
@@ -112,13 +117,13 @@
                     app:layout_constraintStart_toEndOf="@id/itemListSort"
                     android:orientation="horizontal"
                     >
-                    <TextView
+                    <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="FILTER"
-                        style="@style/TextAppearance.Material3.LabelMedium"
+                        style="@style/Widget.Material3.Button.TextButton"
                         >
-                    </TextView>
+                    </Button>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>

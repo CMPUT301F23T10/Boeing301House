@@ -14,7 +14,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Calendar;
+import java.util.Locale;
+import java.util.Objects;
 
 /**
  * Fragment for Adding and Editing items
@@ -43,23 +47,24 @@ public class AddEditItemFragment extends Fragment {
 
 
 
-    private FragmentAddEditItemBinding binding; //used to accsess the things in add_edit_item_fragment_view.xml
+    private FragmentAddEditItemBinding binding; //used to access the things in add_edit_item_fragment_view.xml
 
     private String newMake;
     private String newModel;
 
-    private Float newValue;
+    private double newValue;
 
     private String newComment;
     private String newDescription;
 
-    private Long newDate;
+    private Long newDate = null;
 
     private String newSN;
 
     private Calendar itemCalendarDate;
 
     private OnAddEditFragmentInteractionListener listener;
+    private boolean isAdd = true; // if adding item
 
     // TODO: finish javadoc
     /**
@@ -141,12 +146,16 @@ public class AddEditItemFragment extends Fragment {
         binding.updateValue.setHint(String.format("Cost: $%s", currentItem.getValueString()));
         binding.updateMake.setHint(String.format("Make: %s", currentItem.getMake()));
         binding.updateModel.setHint(String.format("Model: %s", currentItem.getModel()));
-        binding.updateDate.setHint(String.format("Date Acquired: %s", currentItem.getDateString()));
+        if (isAdd) {
+            binding.updateDate.setHint("Date Acquired: mm/dd/yyyy");
+        } else {
+            binding.updateDate.setHint(String.format("Date Acquired: %s", currentItem.getDateString()));
+        }
+
         binding.updateSN.setHint(String.format("SN: %s", currentItem.getSN()));
         binding.updateComment.setHint(String.format("Comment: %s", currentItem.getComment()));
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
 
-        // TODO: SET UP INPUT VALIDATION
         binding.updateDate.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,7 +174,7 @@ public class AddEditItemFragment extends Fragment {
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                                 itemCalendarDate.set(year, month, dayOfMonth);
-                                binding.updateDate.getEditText().setText(String.format("%02d/%02d/%d", month + 1, dayOfMonth, year));
+                                binding.updateDate.getEditText().setText(String.format(Locale.CANADA,"%02d/%02d/%d", month + 1, dayOfMonth, year));
 
 
                                  newDate = itemCalendarDate.getTimeInMillis();
@@ -188,9 +197,69 @@ public class AddEditItemFragment extends Fragment {
             public void onClick(View view) {
                 newMake = binding.updateMake.getEditText().getText().toString();
                 newModel = binding.updateModel.getEditText().getText().toString();
+                String newValueString = binding.updateValue.getEditText().getText().toString();
+                newComment = binding.updateComment.getEditText().getText().toString();
+                newSN = binding.updateSN.getEditText().getText().toString();
+                newDescription = binding.updateDesc.getEditText().getText().toString();
+
+                if (isAdd)
+                {
+                    if(!checkFields()) {
+                        newValue = Double.parseDouble(newValueString);
+
+                        currentItem.setComment(newComment);
+                        currentItem.setMake(newMake);
+                        currentItem.setModel(newModel);
+                        currentItem.setDate(newDate);
+                        currentItem.setValue(newValue);
+                        currentItem.setSN(newSN);
+                        currentItem.setDescription(newDescription);
+
+                        listener.onConfirmPressed(currentItem); // transfers the new data to main
+                    }
+
+                } else { //TODO: no clue if this is right lol
+                    // during edit: replace empty fields with item vals
+                    if (StringUtils.isBlank(newMake)) {
+                        newMake = currentItem.getMake();
+                    }
+                    if (StringUtils.isBlank(newComment)) {
+                        newComment = currentItem.getComment();
+                    }
+                    if (StringUtils.isBlank(newModel)) {
+                        newModel = currentItem.getModel();
+                    }
+                    if (newDate == null) {
+                        newDate = currentItem.getDate();
+                    }
+                    if (StringUtils.isBlank(newValueString)) {
+                        newValue = currentItem.getValue();
+                    } else {
+                        newValue = Double.parseDouble(newValueString);
+                    }
+                    if (StringUtils.isBlank(newSN)) {
+                        newSN = currentItem.getSN();
+                    }
+                    if (StringUtils.isBlank(newDescription)) {
+                        newDescription = currentItem.getDescription();
+                    }
+
+                    currentItem.setComment(newComment);
+                    currentItem.setMake(newMake);
+                    currentItem.setModel(newModel);
+                    currentItem.setDate(newDate);
+                    currentItem.setValue(newValue);
+                    currentItem.setSN(newSN);
+                    currentItem.setDescription(newDescription);
+                    listener.onConfirmPressed(currentItem);
+
+                }
+
+                /*
+                newMake = binding.updateMake.getEditText().getText().toString();
+                newModel = binding.updateModel.getEditText().getText().toString();
                 newValue = Float.parseFloat(binding.updateValue.getEditText().getText().toString());
                 newComment = binding.updateComment.getEditText().getText().toString();
-                // newDate = Long.parseLong(binding.updateDate.getEditText().getText().toString());
                 newSN = binding.updateSN.getEditText().getText().toString();
                 newDescription = binding.updateDesc.getEditText().getText().toString();
 
@@ -201,10 +270,12 @@ public class AddEditItemFragment extends Fragment {
                 currentItem.setValue(newValue);
                 currentItem.setSN(newSN);
                 currentItem.setDescription(newDescription);
+
+
                 // Item newItem = new Item(newMake, newModel, newValue, newDescription, newDate, newSN, newComment);
 
                 listener.onConfirmPressed(currentItem); // transfers the new data to main
-
+                */
 
 
                 // deleteFrag(); //this removes the current fragment
@@ -223,5 +294,38 @@ public class AddEditItemFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private boolean checkFields() {
+        boolean isError = false;
+        // reset errors
+        binding.updateModel.setError("");
+        binding.updateMake.setError("");
+        binding.updateValue.setError("");
+        binding.updateDate.setError("");
+
+        Long currentDate = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
+
+        if (Objects.requireNonNull(binding.updateModel.getEditText()).length() == 0) {
+            binding.updateModel.setError("This field is required");
+            isError = true;
+        }
+        if (Objects.requireNonNull(binding.updateMake.getEditText()).length() == 0) {
+            binding.updateMake.setError("This field is required");
+            isError = true;
+        }
+        if (Objects.requireNonNull(binding.updateValue.getEditText()).length() == 0) {
+            binding.updateValue.setError("This field is required");
+            isError = true;
+        }
+        if (Objects.requireNonNull(binding.updateDate.getEditText()).length() == 0) {
+            binding.updateDate.setError("This field is required");
+            isError = true;
+        } else if (newDate > currentDate) {
+            binding.updateDate.setError("Invalid Date");
+            isError = true;
+        }
+
+        return isError;
     }
 }

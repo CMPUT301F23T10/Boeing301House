@@ -1,15 +1,21 @@
 package com.example.boeing301house;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -27,6 +33,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 
 // TODO: finish javadocs
 /**
@@ -36,15 +43,16 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     private FirebaseFirestore db;
     private CollectionReference itemsRef;
-    private ListView itemList;
+    private ListView itemListView;
 //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
     private TextView subTotalText;
-    public ArrayList<Item> items;
+    public ArrayList<Item> itemList;
 
 //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
+
     private boolean isSelectMultiple;
 
     private int pos;
@@ -56,6 +64,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     // action codes
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
+
+    // for contextual appbar
+    private ActionMode itemMultiSelectMode;
 
     // TODO: finish javadocs
     /**
@@ -77,10 +88,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     private void calculateTotalPrice(){
         float total = 0.0f;
-        for(Item item: items){
+        for(Item item: itemList){
             total += item.getValue();
         }
-        subTotalText.setText(String.format("Total: $%.2f" , total));
+        subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,11 +110,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
         itemsRef = db.collection("items"); // switch to items_test to test adding
 
-        items = new ArrayList<>();
+        itemList = new ArrayList<>();
 
-        itemList = findViewById(R.id.itemList); // binds the city list to the xml file
-        itemAdapter = new ItemAdapter(getApplicationContext(), 0, items);
-        itemList.setAdapter(itemAdapter);
+        itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
+        itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
+        itemListView.setAdapter(itemAdapter);
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
 
 
@@ -121,7 +132,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     return;
                 }
                 if (snapshots != null) {
-                    items.clear();
+                    itemList.clear();
                     for (QueryDocumentSnapshot doc: snapshots) {
                         String model = doc.getString("Model");
                         String make = doc.getString("Make");
@@ -132,7 +143,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         String comment = doc.getString("Comment");
 
                         Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-                        items.add(new Item(make, model, value, desc, date, SN, comment));
+                        itemList.add(new Item(make, model, value, desc, date, SN, comment));
 
                     }
                     itemAdapter.notifyDataSetChanged();
@@ -152,7 +163,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         selectedItems = new ArrayList<>();
 
         // Handle multiselect first step
-        itemList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        itemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             /**
              * When an item is long pressed
@@ -161,12 +172,18 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 // begin select multiple
 
                 if (!isSelectMultiple) {
-                    Item current = (Item) itemList.getItemAtPosition(position);
+                    Item current = (Item) itemListView.getItemAtPosition(position);
                     current.select();
-                    isSelectMultiple= true;
+                    isSelectMultiple = true;
 //                    selectedItemViews.add(view);
                     selectedItems.add(current);
                     view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+
+                    // contextual app bar
+                    if (itemMultiSelectMode != null) {
+                        return false;
+                    }
+                    itemMultiSelectMode = startActionMode(itemMultiSelectModeCallback); // TODO: convert to startSupportActionBar
 
                     // for testing
 //                    CharSequence text = "Selecting multiple";
@@ -181,7 +198,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
         // handle item selection during multiselect and regular selection
-        itemList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             // TODO: finish javadocs
             /**
              * When an item is clicked from the list
@@ -198,7 +215,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int duration = Toast.LENGTH_SHORT;
 //                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
 //                    toast.show();
-                     Item item = (Item) itemList.getItemAtPosition(i); // for debug
+                    Item item = (Item) itemListView.getItemAtPosition(i); // for debug
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
                     intent.putExtra("Selected Item", item);
 
@@ -236,7 +253,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                    int temp = i;
 //                    ListView tempItems = itemList;
 //                    selectedItemViews.size();
-                    Item current = (Item) itemList.getItemAtPosition(i);
+                    Item current = (Item) itemListView.getItemAtPosition(i);
 
                     if (selectedItems.contains(current)) {
                         current.deselect();
@@ -254,12 +271,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     }
 
 //                    selectedItemViews.size();
-
+                    itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", selectedItems.size()));
 
 
                     // deselect all items -> no longer selecting multiple
                     if (selectedItems.size() == 0) {
                         isSelectMultiple = false;
+                        itemMultiSelectMode.finish(); // close contextual app bar
                     }
                     // if delete multiple btn pressed -> isSelectMultiple = false
                         // selectedItems.clear();
@@ -312,14 +330,14 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * UpdateSubtotal just updates the subtotal at the bottom of the screen on the list activity
-     */
-    private void updateSubtotal(){
-        Double subtotal = 0.0;
-
-
-    }
+//    /**
+//     * UpdateSubtotal just updates the subtotal at the bottom of the screen on the list activity
+//     */
+//    private void updateSubtotal(){
+//        Double subtotal = 0.0;
+//
+//
+//    }
 
     /**
      * This function calls when the confirm button is pressed in the listActivity, and the new updated information is passed down from the edit/add screen to this class
@@ -355,7 +373,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 });
 
 
-        items.add(updatedItem);
+        itemList.add(updatedItem);
 
         // items.add(updatedItem); // TODO: change?
         calculateTotalPrice();
@@ -385,12 +403,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // if we returned RESULT_OK that means we want to delete an item
         if (resultCode == RESULT_OK) {
             String action = data.getStringExtra("action");
+            assert action != null;
             if (action.contentEquals(DELETE_ITEM)) {
                 // getting the position data, if it cant find pos it defaults to -1
                 int itemIndexToDelete = data.getIntExtra("pos", -1);
                 if (itemIndexToDelete != -1) {
-                    Item itemToDelete = items.get(itemIndexToDelete);
-                    items.remove(itemIndexToDelete);
+                    Item itemToDelete = itemList.get(itemIndexToDelete);
+                    itemList.remove(itemIndexToDelete);
                     deleteItemFromFirestore(itemToDelete);
                     calculateTotalPrice();
                 }
@@ -437,5 +456,134 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
+    }
+
+    // TODO: FINISH JAVADOCS
+    /**
+     * Create callback functions for actionmode appbar
+     */
+    private ActionMode.Callback itemMultiSelectModeCallback = new ActionMode.Callback() {
+        // TODO: finish javadocs
+        /**
+         *
+         * @param mode ActionMode being created
+         * @param menu Menu used to populate action buttons
+         * @return
+         */
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
+
+            mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
+            int n = selectedItems.size();
+            if (n == 0) {
+                mode.setTitle("Select Items"); // tell user to select items (when none selected yet)
+            } else {
+                mode.setTitle(String.format(Locale.CANADA,"Selected %d Items", n)); // show user how many items selected
+            }
+            return true;
+        }
+        // TODO: finish javadocs
+        /**
+         *
+         * @param mode ActionMode being prepared
+         * @param menu Menu used to populate action buttons
+         * @return
+         */
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+        // TODO: finish javadocs
+        /**
+         *
+         * @param mode The current ActionMode
+         * @param item The item that was clicked
+         * @return
+         */
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            // handle user tap on delete
+            if (item.getItemId() == R.id.itemMultiselectDelete) {
+                deleteConfirmationDialog(mode);
+//                if (deleteConfirmationDialog())
+//                {
+//                    Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
+//                            Toast.LENGTH_SHORT).show(); // for testing
+//                    mode.finish(); // end
+//                    return true;
+//                }
+//
+//
+//
+//                return false;
+            }
+            // handle user tap on tag
+            else if (item.getItemId() == R.id.itemMultiselectTag) {
+                // TODO: add tag dialog (pref maybe bottomsheet)
+
+                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Add tags to %d items", selectedItems.size()),
+                        Toast.LENGTH_SHORT).show(); // for testing
+                return true;
+            }
+            return false;
+        }
+        // TODO: finish javadocs
+        /**
+         *
+         * @param mode The current ActionMode being destroyed
+         */
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            isSelectMultiple = false;
+            for (Item item : selectedItems) {
+                // selectedItems.get(i).deselect();
+                item.deselect();
+            }
+            selectedItems.clear();
+            itemMultiSelectMode = null;
+            itemAdapter.notifyDataSetChanged();
+            findViewById(R.id.itemListSFBar).setVisibility(View.VISIBLE); // temp
+        }
+    };
+
+    /**
+     * This function deletes selected items
+     */
+    private void deleteSelectedItems() {
+        for (Item item : selectedItems) {
+            itemList.remove(item);
+            deleteItemFromFirestore(item);
+        }
+        selectedItems.clear();
+    }
+
+    private boolean deleteConfirmationDialog(ActionMode mode) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Confirm Delete");
+        builder.setMessage(String.format(Locale.CANADA, "Are you sure you want to delete %d items?", selectedItems.size()));
+        final boolean[] isDelete = new boolean[1];
+        isDelete[0] = false;
+        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                deleteSelectedItems();
+                mode.finish();
+                isDelete[0] = true;
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                isDelete[0] = false;
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        return isDelete[0];
     }
 }
