@@ -357,6 +357,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemData.put("Desc", updatedItem.getDescription());
         itemData.put("Comment", updatedItem.getComment());
 
+        // TODO: implement
+        ArrayList<String> tags; // placeholder
+        itemData.put("Tags", tags); // placeholder
+
         itemsRef.document(updatedItem.getItemID())
                 .set(itemData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

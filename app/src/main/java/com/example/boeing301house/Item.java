@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -24,6 +25,8 @@ public class Item implements Parcelable {
     private String SN;
     private String comment;
     private boolean isSelected = false; // for multiselect
+
+    private ArrayList<String> tags; // TODO: implement
 
     // TODO: add tag array and image array (?)
     /**
