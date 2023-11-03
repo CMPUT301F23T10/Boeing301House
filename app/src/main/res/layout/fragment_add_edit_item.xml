@@ -46,7 +46,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/itemAddEditConstraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:paddingBottom="80dp">
             <com.google.android.material.textfield.TextInputLayout
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -112,6 +113,7 @@
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
                 app:boxBackgroundColor="@color/textBoxColor"
+
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:maxLines="1"
@@ -134,7 +136,7 @@
                 android:hint="Serial Number"
                 style="?attr/textInputFilledStyle"
                 app:boxBackgroundColor="@color/textBoxColor"
-
+                android:paddingBottom="20dp"
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:inputType="text"
@@ -156,6 +158,7 @@
                 android:hint="Description"
                 style="?attr/textInputFilledStyle"
                 app:boxBackgroundColor="@color/textBoxColor"
+                android:paddingBottom="20dp"
 
                 >
                 <com.google.android.material.textfield.TextInputEditText
@@ -177,6 +180,7 @@
                 android:hint="Comment"
                 style="?attr/textInputFilledStyle"
                 app:boxBackgroundColor="@color/textBoxColor"
+                android:paddingBottom="20dp"
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:inputType="textLongMessage"
@@ -227,7 +231,7 @@
         android:id="@+id/updateItemConfirm"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="40dp">
+        android:layout_marginBottom="30dp">
 
     </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
 
