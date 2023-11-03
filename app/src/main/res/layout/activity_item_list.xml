@@ -55,75 +55,74 @@
         app:layout_anchorGravity="bottom|right"
         android:contentDescription="Add item"
         />
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/itemListAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="12dp"
-        >
+        android:elevation="12dp">
+
         <com.google.android.material.appbar.MaterialToolbar
-            android:background="@color/colorTitleBar"
+            android:id="@+id/itemListMaterialToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorTitleBar"
             android:minHeight="?attr/actionBarSize"
-            app:title="Items"
-            app:titleTextColor="@color/white"
             app:menu="@menu/ab_item_list_appbar"
+            app:title="Items"
             app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
-            >
+            app:titleTextColor="@color/white">
 
         </com.google.android.material.appbar.MaterialToolbar>
+
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/itemListSFBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="40dp"
             android:background="@color/colorBackground"
-            android:visibility="visible"
-            android:id="@+id/itemListSFBar"
-            >
+            android:minHeight="40dp"
+            android:visibility="visible">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <LinearLayout
-                    android:layout_margin="5dp"
+                    android:id="@+id/itemListSort"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/itemListSort"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/itemListFilter"
+                    android:layout_margin="5dp"
                     android:orientation="horizontal"
-                    >
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/itemListFilter"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <Button
+                        style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SORT"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        >
+                        android:text="SORT">
 
                     </Button>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_margin="5dp"
+                    android:id="@+id/itemListFilter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/itemListFilter"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_margin="5dp"
+                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/itemListSort"
-                    android:orientation="horizontal"
-                    >
+                    app:layout_constraintTop_toTopOf="parent">
+
                     <Button
+                        style="@style/Widget.Material3.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="FILTER"
-                        style="@style/Widget.Material3.Button.TextButton"
-                        >
-                    </Button>
+                        android:text="FILTER"></Button>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>

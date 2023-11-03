@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -116,7 +117,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
         itemListView.setAdapter(itemAdapter);
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
-
+        MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
+        setSupportActionBar(topbar);
 
 
 
@@ -477,7 +479,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
-
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
             int n = selectedItems.size();
             if (n == 0) {
@@ -589,5 +590,18 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         dialog.show();
 
         return isDelete[0];
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.itemListProfileButton) {
+            // TODO: open profile
+        }
+        else if (item.getItemId() == R.id.itemListSearchButton) {
+            // TODO: search for keyword
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
