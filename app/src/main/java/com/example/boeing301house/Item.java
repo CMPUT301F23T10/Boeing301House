@@ -31,7 +31,7 @@ public class Item implements Parcelable {
 
     // TODO: add tag array and image array (?)
     /**
-     * Constructor with full args + given id
+     * Constructor with full args with id
      * @param make
      * @param model
      * @param value
@@ -52,7 +52,7 @@ public class Item implements Parcelable {
     }
 
     /**
-     * Constructor with full args + no given id
+     * Constructor with full args except id
      * @param make
      * @param model
      * @param value
@@ -73,7 +73,7 @@ public class Item implements Parcelable {
     }
 
     /**
-     * Default constructor so that we can construct an item without any given attributes
+     * Default no arg constructor for Item object
      */
     public Item() {
         this.make = "";
