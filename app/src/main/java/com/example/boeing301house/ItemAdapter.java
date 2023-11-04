@@ -75,7 +75,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         if (item.getSN().length() > 9) {
             itemSN.setText(String.format(Locale.CANADA, "SN: %.6s...", item.getSN()));
         } else {
-            itemSN.setText(item.getSN());
+            itemSN.setText(String.format(Locale.CANADA, "SN: %s", item.getSN()));
         }
 
         if (item.getComment().length() > 30) {
