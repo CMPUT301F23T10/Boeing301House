@@ -208,6 +208,11 @@ public class Item implements Parcelable {
     public boolean isSelected() {
         return isSelected;
     }
+
+    public void setItemID(String id) {
+        this.id = id;
+    }
+
     public String getItemID() {
         // long time = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
 //        return id;
