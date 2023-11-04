@@ -21,10 +21,12 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 
 /**
  * Fragment for Adding and Editing items
@@ -162,42 +164,77 @@ public class AddEditItemFragment extends Fragment {
         binding.updateComment.setHint(String.format("Comment: %s", currentItem.getComment()));
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
 
+        // create instance of material date picker builder
+        //  creating datepicker (use daterange for filter)
+        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+
+        // create constraint for date picker (only let user choose dates on and before current"
+        CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
+
+        // define properties/title for material date picker
+        materialDateBuilder.setTitleText("Date Acquired: ");
+        materialDateBuilder.setCalendarConstraints(dateConstraint); // apply date constraint
+        materialDateBuilder.setSelection(Calendar.getInstance().getTimeInMillis());
+        // instantiate date picker
+        final MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
+
+        final TimeZone local = Calendar.getInstance().getTimeZone(); // local timezone
 
         binding.updateDate.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+//                final Calendar c = Calendar.getInstance();
+//
+//
+//                int year = c.get(Calendar.YEAR);
+//                int month = c.get(Calendar.MONTH);
+//                int day = c.get(Calendar.DATE);
+//
+//                itemCalendarDate = Calendar.getInstance();
+//
+//                DatePickerDialog datePickerDialog = new DatePickerDialog(
+//                        getContext(),
+//                        new DatePickerDialog.OnDateSetListener() {
+//                            @Override
+//                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+//                                itemCalendarDate.set(year, month, dayOfMonth);
+//                                binding.updateDate.getEditText().setText(String.format(Locale.CANADA,"%02d/%02d/%d", month + 1, dayOfMonth, year));
+//
+//
+//                                 newDate = itemCalendarDate.getTimeInMillis();
+////                                String dateString = new SimpleDateFormat("MM/dd/yyyy").format(new Date(itemCalendarDate.getTimeInMillis()));
+////                                CharSequence text = dateString;
+////                                int duration = Toast.LENGTH_SHORT;
+////                                Toast toast = Toast.makeText(getContext(), text, duration);
+////                                toast.show();
+//                            }
+//
+//                        }, year, month, day // initial state
+//                );
+//                datePickerDialog.getDatePicker().setMaxDate(itemCalendarDate.getTimeInMillis() + 1000);
+//                datePickerDialog.show();
 
-                final Calendar c = Calendar.getInstance();
+            }
+        });
 
+        // material date picker behaviours
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+            @Override
+            public void onPositiveButtonClick(Long selection) {
+                // since material design picker date is in UTC
+                long offset = local.getOffset(selection);
+                long localDate = selection - offset; // account for timezone difference
+                String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(localDate);
+                binding.updateDate.getEditText().setText(dateString);
+                newDate = localDate;
+            }
+        });
 
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DATE);
-
-                itemCalendarDate = Calendar.getInstance();
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        getContext(),
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                itemCalendarDate.set(year, month, dayOfMonth);
-                                binding.updateDate.getEditText().setText(String.format(Locale.CANADA,"%02d/%02d/%d", month + 1, dayOfMonth, year));
-
-
-                                 newDate = itemCalendarDate.getTimeInMillis();
-//                                String dateString = new SimpleDateFormat("MM/dd/yyyy").format(new Date(itemCalendarDate.getTimeInMillis()));
-//                                CharSequence text = dateString;
-//                                int duration = Toast.LENGTH_SHORT;
-//                                Toast toast = Toast.makeText(getContext(), text, duration);
-//                                toast.show();
-                            }
-
-                        }, year, month, day // initial state
-                );
-                datePickerDialog.getDatePicker().setMaxDate(itemCalendarDate.getTimeInMillis() + 1000);
-                datePickerDialog.show();
-
+        materialDatePicker.addOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                dialog.cancel(); // cancel dialog
             }
         });
 
