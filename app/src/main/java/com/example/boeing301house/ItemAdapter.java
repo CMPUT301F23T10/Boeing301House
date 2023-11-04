@@ -30,6 +30,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         this.context = context;
     }
 
+
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -96,6 +98,6 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         return view;
     }
-
+    
 
 }

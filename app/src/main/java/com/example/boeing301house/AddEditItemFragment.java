@@ -11,6 +11,7 @@ import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
@@ -23,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
@@ -166,24 +168,23 @@ public class AddEditItemFragment extends Fragment {
 
         // create instance of material date picker builder
         //  creating datepicker (use daterange for filter)
-        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
+        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
 
         // create constraint for date picker (only let user choose dates on and before current"
-        CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
-
+        CalendarConstraints.Builder constraintsBuilder = new CalendarConstraints.Builder();
+        constraintsBuilder.setEnd(Calendar.getInstance().getTimeInMillis());
         // define properties/title for material date picker
-        materialDateBuilder.setTitleText("Date Acquired: ");
-        materialDateBuilder.setCalendarConstraints(dateConstraint); // apply date constraint
-        materialDateBuilder.setSelection(Calendar.getInstance().getTimeInMillis());
+        builder.setCalendarConstraints(constraintsBuilder.build());
+        builder.setTitleText("Select Dates");
         // instantiate date picker
-        final MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
+        final MaterialDatePicker<Pair<Long, Long>> materialDatePicker = builder.build();
 
         final TimeZone local = Calendar.getInstance().getTimeZone(); // local timezone
 
         binding.updateDate.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
+                materialDatePicker.show(getChildFragmentManager(), "DATE_RANGE_PICKER_TAG");
 //                final Calendar c = Calendar.getInstance();
 //
 //
@@ -219,15 +220,15 @@ public class AddEditItemFragment extends Fragment {
         });
 
         // material date picker behaviours
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
+        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
             @Override
-            public void onPositiveButtonClick(Long selection) {
-                // since material design picker date is in UTC
-                long offset = local.getOffset(selection);
-                long localDate = selection - offset; // account for timezone difference
-                String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(localDate);
-                binding.updateDate.getEditText().setText(dateString);
-                newDate = localDate;
+            public void onPositiveButtonClick(Pair<Long, Long> selection) {
+                // Here, you can get the start and end date from the selection variable
+                Long startDate = selection.first;
+                Long endDate = selection.second;
+
+                // Now you can use these dates to filter your list
+//                filterItemsByDateRange(startDate, endDate);
             }
         });
 
@@ -333,6 +334,18 @@ public class AddEditItemFragment extends Fragment {
         return view;
 
     }
+
+//    private void filterItemsByDateRange(Long startDate, Long endDate) {
+//        ArrayList<Item> filteredItems = new ArrayList<>();
+//        for (Item item : items) {
+//            if (item.getDate() >= startDate && item.getDate() <= endDate) {
+//                filteredItems.add(item);
+//            }
+//        }
+//        // Now, `filteredItems` contains only the items within the selected date range.
+//        // Update your adapter or list view with this filtered list.
+//        ItemAdapter.updateData(filteredItems);
+//    }
     // TODO: finish java doc
     /**
      *

@@ -24,12 +24,14 @@ public class Item implements Parcelable {
     private String description;
     private long date;
 
+
     private String SN;
     private String comment;
     private boolean isSelected = false; // for multiselect
     private String id;
 
     private ArrayList<String> tags; // TODO: implement
+
 
     // TODO: add tag array and image array (?)
     /**
@@ -176,6 +178,7 @@ public class Item implements Parcelable {
         String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(new Date(this.date));
         return dateString;
     }
+
 
     public String getValueString(){return String.format(Locale.CANADA,"%.2f", value);}
 
