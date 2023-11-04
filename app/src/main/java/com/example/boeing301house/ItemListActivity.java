@@ -146,7 +146,19 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         String id = doc.getId();
 
                         Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-                        itemList.add(new Item(make, model, value, desc, date, SN, comment, id));
+
+                        Item item = new ItemBuilder()
+                                .addID(id)
+                                .addMake(make)
+                                .addModel(model)
+                                .addDate(date)
+                                .addSN(SN)
+                                .addValue(value)
+                                .addDescription(desc)
+                                .addComment(comment)
+                                .build();
+
+                        itemList.add(item);
 
                     }
                     itemAdapter.notifyDataSetChanged();
@@ -308,7 +320,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                view.requestLayout();
                 addButton.hide();
                 Fragment addFrag = new AddEditItemFragment();
-                Item newItem = new Item(); //creates a new city to be created
+
+                Item newItem = new ItemBuilder()
+                                .build(); //creates a new city to be created
                 // items.add(selectItem); //adds the empty city to the list (with no details)
 
                 Bundle itemBundle = new Bundle();
