@@ -28,7 +28,8 @@
             app:titleMarginBottom="10dp"
             app:menu="@menu/ab_item_add_edit_bar"
             style="@style/Widget.Material3.Toolbar"
-            app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+            android:paddingBottom="3dp"
             >
 
         </com.google.android.material.appbar.MaterialToolbar>
