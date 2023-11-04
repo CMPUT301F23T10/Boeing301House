@@ -248,4 +248,9 @@ public class Item implements Parcelable {
         dest.writeString(id);
         dest.writeByte((byte) (isSelected ? 1 : 0));
     }
+
+
 }
+
+
+
