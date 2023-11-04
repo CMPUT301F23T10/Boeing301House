@@ -5,7 +5,10 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -24,10 +27,34 @@ public class Item implements Parcelable {
     private String SN;
     private String comment;
     private boolean isSelected = false; // for multiselect
+    private String id;
+
+    private ArrayList<String> tags; // TODO: implement
 
     // TODO: add tag array and image array (?)
     /**
-     * Constructor with args
+     * Constructor with full args with id
+     * @param make
+     * @param model
+     * @param value
+     * @param description
+     * @param date
+     * @param SN
+     * @param comment
+     */
+    public Item(String make, String model, double value, String description, long date, String SN, String comment, String id) {
+        this.make = make;
+        this.model = model;
+        this.value = value;
+        this.description = description;
+        this.date = date;
+        this.SN = SN;
+        this.comment = comment;
+        this.id = id;
+    }
+
+    /**
+     * Constructor with full args except id
      * @param make
      * @param model
      * @param value
@@ -44,20 +71,27 @@ public class Item implements Parcelable {
         this.date = date;
         this.SN = SN;
         this.comment = comment;
+//        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
+//        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
+        this.id = String.format(Locale.CANADA,"%d",Calendar.getInstance(Locale.CANADA).getTimeInMillis());
     }
 
     /**
-     * Default constructor so that we can construct an item without any given attributes
+     * Default no arg constructor for Item object
      */
-    public Item(){
+    public Item() {
         this.make = "";
         this.model = "";
         this.value = 0.0;
         this.description = "";
-        this.date = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
+        long time = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
+        this.date = time;
         this.SN = "";
         this.comment = "";
+        this.id = String.format(Locale.CANADA,"%d",Calendar.getInstance(Locale.CANADA).getTimeInMillis());
+//        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
     }
+
 
     /**
      * Constructor for parcelable
@@ -71,6 +105,7 @@ public class Item implements Parcelable {
         date = in.readLong();
         SN = in.readString();
         comment = in.readString();
+        id = in.readString();
         isSelected = in.readByte() != 0;
     }
 
@@ -173,7 +208,18 @@ public class Item implements Parcelable {
     public boolean isSelected() {
         return isSelected;
     }
-    public String getItemID() { return String.format("%s.%s", make, model); } // TODO: convert to item id (or not)
+
+    public void setItemID(String id) {
+        this.id = id;
+    }
+
+    public String getItemID() {
+        // long time = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
+//        return id;
+        // return String.format(Locale.CANADA, "%s.%s", make, model);
+        assert (!StringUtils.isBlank(id));
+        return id;
+    } // TODO: convert to item id (or not)
 
     /**
      * Describe the kinds of special objects contained in this Parcelable instance's marshaled representation.
@@ -199,6 +245,12 @@ public class Item implements Parcelable {
         dest.writeLong(date);
         dest.writeString(SN);
         dest.writeString(comment);
+        dest.writeString(id);
         dest.writeByte((byte) (isSelected ? 1 : 0));
     }
+
+
 }
+
+
+

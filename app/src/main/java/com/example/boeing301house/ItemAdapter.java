@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ItemAdapter extends ArrayAdapter<Item> {
     private final Context context;
@@ -49,24 +50,48 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             view.setBackgroundColor(0);
         }
 
-        //finds all the widgets in itemcell
-        TextView itemCost = view.findViewById(R.id.cost);
-        TextView itemDate = view.findViewById(R.id.date);
-        TextView itemSN = view.findViewById(R.id.SN);
-        TextView itemComment = view.findViewById(R.id.comment);
-        TextView itemDesc = view.findViewById(R.id.description);
-        TextView itemModel = view.findViewById(R.id.model);
-        TextView itemMake = view.findViewById(R.id.make);
+        //finds all the widgets in item cell
+        TextView itemCost = view.findViewById(R.id.itemCost); // 12 digits max displayed
+        TextView itemDate = view.findViewById(R.id.itemDate);
+        TextView itemSN = view.findViewById(R.id.itemSN);
+        TextView itemComment = view.findViewById(R.id.itemComment); // 17 max char displayed
+        TextView itemDesc = view.findViewById(R.id.itemDescription); // 86 max char displayed
+        TextView itemModel = view.findViewById(R.id.itemModel); // 16 max char displayed
+        TextView itemMake = view.findViewById(R.id.itemMake); // 25 max char displayed
 
         //updates all the information from given item to the itemcell, to be displayed in the main listView
-        itemModel.setText(item.getModel());
-        itemCost.setText(item.getValueString());
-        itemDate.setText(item.getDateString());
-        itemSN.setText(item.getSN());
-        itemComment.setText(item.getComment());
-        itemDesc.setText(item.getDescription());
-        itemMake.setText(item.getMake());
+        if (item.getMake().length() > 25) {
+            itemModel.setText((String.format(Locale.CANADA, "%.22s...", item.getMake())));
+        } else {
+            itemMake.setText(item.getMake());
+        }
 
+        if (item.getModel().length() > 16) {
+            itemModel.setText(String.format(Locale.CANADA, "%.13s...", item.getModel()));
+        } else {
+            itemModel.setText(item.getModel());
+        }
+
+        if (item.getSN().length() > 10) {
+            itemSN.setText(String.format(Locale.CANADA, "SN: %.7s...", item.getSN()));
+        } else {
+            itemSN.setText(String.format(Locale.CANADA, "SN: %s", item.getSN()));
+        }
+
+        if (item.getComment().length() > 17) {
+            itemComment.setText(String.format(Locale.CANADA, "%.14s...", item.getComment()));
+        } else {
+            itemComment.setText(item.getComment());
+        }
+
+        if (item.getDescription().length() > 86) {
+            itemDesc.setText(String.format(Locale.CANADA, "%.82s...", item.getDescription()));
+        } else {
+            itemDesc.setText(item.getDescription());
+        }
+
+        itemCost.setText(String.format(Locale.CANADA, "$%.9s", item.getValueString()));
+        itemDate.setText(item.getDateString());
 
 
         return view;

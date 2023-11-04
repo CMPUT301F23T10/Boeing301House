@@ -28,7 +28,8 @@
             app:titleMarginBottom="10dp"
             app:menu="@menu/ab_item_add_edit_bar"
             style="@style/Widget.Material3.Toolbar"
-            app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
+            app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+            android:paddingBottom="3dp"
             >
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -46,7 +47,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/itemAddEditConstraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:paddingBottom="80dp">
             <com.google.android.material.textfield.TextInputLayout
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -60,6 +62,8 @@
                 app:helperTextTextColor="@color/required"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
+                app:boxBackgroundColor="@color/textBoxColor"
+
 
                 >
                 <com.google.android.material.textfield.TextInputEditText
@@ -84,6 +88,7 @@
                 app:helperTextTextColor="@color/required"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
+                app:boxBackgroundColor="@color/textBoxColor"
 
                 >
                 <com.google.android.material.textfield.TextInputEditText
@@ -108,6 +113,8 @@
                 app:helperTextTextColor="@color/required"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
+                app:boxBackgroundColor="@color/textBoxColor"
+
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:maxLines="1"
@@ -129,6 +136,8 @@
                 android:id="@+id/updateSN"
                 android:hint="Serial Number"
                 style="?attr/textInputFilledStyle"
+                app:boxBackgroundColor="@color/textBoxColor"
+                android:paddingBottom="20dp"
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:inputType="text"
@@ -149,6 +158,9 @@
                 android:id="@+id/updateDesc"
                 android:hint="Description"
                 style="?attr/textInputFilledStyle"
+                app:boxBackgroundColor="@color/textBoxColor"
+                android:paddingBottom="20dp"
+
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:inputType="textLongMessage"
@@ -168,6 +180,8 @@
                 android:id="@+id/updateComment"
                 android:hint="Comment"
                 style="?attr/textInputFilledStyle"
+                app:boxBackgroundColor="@color/textBoxColor"
+                android:paddingBottom="20dp"
                 >
                 <com.google.android.material.textfield.TextInputEditText
                     android:inputType="textLongMessage"
@@ -189,6 +203,7 @@
                 app:helperText="*mm/dd/yyyy"
                 app:helperTextTextColor="@color/required"
                 style="?attr/textInputFilledStyle"
+                app:boxBackgroundColor="@color/textBoxColor"
                 >
                 <com.google.android.material.textfield.TextInputEditText
 
@@ -217,7 +232,7 @@
         android:id="@+id/updateItemConfirm"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="40dp">
+        android:layout_marginBottom="30dp">
 
     </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
 

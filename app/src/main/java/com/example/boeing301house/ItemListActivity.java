@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
@@ -116,7 +117,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
         itemListView.setAdapter(itemAdapter);
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
-
+        MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
+        setSupportActionBar(topbar);
 
 
 
@@ -141,9 +143,22 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         Double value = doc.getDouble("Est Value");
                         String desc = doc.getString("Desc");
                         String comment = doc.getString("Comment");
+                        String id = doc.getId();
 
                         Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-                        itemList.add(new Item(make, model, value, desc, date, SN, comment));
+
+                        Item item = new ItemBuilder()
+                                .addID(id)
+                                .addMake(make)
+                                .addModel(model)
+                                .addDate(date)
+                                .addSN(SN)
+                                .addValue(value)
+                                .addDescription(desc)
+                                .addComment(comment)
+                                .build();
+
+                        itemList.add(item);
 
                     }
                     itemAdapter.notifyDataSetChanged();
@@ -305,7 +320,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                view.requestLayout();
                 addButton.hide();
                 Fragment addFrag = new AddEditItemFragment();
-                Item newItem = new Item(); //creates a new city to be created
+
+                Item newItem = new ItemBuilder()
+                                .build(); //creates a new city to be created
                 // items.add(selectItem); //adds the empty city to the list (with no details)
 
                 Bundle itemBundle = new Bundle();
@@ -356,6 +373,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemData.put("Est Value", updatedItem.getValue());
         itemData.put("Desc", updatedItem.getDescription());
         itemData.put("Comment", updatedItem.getComment());
+
+        // TODO: implement
+        ArrayList<String> tags = new ArrayList<>(); // placeholder
+        itemData.put("Tags", tags); // placeholder
 
         itemsRef.document(updatedItem.getItemID())
                 .set(itemData)
@@ -473,7 +494,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
-
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
             int n = selectedItems.size();
             if (n == 0) {
@@ -505,7 +525,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             // handle user tap on delete
             if (item.getItemId() == R.id.itemMultiselectDelete) {
-                deleteConfirmationDialog(mode);
+                return deleteConfirmationDialog(mode);
 //                if (deleteConfirmationDialog())
 //                {
 //                    Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
@@ -585,5 +605,18 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         dialog.show();
 
         return isDelete[0];
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.itemListProfileButton) {
+            // TODO: open profile
+        }
+        else if (item.getItemId() == R.id.itemListSearchButton) {
+            // TODO: search for keyword
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
