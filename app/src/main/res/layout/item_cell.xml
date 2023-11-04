@@ -1,91 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    >
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
-        android:id="@+id/make"
-        android:layout_width="wrap_content"
-        android:layout_height="20sp"
+        android:id="@+id/itemMake"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
         android:text="make"
-        android:textColor="#4CAF50" />
+        android:textColor="@color/itemCellTextColor"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="3dp"
+        style="@style/TextAppearance.Material3.LabelLarge"
+        />
 
     <TextView
-        android:id="@+id/model"
-        android:layout_width="match_parent"
+        android:id="@+id/itemModel"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/make"
-        android:layout_marginTop="3dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemMake"
+        android:layout_margin="3dp"
         android:text="model"
-        android:textColor="@color/black"
-        android:textSize="24sp" />
+        android:textColor="@color/itemCellTextColor"
+        style="@style/TextAppearance.Material3.HeadlineMedium"
+        />
 
     <TextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/make"
-        android:layout_marginTop="36dp"
+        android:id="@+id/itemDescription"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemModel"
+        android:layout_margin="3dp"
         android:text="description"
-        android:textColor="#4CAF50" />
+        style="@style/TextAppearance.Material3.BodySmall"
+        android:textColor="@color/itemCellTextColor"
+        />
 
     <TextView
-        android:id="@+id/date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/make"
-        android:layout_marginTop="54dp"
-        android:text="date"
-        android:textColor="#4CAF50" />
-
-    <TextView
-        android:id="@+id/SN"
+        android:id="@+id/itemDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/itemDescription"
+        android:layout_margin="3dp"
+        android:text="mm/dd/yyyy"
+        style="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="@color/itemCellTextColor" />
 
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="63dp"
-        android:text="SN"
-        android:textAlignment="viewStart"
-        android:textColor="#4CAF50"
-        android:textColorHighlight="#4CAF50"
-        android:textStyle="bold"
+
+    <TextView
+        android:id="@+id/itemCost"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/itemModel"
+        style="@style/TextAppearance.Material3.LabelMedium"
+        android:layout_margin="3dp"
+
+        android:text="$0.00"
+        android:textColor="@color/itemCellTextColor"
         android:translationX="0dp" />
 
     <TextView
-        android:id="@+id/comment"
+        android:id="@+id/itemSN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/itemCost"
+        app:layout_constraintStart_toStartOf="@id/itemCost"
+        android:text="SN: XXXXXXXXX"
+        android:textColor="@color/itemCellTextColor"
+        style="@style/TextAppearance.Material3.LabelMedium"
+        />
 
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="45dp"
+    <TextView
+        android:id="@+id/itemComment"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
+        app:layout_constraintStart_toStartOf="@id/itemSN"
+        app:layout_constraintTop_toBottomOf="@id/itemModel"
+        android:textColor="@color/itemCellTextColor"
+        android:textStyle="italic"
+        style="@style/TextAppearance.Material3.LabelMedium"
+        android:layout_marginTop="2dp"
         android:text="comment"
-        android:textAlignment="viewStart"
-        android:textColor="#4CAF50"
-        android:textColorHighlight="#4CAF50"
-        android:textStyle="bold"
-        android:translationX="0dp" />
 
-    <TextView
-        android:id="@+id/cost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        />
 
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="9dp"
-        android:layout_marginBottom="81dp"
-        android:text="cost"
-        android:textAlignment="viewStart"
-        android:textColor="#4CAF50"
-        android:textColorHighlight="#4CAF50"
-        android:textStyle="bold"
-        android:translationX="0dp" />
+
 
 <!--    <LinearLayout-->
 <!--        android:layout_width="match_parent"-->
@@ -94,16 +99,130 @@
 <!--        android:layout_marginBottom="3dp"-->
 <!--        android:background="@color/cardview_dark_background" />-->
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="79dp"
-        android:layout_toStartOf="@+id/cost"
-        android:text="$"
-        android:textColor="#4EAF52" />
+<!--    <TextView-->
+<!--        android:id="@+id/textView3"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_marginEnd="0dp"-->
+<!--        android:layout_marginBottom="79dp"-->
+<!--        android:layout_toStartOf="@+id/itemCost"-->
+<!--        android:text="$"-->
+<!--        android:textColor="#4EAF52" />-->
 
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+<!--OLD-->
+
+<!--    <?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="100dp"-->
+<!--    >-->
+
+<!--<TextView-->
+<!--    android:id="@+id/make"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="20sp"-->
+<!--    android:text="make"-->
+<!--    android:textColor="#4CAF50" />-->
+
+<!--<TextView-->
+<!--    android:id="@+id/model"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_below="@id/make"-->
+<!--    android:layout_marginTop="3dp"-->
+<!--    android:text="model"-->
+<!--    android:textColor="@color/black"-->
+<!--    android:textSize="24sp" />-->
+
+<!--<TextView-->
+<!--    android:id="@+id/description"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_below="@id/make"-->
+<!--    android:layout_marginTop="36dp"-->
+<!--    android:text="description"-->
+<!--    android:textColor="#4CAF50" />-->
+
+<!--<TextView-->
+<!--    android:id="@+id/date"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_below="@id/make"-->
+<!--    android:layout_marginTop="54dp"-->
+<!--    android:text="date"-->
+<!--    android:textColor="#4CAF50" />-->
+
+<!--<TextView-->
+<!--    android:id="@+id/SN"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+
+<!--    android:layout_alignParentEnd="true"-->
+<!--    android:layout_alignParentBottom="true"-->
+<!--    android:layout_marginEnd="8dp"-->
+<!--    android:layout_marginBottom="63dp"-->
+<!--    android:text="SN"-->
+<!--    android:textAlignment="viewStart"-->
+<!--    android:textColor="#4CAF50"-->
+<!--    android:textColorHighlight="#4CAF50"-->
+<!--    android:textStyle="bold"-->
+<!--    android:translationX="0dp" />-->
+
+<!--<TextView-->
+<!--    android:id="@+id/comment"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+
+<!--    android:layout_alignParentEnd="true"-->
+<!--    android:layout_alignParentBottom="true"-->
+<!--    android:layout_marginEnd="9dp"-->
+<!--    android:layout_marginBottom="45dp"-->
+<!--    android:text="comment"-->
+<!--    android:textAlignment="viewStart"-->
+<!--    android:textColor="#4CAF50"-->
+<!--    android:textColorHighlight="#4CAF50"-->
+<!--    android:textStyle="bold"-->
+<!--    android:translationX="0dp" />-->
+
+<!--<TextView-->
+<!--    android:id="@+id/cost"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+
+<!--    android:layout_alignParentEnd="true"-->
+<!--    android:layout_alignParentBottom="true"-->
+<!--    android:layout_marginEnd="9dp"-->
+<!--    android:layout_marginBottom="81dp"-->
+<!--    android:text="cost"-->
+<!--    android:textAlignment="viewStart"-->
+<!--    android:textColor="#4CAF50"-->
+<!--    android:textColorHighlight="#4CAF50"-->
+<!--    android:textStyle="bold"-->
+<!--    android:translationX="0dp" />-->
+
+<!--&lt;!&ndash;    <LinearLayout&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_height="2dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_alignParentBottom="true"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:layout_marginBottom="3dp"&ndash;&gt;-->
+<!--&lt;!&ndash;        android:background="@color/cardview_dark_background" />&ndash;&gt;-->
+
+<!--<TextView-->
+<!--    android:id="@+id/textView3"-->
+<!--    android:layout_width="wrap_content"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_alignParentBottom="true"-->
+<!--    android:layout_marginEnd="0dp"-->
+<!--    android:layout_marginBottom="79dp"-->
+<!--    android:layout_toStartOf="@+id/cost"-->
+<!--    android:text="$"-->
+<!--    android:textColor="#4EAF52" />-->
+
+
+<!--</RelativeLayout>-->
