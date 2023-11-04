@@ -18,19 +18,19 @@
 
     <TextView
         android:id="@+id/itemModel"
-        android:layout_width="250dp"
+        android:layout_width="270dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/itemMake"
         android:layout_margin="3dp"
         android:text="model"
         android:textColor="@color/itemCellTextColor"
-        style="@style/TextAppearance.Material3.HeadlineMedium"
+        style="@style/TextAppearance.Material3.HeadlineSmall"
         />
 
     <TextView
         android:id="@+id/itemDescription"
-        android:layout_width="250dp"
+        android:layout_width="270dp"
         android:layout_height="35dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/itemModel"
@@ -59,7 +59,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/itemModel"
         style="@style/TextAppearance.Material3.LabelMedium"
-        android:layout_margin="3dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginStart="20dp"
 
         android:text="$0.00"
         android:textColor="@color/itemCellTextColor"

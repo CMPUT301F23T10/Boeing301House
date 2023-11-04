@@ -54,9 +54,9 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         TextView itemCost = view.findViewById(R.id.itemCost); // 12 digits max displayed
         TextView itemDate = view.findViewById(R.id.itemDate);
         TextView itemSN = view.findViewById(R.id.itemSN);
-        TextView itemComment = view.findViewById(R.id.itemComment); // 30 max char displayed
+        TextView itemComment = view.findViewById(R.id.itemComment); // 17 max char displayed
         TextView itemDesc = view.findViewById(R.id.itemDescription); // 86 max char displayed
-        TextView itemModel = view.findViewById(R.id.itemModel); // 12 max char displayed
+        TextView itemModel = view.findViewById(R.id.itemModel); // 16 max char displayed
         TextView itemMake = view.findViewById(R.id.itemMake); // 25 max char displayed
 
         //updates all the information from given item to the itemcell, to be displayed in the main listView
@@ -66,20 +66,20 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             itemMake.setText(item.getMake());
         }
 
-        if (item.getModel().length() > 12) {
-            itemModel.setText(String.format(Locale.CANADA, "%.9s...", item.getModel()));
+        if (item.getModel().length() > 16) {
+            itemModel.setText(String.format(Locale.CANADA, "%.13s...", item.getModel()));
         } else {
             itemModel.setText(item.getModel());
         }
 
-        if (item.getSN().length() > 9) {
-            itemSN.setText(String.format(Locale.CANADA, "SN: %.6s...", item.getSN()));
+        if (item.getSN().length() > 10) {
+            itemSN.setText(String.format(Locale.CANADA, "SN: %.7s...", item.getSN()));
         } else {
             itemSN.setText(String.format(Locale.CANADA, "SN: %s", item.getSN()));
         }
 
-        if (item.getComment().length() > 30) {
-            itemComment.setText(String.format(Locale.CANADA, "%.27s...", item.getComment()));
+        if (item.getComment().length() > 17) {
+            itemComment.setText(String.format(Locale.CANADA, "%.14s...", item.getComment()));
         } else {
             itemComment.setText(item.getComment());
         }
