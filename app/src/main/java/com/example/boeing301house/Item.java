@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,7 +71,9 @@ public class Item implements Parcelable {
         this.date = date;
         this.SN = SN;
         this.comment = comment;
-        this.id = String.format(Locale.CANADA, "%s.%s.%d", make, model, Calendar.getInstance(Locale.CANADA).getTimeInMillis());
+//        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
+//        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
+        this.id = String.format(Locale.CANADA,"%d",Calendar.getInstance(Locale.CANADA).getTimeInMillis());
     }
 
     /**
@@ -84,7 +88,8 @@ public class Item implements Parcelable {
         this.date = time;
         this.SN = "";
         this.comment = "";
-        this.id = String.format(Locale.CANADA, "%s.%s.%d", make, model, time);
+        this.id = String.format(Locale.CANADA,"%d",Calendar.getInstance(Locale.CANADA).getTimeInMillis());
+//        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
     }
 
 
@@ -205,6 +210,9 @@ public class Item implements Parcelable {
     }
     public String getItemID() {
         // long time = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
+//        return id;
+        // return String.format(Locale.CANADA, "%s.%s", make, model);
+        assert (!StringUtils.isBlank(id));
         return id;
     } // TODO: convert to item id (or not)
 

@@ -143,9 +143,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         Double value = doc.getDouble("Est Value");
                         String desc = doc.getString("Desc");
                         String comment = doc.getString("Comment");
+                        String id = doc.getId();
 
                         Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-                        itemList.add(new Item(make, model, value, desc, date, SN, comment));
+                        itemList.add(new Item(make, model, value, desc, date, SN, comment, id));
 
                     }
                     itemAdapter.notifyDataSetChanged();
