@@ -5,7 +5,7 @@
         android:id="@+id/itemAddEditTag"
         android:title="Tag"
         android:contentDescription="Add tag"
-        android:icon="@drawable/ic_tag_button_36dp"
+        android:icon="@drawable/ic_tag_button_24dp"
         app:showAsAction="always"
         />
 
@@ -14,7 +14,7 @@
         app:showAsAction="always"
         android:title="Photo"
         android:contentDescription="Add photo"
-        android:icon="@drawable/ic_photo_button_36dp"
+        android:icon="@drawable/ic_photo_button_24dp"
         />
 
     <item
@@ -22,7 +22,7 @@
         app:showAsAction="always"
         android:title="Scan"
         android:contentDescription="Scan SN or barcode"
-        android:icon="@drawable/ic_scan_button_36dp"
+        android:icon="@drawable/ic_scan_button_24dp"
         >
 
     </item>

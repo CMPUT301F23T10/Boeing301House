@@ -23,12 +23,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_back_button_36dp"
+            app:navigationIcon="@drawable/ic_back_button_24dp"
             app:title="Add/Edit Item"
             app:titleMarginBottom="10dp"
             app:menu="@menu/ab_item_add_edit_bar"
             style="@style/Widget.Material3.Toolbar"
-            app:titleTextAppearance="@style/TextAppearance.Material3.HeadlineLarge"
+
             android:paddingBottom="3dp"
             >
 
