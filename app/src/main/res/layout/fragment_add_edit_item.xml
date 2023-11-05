@@ -230,6 +230,7 @@
         android:layout_height="wrap_content"
         android:text="Confirm"
         android:id="@+id/updateItemConfirm"
+        android:backgroundTint="@color/colorButton"
         style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="30dp">
