@@ -16,6 +16,7 @@
         >
 
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/UserProfileTopBar"
             android:background="@color/colorTitleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

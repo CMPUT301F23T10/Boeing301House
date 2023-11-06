@@ -18,6 +18,11 @@
             android:windowSoftInputMode="adjustPan"
             />
         <activity
+            android:name=".UserProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"
+            />
+        <activity
             android:name=".ItemListActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan"
