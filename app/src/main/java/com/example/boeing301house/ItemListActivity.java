@@ -48,6 +48,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
+
     private TextView subTotalText;
     public ArrayList<Item> itemList;
 
@@ -94,6 +95,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         }
         subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
