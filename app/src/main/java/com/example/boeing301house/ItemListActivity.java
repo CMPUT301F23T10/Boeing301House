@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
+
+    private Button itemListFilterButton;
+    private Button itemListSortButton;
 
     private boolean isSelectMultiple;
 
@@ -124,6 +128,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         setSupportActionBar(topbar);
 
 
+        itemListSortButton = findViewById(R.id.sortButton);
+        itemListFilterButton = findViewById(R.id.filterButton);
 
 
         /**
@@ -310,6 +316,46 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         });
 
+        //for launching the sort fragment
+        itemListFilterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Fragment filterFragment = new filterFragment(); //this is passed along so it can display the proper information
+
+
+                //inflates the filterFragment
+
+                /*
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction
+//                            .add(R.id.content_frame, detailFrag, null)
+                        .add(R.id.itemListContent, filterFragment, null)
+                        .addToBackStack("filter")
+                        .commit();
+                        */
+
+            }
+        });
+
+        itemListSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Fragment sortFragment = new sortFragment(); //this is passed along so it can display the proper information
+
+
+                //inflates the sortFragment
+
+                /*
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction
+//                            .add(R.id.content_frame, detailFrag, null)
+                        .add(R.id.itemListContent, sortFragment, null)
+                        .addToBackStack("sort")
+                        .commit();
+                        */
+
+            }
+        });
 
         // for adding new expenses:
         addButton.setOnClickListener(new View.OnClickListener() {
