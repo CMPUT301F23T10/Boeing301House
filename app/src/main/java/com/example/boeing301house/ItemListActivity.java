@@ -56,8 +56,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
 
-    private Button filterButton;
-    private Button sortButton;
+    private Button itemListFilterButton;
+    private Button itemListSortButton;
 
     private boolean isSelectMultiple;
 
@@ -128,8 +128,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         setSupportActionBar(topbar);
 
 
-        sortButton = findViewById(R.id.sortButton);
-        filterButton = findViewById(R.id.filterButton);
+        itemListSortButton = findViewById(R.id.sortButton);
+        itemListFilterButton = findViewById(R.id.filterButton);
 
 
         /**
@@ -317,7 +317,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         });
 
         //for launching the sort fragment
-        filterButton.setOnClickListener(new View.OnClickListener() {
+        itemListFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Fragment filterFragment = new filterFragment(); //this is passed along so it can display the proper information
@@ -337,7 +337,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             }
         });
 
-        sortButton.setOnClickListener(new View.OnClickListener() {
+        itemListSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Fragment sortFragment = new sortFragment(); //this is passed along so it can display the proper information
