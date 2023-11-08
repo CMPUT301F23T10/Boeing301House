@@ -80,6 +80,9 @@ public class AddEditItemFragment extends Fragment {
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();
+
+        void onDateRangeSelected(Calendar start, Calendar end);
+
         void onConfirmPressed(Item updatedItem);
     }
 

@@ -179,6 +179,12 @@ public class Item implements Parcelable {
         return dateString;
     }
 
+    public Calendar getDateCalendar() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date);
+        return calendar;
+    }
+
 
     public String getValueString(){return String.format(Locale.CANADA,"%.2f", value);}
 

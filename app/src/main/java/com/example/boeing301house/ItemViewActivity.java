@@ -17,6 +17,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Calendar;
+
 /**
  * Class for item view activity (lets user view specific item)
  */
@@ -266,6 +268,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     @Override
     public void onCancel() {
         exitAddEditFragment();
+    }
+
+    @Override
+    public void onDateRangeSelected(Calendar start, Calendar end) {
+
     }
 
     /**
