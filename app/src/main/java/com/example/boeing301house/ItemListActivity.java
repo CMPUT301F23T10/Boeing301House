@@ -677,7 +677,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.itemListProfileButton) {
-            // TODO: open profile
+            Intent intent = new Intent(ItemListActivity.this, UserProfileActivity.class);
+            startActivity(intent);
+            return true;
         }
         else if (item.getItemId() == R.id.itemListSearchButton) {
             // TODO: search for keyword
