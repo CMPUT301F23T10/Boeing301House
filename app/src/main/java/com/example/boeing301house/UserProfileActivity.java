@@ -46,6 +46,7 @@ public class UserProfileActivity extends AppCompatActivity {
                         .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                // TODO fix edit text : currently breaking when setting text
                                 userName.setText("Objects.requireNonNull(editText.getText())");
                                 dialog.dismiss();
                             }
