@@ -47,7 +47,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private FirebaseFirestore db;
     private CollectionReference itemsRef;
     private ListView itemListView;
-//    private FloatingActionButton addButton;
+    //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
 
@@ -55,7 +55,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     public ArrayList<Item> itemList;
     private ArrayList<Item> originalItemList;
 
-//    private ArrayList<View> selectedItemViews = new ArrayList<>();
+    //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
 
     private Button itemListFilterButton;
@@ -78,6 +78,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private Calendar startDate;
     private Calendar endDate;
 
+    Button btnreset;
+    AlertDialog.Builder builder;
+
     // TODO: finish javadocs
     /**
      *
@@ -92,16 +95,16 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      * This method iterates through the list of items and calculates the sum of their
      * individual costs to determine the total cost. The result is then displayed to
      * the user to provide an overview of the total estimated expenses.
-     *
+     * <p>
      * This method should be called when initializing the item list and whenever an item
      * is added, edited, or deleted to ensure that the total cost is up-to-date.
      */
-    private void calculateTotalPrice(){
+    private void calculateTotalPrice() {
         float total = 0.0f;
-        for(Item item: itemList){
+        for (Item item : itemList) {
             total += item.getValue();
         }
-        subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
+        subTotalText.setText(String.format(Locale.CANADA, "Total: $%.2f", total));
     }
 
 
@@ -129,6 +132,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListView.setAdapter(itemAdapter);
 
         originalItemList = new ArrayList<>(itemList);
+
+
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
         setSupportActionBar(topbar);
@@ -174,6 +179,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                                 .build();
 
                         itemList.add(item);
+                        originalItemList.add(item);
 
                     }
                     itemAdapter.notifyDataSetChanged();
@@ -401,45 +407,76 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         calculateTotalPrice();
         itemAdapter.notifyDataSetChanged();
 
+        btnreset = findViewById(R.id.resetButton);
+        builder = new AlertDialog.Builder(this);
+
+        btnreset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.setTitle("Alert!!")
+                        .setMessage("Do you want to reset your Date Filter")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int which) {
+                                itemList.clear();
+                                itemList.addAll(originalItemList);
+                                itemAdapter.notifyDataSetChanged();
+                                calculateTotalPrice();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int which) {
+                                dialogInterface.cancel();
+                            }
+                        })
+                        .show();
+
+            }
+        });
 
     }
+
+
     @Override
     public void onDateRangeSelected(Calendar start, Calendar end) {
         startDate = start;
         endDate = end;
+        itemList.clear();
+        itemList.addAll(originalItemList);
         filterItemsByDateRange(startDate, endDate);
         calculateTotalPrice();
         itemAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onResetSelected() {
-
-    }
 
     private void filterItemsByDateRange(Calendar startDate, Calendar endDate) {
+        startDate.set(Calendar.HOUR_OF_DAY, 0);
+        startDate.set(Calendar.MINUTE, 0);
+        startDate.set(Calendar.SECOND, 0);
+        startDate.set(Calendar.MILLISECOND, 0);
+
+        // Set time to the end of the day for endDate to include all items on this day
+        endDate.set(Calendar.HOUR_OF_DAY, 23);
+        endDate.set(Calendar.MINUTE, 59);
+        endDate.set(Calendar.SECOND, 59);
+        endDate.set(Calendar.MILLISECOND, 999);
         ArrayList<Item> filteredItems = new ArrayList<>();
         for (Item item : itemList) {
             Calendar itemDate = item.getDateCalendar();
-            if (itemDate != null && itemDate.after(startDate) && itemDate.before(endDate)) {
+            if ((itemDate.after(startDate) || itemDate.equals(startDate)) && itemDate.before(endDate)){
                 filteredItems.add(item);
+            }
 
                 // Include items with the same date as the start date
-            }
+
         }
 
         itemAdapter.clear();
         itemAdapter.addAll(filteredItems);
         itemAdapter.notifyDataSetChanged();
 
-        Button resetButton = findViewById(R.id.resetButton);
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Perform the reset action here
-                onResetButtonClick(view);
-            }
-        });
     }
 
 //    /**
@@ -732,15 +769,4 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         return super.onOptionsItemSelected(item);
     }
 
-    public void onResetButtonClick(View view) {
-        Log.d("ResetButton", "Button was clicked");
-        filterFragment fragment = (filterFragment) getSupportFragmentManager().findFragmentById(R.id.resetButton);
-        if (fragment != null) {
-            fragment.resetDates();
-            itemList.clear();
-            itemList.addAll(originalItemList);
-            calculateTotalPrice();
-            itemAdapter.notifyDataSetChanged();
-        }
-    }
 }

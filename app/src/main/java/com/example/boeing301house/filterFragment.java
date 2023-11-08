@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.DatePicker;
 import androidx.fragment.app.DialogFragment;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class filterFragment extends DialogFragment {
@@ -13,6 +15,9 @@ public class filterFragment extends DialogFragment {
     private Calendar startDate;
     private Calendar endDate;
     private boolean isStartDatePicker;
+
+    private ArrayList<Item> originalItemList;
+    private ArrayList<Item> workingItemList;
 
     public filterFragment() {
         // Required empty public constructor
@@ -75,20 +80,16 @@ public class filterFragment extends DialogFragment {
         this.startDate = startDate;
     }
 
-    public void resetDates() {
-        startDate = null;
-        endDate = null;
-        // Notify the activity with the reset action
-        OnDateRangeSelectedListener listener = (OnDateRangeSelectedListener) getActivity();
-        if (listener != null) {
-            listener.onResetSelected();
-        }
-    }
 
+    public void setOriginalItemList(ArrayList<Item> originalItemList) {
+        this.originalItemList = new ArrayList<>(originalItemList);
+        // Make a copy for working with the list
+        this.workingItemList = new ArrayList<>(originalItemList);
+    }
 
     public interface OnDateRangeSelectedListener {
         void onDateRangeSelected(Calendar startDate, Calendar endDate);
-        void onResetSelected();
+
     }
     // Add other necessary methods and callbacks for communicating the selected dates back to the activity
 }
