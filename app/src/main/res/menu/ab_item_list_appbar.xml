@@ -7,7 +7,8 @@
         android:icon="@drawable/ic_search_button_36dp"
         android:title="Search"
         android:contentDescription="Search for keywords"
-        app:showAsAction="ifRoom">
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView">
 
     </item>
     <item

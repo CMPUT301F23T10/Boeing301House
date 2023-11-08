@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -748,6 +749,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ab_item_list_appbar, menu);
+
+
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -760,10 +764,44 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.itemListProfileButton) {
-            // TODO: open profile
+            Intent intent = new Intent(ItemListActivity.this, UserProfileActivity.class);
+            startActivity(intent);
+            return true;
         }
         else if (item.getItemId() == R.id.itemListSearchButton) {
-            // TODO: search for keyword
+
+            SearchView searchView = (SearchView) item.getActionView();
+            searchView.setQueryHint("Search by Description or Make");
+
+
+            //THIS IS WHERE THE SEARCHING THROUGH THE LIST IS HANDLED!!!
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) { //when user submits search
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) { //when user changes some of the search
+                    ArrayList<Item> filteredItems = new ArrayList<Item>();
+                    for(Item listItem: itemList){
+                        //if the current item contains this word in description
+                        if (listItem.getDescription().toLowerCase().contains(newText.toLowerCase())) {
+                            filteredItems.add(listItem);
+                        }
+                        else if(listItem.getMake().toLowerCase().contains(newText.toLowerCase())){
+                            filteredItems.add(listItem);
+                        }
+                    }
+
+                    ItemAdapter filterAdapter = new ItemAdapter(getApplicationContext(), 0, filteredItems);
+                    itemListView.setAdapter(filterAdapter);
+
+                    itemAdapter.getFilter().filter(newText);
+
+                    return false;
+                }
+            });
         }
 
         return super.onOptionsItemSelected(item);
