@@ -667,36 +667,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ab_item_list_appbar, menu);
 
-        MenuItem menuItem = menu.findItem((R.id.itemListSearchButton));
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Search by Description Keyword");
 
-
-        //THIS IS WHERE THE SEARCHING THROUGH THE LIST IS HANDLED!!!
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) { //when user submits search
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) { //when user changes some of the search
-                ArrayList<Item> filteredItems = new ArrayList<Item>();
-                for(Item item: itemList){
-                    //if the current item contains this word in description
-                    if (item.getDescription().toLowerCase().contains(newText.toLowerCase())) {
-                        filteredItems.add(item);
-                    }
-                }
-
-                ItemAdapter filterAdapter = new ItemAdapter(getApplicationContext(), 0, filteredItems);
-                itemListView.setAdapter(filterAdapter);
-
-                itemAdapter.getFilter().filter(newText);
-
-                return false;
-            }
-        });
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -713,7 +684,39 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             // TODO: open profile
         }
         else if (item.getItemId() == R.id.itemListSearchButton) {
-            // TODO: search for keyword
+
+            SearchView searchView = (SearchView) item.getActionView();
+            searchView.setQueryHint("Search by Description or Make");
+
+
+            //THIS IS WHERE THE SEARCHING THROUGH THE LIST IS HANDLED!!!
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) { //when user submits search
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) { //when user changes some of the search
+                    ArrayList<Item> filteredItems = new ArrayList<Item>();
+                    for(Item listItem: itemList){
+                        //if the current item contains this word in description
+                        if (listItem.getDescription().toLowerCase().contains(newText.toLowerCase())) {
+                            filteredItems.add(listItem);
+                        }
+                        else if(listItem.getMake().toLowerCase().contains(newText.toLowerCase())){
+                            filteredItems.add(listItem);
+                        }
+                    }
+
+                    ItemAdapter filterAdapter = new ItemAdapter(getApplicationContext(), 0, filteredItems);
+                    itemListView.setAdapter(filterAdapter);
+
+                    itemAdapter.getFilter().filter(newText);
+
+                    return false;
+                }
+            });
         }
 
         return super.onOptionsItemSelected(item);
