@@ -1,3 +1,7 @@
+/**
+ * Source code for activity dedicated to viewing a chosen {@link com.example.boeing301house.Item} object
+ */
+
 package com.example.boeing301house;
 
 import androidx.annotation.NonNull;
@@ -18,8 +22,10 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Calendar;
+
 /**
- * Class for item view activity (lets user view specific item)
+ * Class for item view activity (lets user view specific {@link Item})
  */
 public class ItemViewActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
     private Item selectedItem; // item user selected
@@ -241,8 +247,9 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         if (isEdited == true) {
-            builder.setTitle("Confirm Edit");
-            builder.setMessage("Please confirm changes.");
+            builder.setTitle("Confirm Item Edit");
+            builder.setMessage("Are these changes correct?");
+
         }
         else {
             builder.setTitle("Confirm Delete");
@@ -266,7 +273,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
                 finish();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // if were editing and they cancel we want to return to the ItemViewActivity
@@ -288,6 +295,9 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     public void onCancel() {
         exitAddEditFragment();
     }
+
+
+
 
     /**
      * Handle if user edits by replacing the old values to the updated values

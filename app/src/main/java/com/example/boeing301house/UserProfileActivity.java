@@ -2,6 +2,7 @@ package com.example.boeing301house;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,10 +19,16 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Objects;
 
+/**
+ * Subclass of {@link AppCompatActivity}.
+ * Activity for displaying profile.
+ */
 public class UserProfileActivity extends AppCompatActivity {
     TextView userName;
     MaterialButton editUsernameBtn;
@@ -35,11 +42,16 @@ public class UserProfileActivity extends AppCompatActivity {
         userName = findViewById(R.id.userNameTextView);
         editUsernameBtn = findViewById(R.id.editUserNameButton);
 
+        SharedPreferences pref = getSharedPreferences("mypref", MODE_PRIVATE);
+        if(pref.getString("username", null) != null){
+            userName.setText(pref.getString("username", null));
+        }
+
         editUsernameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 View dialogview = LayoutInflater.from(UserProfileActivity.this).inflate(R.layout.edit_username_dialog, null);
-                TextInputEditText editText = findViewById(R.id.userNameDialogEditText);
+
                 AlertDialog alertDialog = new MaterialAlertDialogBuilder(UserProfileActivity.this)
                         .setTitle("Change username")
                         .setView(dialogview)
@@ -47,7 +59,12 @@ public class UserProfileActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO fix edit text : currently breaking when setting text
-                                userName.setText("Objects.requireNonNull(editText.getText())");
+                                TextInputLayout usernameInput = dialogview.findViewById(R.id.userNameDialogInputLayout);
+                                userName.setText(String.format(Locale.CANADA, "%s", Objects.requireNonNull(usernameInput.getEditText().getText().toString())));
+
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("username", String.format(Locale.CANADA, "%s", Objects.requireNonNull(usernameInput.getEditText().getText().toString())));
+                                editor.commit(); // apply changes
                                 dialog.dismiss();
                             }
                         })
