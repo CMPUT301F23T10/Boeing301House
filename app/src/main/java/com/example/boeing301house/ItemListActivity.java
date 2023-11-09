@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -546,14 +547,49 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     Item editedItem = data.getParcelableExtra("edited_item");
                     itemList.set(itemIndex, editedItem); // replace prev item with updated item
                     itemAdapter.notifyDataSetChanged();
+                    editItemFromFirestore(editedItem);
                 }
             }
             calculateTotalPrice();
         }
     }
-    // TODO: update firestore for editied item
+
+    /**
+     * Updates the item in firestore if it has been edited
+     * @param item The edited item
+     */
     private void editItemFromFirestore(Item item) {
-        itemsRef.document(item.getItemID());
+        // putting the values in a hashmap bc the doc on firestore is the same format
+        HashMap<String, Object> itemData = new HashMap<>();
+        itemData.put("Make", item.getMake());
+        itemData.put("Model", item.getModel());
+        itemData.put("Date", item.getDate());
+        itemData.put("SN", item.getSN());
+        itemData.put("Est Value", item.getValue());
+        itemData.put("Desc", item.getDescription());
+        itemData.put("Comment", item.getComment());
+
+        // TODO: implement
+        ArrayList<String> tags = new ArrayList<>(); // placeholder
+        itemData.put("Tags", tags); // placeholder for tags since we haven't done it yet
+
+        // Get the document reference for the item
+        DocumentReference itemRef = itemsRef.document(item.getItemID());
+
+        itemRef
+                .update(itemData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("Firestore", "DocumentSnapshot successfully written");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Firestore", "db write failed: " + e.getMessage());
+                    }
+                });
     }
 
     // TODO: finish javadocs
