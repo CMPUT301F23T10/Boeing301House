@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,7 @@ import java.util.Locale;
 /**
  * This class is for the list activity, where you can see/interact with items
  */
-public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
+public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener {
 
     private FirebaseFirestore db;
     private CollectionReference itemsRef;
@@ -71,6 +72,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     // action codes
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
+
 
     // for contextual appbar
     private ActionMode itemMultiSelectMode;
@@ -183,6 +185,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
+
 
         // select multiple initialization:
         selectedItems = new ArrayList<>();
@@ -321,6 +324,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new FilterFragment().show(getSupportFragmentManager(), "FILTER");
                 //Fragment filterFragment = new filterFragment(); //this is passed along so it can display the proper information
 
 
@@ -722,6 +726,30 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Get date range (and later tags) from filter dialog and use to filter list items
+     * @param dateStart start date in ms
+     * @param dateEnd end date in ms
+     */
+    @Override
+    public void onFilterOKPressed(long dateStart, long dateEnd) {
+        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"OK", selectedItems.size()),
+                Toast.LENGTH_SHORT).show(); // for testing
+
+        if (dateStart != 0 && dateEnd != 0) {
+            // filter items
+            dateRangeFilter(dateStart, dateEnd);
+        }
+        // TODO: add tags
+
+    }
+
+    public void dateRangeFilter(long dateStart, long dateEnd) {
+        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"FILTER", selectedItems.size()),
+                Toast.LENGTH_SHORT).show(); // for testing
+        
     }
 
 
