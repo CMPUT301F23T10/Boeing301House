@@ -18,8 +18,10 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.MessageFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -43,7 +45,8 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 View dialogview = LayoutInflater.from(UserProfileActivity.this).inflate(R.layout.edit_username_dialog, null);
-                TextInputEditText editText = findViewById(R.id.userNameDialogEditText);
+//                TextInputEditText editText = findViewById(R.id.userNameDialogEditText);
+
                 AlertDialog alertDialog = new MaterialAlertDialogBuilder(UserProfileActivity.this)
                         .setTitle("Change username")
                         .setView(dialogview)
@@ -51,7 +54,8 @@ public class UserProfileActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 // TODO fix edit text : currently breaking when setting text
-                                userName.setText("Objects.requireNonNull(editText.getText())");
+                                TextInputLayout usernameInput = dialogview.findViewById(R.id.userNameDialogInputLayout);
+                                userName.setText(String.format(Locale.CANADA, "%s", Objects.requireNonNull(usernameInput.getEditText().getText().toString())));
                                 dialog.dismiss();
                             }
                         })
