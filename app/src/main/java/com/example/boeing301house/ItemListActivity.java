@@ -1,3 +1,8 @@
+/**
+ * Source code for primary activity of app. Displays list of {@link com.example.boeing301house.Item}s and
+ * allows users to interact and add {@link com.example.boeing301house.Item}s
+ */
+
 package com.example.boeing301house;
 
 import android.content.DialogInterface;

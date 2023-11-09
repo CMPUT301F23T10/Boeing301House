@@ -1,3 +1,7 @@
+/**
+ * Source code for Item object
+ */
+
 package com.example.boeing301house;
 
 import android.os.Parcel;
@@ -17,7 +21,6 @@ import java.util.Locale;
  * Class representing item object
  */
 public class Item implements Parcelable {
-    // private String itemID; // TODO: make this
     private String make;
     private String model;
     private double value;
@@ -34,49 +37,6 @@ public class Item implements Parcelable {
 
 
     // TODO: add tag array and image array (?)
-    /**
-     * Constructor with full args with id
-     * @param make
-     * @param model
-     * @param value
-     * @param description
-     * @param date
-     * @param SN
-     * @param comment
-     */
-    public Item(String make, String model, double value, String description, long date, String SN, String comment, String id) {
-        this.make = make;
-        this.model = model;
-        this.value = value;
-        this.description = description;
-        this.date = date;
-        this.SN = SN;
-        this.comment = comment;
-        this.id = id;
-    }
-
-    /**
-     * Constructor with full args except id
-     * @param make
-     * @param model
-     * @param value
-     * @param description
-     * @param date
-     * @param SN
-     * @param comment
-     */
-    public Item(String make, String model, double value, String description, long date, String SN, String comment) {
-        this.make = make;
-        this.model = model;
-        this.value = value;
-        this.description = description;
-        this.date = date;
-        this.SN = SN;
-        this.comment = comment;
-//        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
-//        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
-        this.id = String.format(Locale.CANADA,"%d",Calendar.getInstance(Locale.CANADA).getTimeInMillis());
-    }
 
     /**
      * Default no arg constructor for Item object

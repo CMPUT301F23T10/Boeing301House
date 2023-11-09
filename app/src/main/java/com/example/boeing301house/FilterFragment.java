@@ -1,3 +1,9 @@
+/**
+ * Source code for {@link androidx.fragment.app.DialogFragment} subclass used
+ * for determining how to filter items (via date or tags)
+ * Observer pattern used.
+ */
+
 package com.example.boeing301house;
 
 import android.app.AlertDialog;
@@ -29,6 +35,7 @@ import java.util.TimeZone;
  * A simple {@link DialogFragment} subclass.
  * Use the {@link FilterFragment#newInstance} factory method to
  * create an instance of this fragment.
+ * Allows user to choose a specific date range to filter items from
  */
 public class FilterFragment extends DialogFragment {
     private long dateStart = 0;
@@ -39,6 +46,9 @@ public class FilterFragment extends DialogFragment {
         // Required empty public constructor
     }
 
+    /**
+     * Listener object for when user wants to filter {@link Item}. Uses Observer pattern.
+     */
     public interface OnFilterFragmentInteractionListener {
         void onFilterOKPressed(long dateStart, long dateEnd);
 
@@ -84,10 +94,13 @@ public class FilterFragment extends DialogFragment {
 
 
         CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
-
+        final TimeZone local = Calendar.getInstance().getTimeZone();
         MaterialDatePicker.Builder<Pair<Long, Long>> materialDateRangeBuilder = MaterialDatePicker.Builder.dateRangePicker();
-        long currentDate = Calendar.getInstance().getTimeInMillis();
+//        long offset = local.getOffset(currentDate);
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1); // go back one day
+
+        long currentDate = calendar.getTimeInMillis();
         calendar.add(Calendar.DAY_OF_YEAR, -1); // go back one day
         long prevDate = calendar.getTimeInMillis();
 
@@ -97,7 +110,7 @@ public class FilterFragment extends DialogFragment {
                 .setSelection(defaultSelection);
 
         final MaterialDatePicker<Pair<Long, Long>> materialDateRangePicker = materialDateRangeBuilder.build();
-        final TimeZone local = Calendar.getInstance().getTimeZone();
+
 
         TextInputLayout dateRange = view.findViewById(R.id.filterDateRange);
 

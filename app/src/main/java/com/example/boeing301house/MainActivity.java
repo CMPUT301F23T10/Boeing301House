@@ -1,3 +1,7 @@
+/**
+ * Source code for Main Activity (currently dedicated to login)
+ */
+
 package com.example.boeing301house;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +14,9 @@ import android.widget.Button;
 
 import java.util.UUID;
 
+/**
+ * Main Activity
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override
