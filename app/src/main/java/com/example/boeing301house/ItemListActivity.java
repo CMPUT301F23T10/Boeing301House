@@ -399,6 +399,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                 Bundle itemBundle = new Bundle();
                 itemBundle.putParcelable("item_key", newItem);
+                itemBundle.putBoolean("is_add", true);
                 addFrag.setArguments(itemBundle);
 
 

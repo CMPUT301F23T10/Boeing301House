@@ -213,7 +213,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             //      send back updated item
             //      update item properties here
             //      finalize edits to list item in navigateup
-            Fragment editItemFragment = AddEditItemFragment.newInstance(selectedItem);
+            Fragment editItemFragment = new AddEditItemFragment();
+            Bundle itemBundle = new Bundle();
+            itemBundle.putParcelable("item_key", selectedItem);
+            itemBundle.putBoolean("is_add", false);
+            editItemFragment.setArguments(itemBundle);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.itemView, editItemFragment, "VIEW_TO_EDIT").commit();
 
@@ -309,7 +313,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         selectedItem.setValue(updatedItem.getValue());
         updateTexts();
         exitAddEditFragment();
-        exitAddEditFragment();
+//        exitAddEditFragment();
     }
 
     private void exitAddEditFragment() {
