@@ -22,6 +22,10 @@ import com.google.android.material.textfield.TextInputEditText;
 import java.text.MessageFormat;
 import java.util.Objects;
 
+/**
+ * Subclass of {@link AppCompatActivity}.
+ * Activity for displaying profile.
+ */
 public class UserProfileActivity extends AppCompatActivity {
     TextView userName;
     MaterialButton editUsernameBtn;

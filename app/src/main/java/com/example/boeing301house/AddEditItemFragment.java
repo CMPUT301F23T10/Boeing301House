@@ -1,3 +1,7 @@
+/**
+ * Source code for fragment dedicated to adding/editing an {@link com.example.boeing301house.Item}
+ */
+
 package com.example.boeing301house;
 
 import android.app.DatePickerDialog;
@@ -76,7 +80,7 @@ public class AddEditItemFragment extends Fragment {
 
     // TODO: finish javadoc
     /**
-     *
+     * Listener object for Adding/Editing {@link Item}. Uses Observer pattern.
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();

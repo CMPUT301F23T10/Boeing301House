@@ -1,3 +1,7 @@
+/**
+ * Source code for activity dedicated to viewing a chosen {@link com.example.boeing301house.Item} object
+ */
+
 package com.example.boeing301house;
 
 import androidx.annotation.NonNull;
@@ -18,7 +22,7 @@ import com.google.android.material.appbar.MaterialToolbar;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Class for item view activity (lets user view specific item)
+ * Class for item view activity (lets user view specific {@link Item})
  */
 public class ItemViewActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
     private Item selectedItem; // item user selected
