@@ -251,8 +251,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         if (isEdited == true) {
-            builder.setTitle("Confirm Item Edit");
-            builder.setMessage("Are these changes correct?");
+            builder.setTitle("Confirm Edit");
+            builder.setMessage("Please confirm changes?");
 
         }
         else {
