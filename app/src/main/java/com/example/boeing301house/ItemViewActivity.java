@@ -1,9 +1,14 @@
+/**
+ * Source code for activity dedicated to viewing a chosen {@link com.example.boeing301house.Item} object
+ */
+
 package com.example.boeing301house;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Calendar;
 
 /**
- * Class for item view activity (lets user view specific item)
+ * Class for item view activity (lets user view specific {@link Item})
  */
 public class ItemViewActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
     private Item selectedItem; // item user selected
@@ -81,6 +86,23 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             throw new IllegalArgumentException();
         }
 
+        updateTexts();
+
+
+
+//        topbar.setOnClickListener();
+
+        // TODO: add gallery carousel and tags
+
+        // TODO: add delete and edit functionality (in onOptionsItemSelected function)
+        // during call back: send item and position back via intent
+        //      delete -> delete item at given position
+        //      edit -> set item in list as newly returned item
+
+
+    }
+
+    private void updateTexts() {
         // textviews
         tSN = findViewById(R.id.itemViewSN); // can be empty
         tModel = findViewById(R.id.itemViewModel);
@@ -132,21 +154,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         tMake.setText(make);
         tEstimatedValue.setText(estimatedValue);
         tDate.setText(date);
-
-
-
-
-//        topbar.setOnClickListener();
-
-        // TODO: add gallery carousel and tags
-
-        // TODO: add delete and edit functionality (in onOptionsItemSelected function)
-        // during call back: send item and position back via intent
-        //      delete -> delete item at given position
-        //      edit -> set item in list as newly returned item
-
-
     }
+
 
     /**
      * Go back to previous activity on navigation button press
@@ -165,6 +174,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             //      resultIntent.putExtra ... | add item and position
             //      setResult(RESULT_OK, resultIntent)
             //      set item from list activity (update item properties again)
+            ConfirmationDialog(true);
         } else {
             // if no edits or anything
             setResult(RESULT_CANCELED);
@@ -203,13 +213,17 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             //      send back updated item
             //      update item properties here
             //      finalize edits to list item in navigateup
+            Fragment editItemFragment = AddEditItemFragment.newInstance(selectedItem);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.itemView, editItemFragment, "VIEW_TO_EDIT").commit();
+
             return true;
         } else if (itemId == R.id.itemViewDeleteButton) {
             // delete item
             //      delete -> delete item at given position
             //      probably just send item or position back to list activity and delete from there
 
-            deleteConfirmationDialog();
+            ConfirmationDialog(false);
 //            setResult(RESULT_OK);
             return true;
         }
@@ -225,41 +239,47 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     /**
      *
      */
-    private void deleteConfirmationDialog() {
+    private void ConfirmationDialog(boolean isEdited) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Confirm Delete");
-        builder.setMessage("Are you sure you want to delete this item?");
+
+        if (isEdited == true) {
+            builder.setTitle("Confirm Item Edit");
+            builder.setMessage("Are these changes correct?");
+        }
+        else {
+            builder.setTitle("Confirm Delete");
+            builder.setMessage("Are you sure you want to delete this item?");
+        }
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent resultIntent = new Intent();
-
-                // adding the position to the intent, can access with key "pos"
                 resultIntent.putExtra("pos", pos);
-                resultIntent.putExtra("action", DELETE_ITEM);
+                // adding the position to the intent, can access with key "pos"
+                if (isEdited) {
+                    resultIntent.putExtra("action", EDIT_ITEM);
+                    resultIntent.putExtra("edited_item", selectedItem);
+                }
+                else {
+                    resultIntent.putExtra("action", DELETE_ITEM);
+                }
                 setResult(RESULT_OK, resultIntent);
-
                 // finish closes the activity then goes back to the next activity in stack
                 finish();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                if (isEdited == true) {
+                    finish();
+                }
             }
         });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
-    // TODO: finish javadocs
-    /**
-     *
-     */
-    private void editConfirmationDialog() {
-        // TODO: add functionality
-    }
 
     // TODO: finish javadocs
     /**
@@ -281,8 +301,16 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      */
     @Override
     public void onConfirmPressed(Item updatedItem) {
-        // TODO: add functionality
-
+        editingItem = true;
+        selectedItem.setSN(updatedItem.getSN());
+        selectedItem.setModel(updatedItem.getModel());
+        selectedItem.setMake(updatedItem.getMake());
+        selectedItem.setDate(updatedItem.getDate());
+        selectedItem.setDescription(updatedItem.getDescription());
+        selectedItem.setComment(updatedItem.getComment());
+        selectedItem.setValue(updatedItem.getValue());
+        updateTexts();
+        exitAddEditFragment();
         exitAddEditFragment();
     }
 

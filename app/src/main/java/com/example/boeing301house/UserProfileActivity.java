@@ -1,23 +1,70 @@
 package com.example.boeing301house;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.MessageFormat;
+import java.util.Objects;
+
+/**
+ * Subclass of {@link AppCompatActivity}.
+ * Activity for displaying profile.
+ */
 public class UserProfileActivity extends AppCompatActivity {
+    TextView userName;
+    MaterialButton editUsernameBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_profile);
-
         MaterialToolbar topbar = findViewById(R.id.UserProfileTopBar);
         setSupportActionBar(topbar);
+
+        userName = findViewById(R.id.userNameTextView);
+        editUsernameBtn = findViewById(R.id.editUserNameButton);
+
+        editUsernameBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View dialogview = LayoutInflater.from(UserProfileActivity.this).inflate(R.layout.edit_username_dialog, null);
+                TextInputEditText editText = findViewById(R.id.userNameDialogEditText);
+                AlertDialog alertDialog = new MaterialAlertDialogBuilder(UserProfileActivity.this)
+                        .setTitle("Change username")
+                        .setView(dialogview)
+                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO fix edit text : currently breaking when setting text
+                                userName.setText("Objects.requireNonNull(editText.getText())");
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create();
+                alertDialog.show();
+            }
+        });
+
     }
     /**
      * Inflate menu items in app bar
@@ -43,5 +90,10 @@ public class UserProfileActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showChangeUsername(){
+
+
     }
 }

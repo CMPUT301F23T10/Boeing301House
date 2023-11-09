@@ -1,3 +1,7 @@
+/**
+ * Builder pattern for {@link com.example.boeing301house.Item} object
+ */
+
 package com.example.boeing301house;
 
 import java.util.Calendar;
@@ -19,7 +23,7 @@ public class ItemBuilder {
 //    private String id;
 
     /**
-     * No arg constructor for builder object
+     * No arg constructor for builder object. Creates an empty {@link Item} object
      */
     public ItemBuilder() {
         this.item = new Item();
@@ -35,7 +39,7 @@ public class ItemBuilder {
 //    }
 
     /**
-     * Builder method for declaring the id of an item
+     * Builder method for declaring the id of an {@link Item}
      * @param id
      */
     public ItemBuilder addID(String id) {
@@ -45,7 +49,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Builder method for declaring make of an item
+     * Builder method for declaring make of an {@link Item}
      * @param make
      */
     public ItemBuilder addMake(String make) {
@@ -55,7 +59,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Builder method for declaring model of an item
+     * Builder method for declaring model of an {@link Item}
      * @param model
      */
     public ItemBuilder addModel(String model) {
@@ -65,7 +69,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Builder method for declaring serial number of an item
+     * Builder method for declaring serial number of an {@link Item}
      * @param SN
      */
     public ItemBuilder addSN(String SN) {
@@ -75,7 +79,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Builder method for adding a description to an item
+     * Builder method for adding a description to an {@link Item}
      * @param desc
      */
     public ItemBuilder addDescription(String desc) {
@@ -85,7 +89,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Builder method for adding comments to an item
+     * Builder method for adding comments to an {@link Item}
      * @param comment
      */
     public ItemBuilder addComment(String comment) {
@@ -95,8 +99,8 @@ public class ItemBuilder {
     }
 
     /**
-     * Builder method for declaring the date (in milliseconds) an item was acquired
-     * @param date
+     * Builder method for declaring the date (in milliseconds) an {@link Item} was acquired
+     * @param date purchase date
      */
     public ItemBuilder addDate(long date) {
 //        this.date = date;
@@ -105,8 +109,8 @@ public class ItemBuilder {
     }
 
     /**
-     * Builder method for declaring value/price of an item
-     * @param value
+     * Builder method for declaring value/price of an {@link Item}
+     * @param value estimated value/price of the item
      */
     public ItemBuilder addValue(double value) {
 //        this.value = value;
@@ -115,7 +119,7 @@ public class ItemBuilder {
     }
 
     /**
-     * Builder method that "builds" and returns the item
+     * Builder method that "builds" and returns the {@link Item}
      * @return constructed item
      */
     public Item build() {

@@ -1,3 +1,7 @@
+/**
+ * Source code for fragment dedicated to adding/editing an {@link com.example.boeing301house.Item}
+ */
+
 package com.example.boeing301house;
 
 import android.app.DatePickerDialog;
@@ -39,9 +43,9 @@ public class AddEditItemFragment extends Fragment {
     // handle passing through an expense object to fragment from activity
 
     /**
-     * This function creates an instance of the fragment and passes an item to it.
+     * This function creates an instance of the fragment and passes an {@link Item} to it.
      * Creates fragment via a no-argument constructor
-     * @param item Parcelable Item object given to fragment
+     * @param item Parcelable {@link Item} object given to fragment
      * @return fragment instance
      */
     public static AddEditItemFragment newInstance(Item item) {
@@ -76,7 +80,7 @@ public class AddEditItemFragment extends Fragment {
 
     // TODO: finish javadoc
     /**
-     *
+     * Listener object for Adding/Editing {@link Item}. Uses Observer pattern.
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();
@@ -114,7 +118,8 @@ public class AddEditItemFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            currentItem = (Item) getArguments().getParcelable("ITEM_OBJ"); // get item from bundle
+            currentItem = (Item) getArguments().getParcelable("item_key"); // get item from bundle
+            isAdd = false;
         }
     }
 //    private void deleteFrag(){ //this deletes the fragment from the screen

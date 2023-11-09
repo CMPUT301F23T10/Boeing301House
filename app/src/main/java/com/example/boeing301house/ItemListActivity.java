@@ -1,3 +1,8 @@
+/**
+ * Source code for primary activity of app. Displays list of {@link com.example.boeing301house.Item}s and
+ * allows users to interact and add {@link com.example.boeing301house.Item}s
+ */
+
 package com.example.boeing301house;
 
 import android.content.DialogInterface;
@@ -10,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +41,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -43,20 +48,19 @@ import java.util.Locale;
 /**
  * This class is for the list activity, where you can see/interact with items
  */
-public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener,filterFragment.OnDateRangeSelectedListener {
+public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener {
 
     private FirebaseFirestore db;
     private CollectionReference itemsRef;
     private ListView itemListView;
-    //    private FloatingActionButton addButton;
+//    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
 
     private TextView subTotalText;
     public ArrayList<Item> itemList;
-    private ArrayList<Item> originalItemList;
 
-    //    private ArrayList<View> selectedItemViews = new ArrayList<>();
+//    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
 
     private Button itemListFilterButton;
@@ -74,13 +78,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
 
+
     // for contextual appbar
     private ActionMode itemMultiSelectMode;
-    private Calendar startDate;
-    private Calendar endDate;
-
-    Button btnreset;
-    AlertDialog.Builder builder;
 
     // TODO: finish javadocs
     /**
@@ -96,16 +96,16 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      * This method iterates through the list of items and calculates the sum of their
      * individual costs to determine the total cost. The result is then displayed to
      * the user to provide an overview of the total estimated expenses.
-     * <p>
+     *
      * This method should be called when initializing the item list and whenever an item
      * is added, edited, or deleted to ensure that the total cost is up-to-date.
      */
-    private void calculateTotalPrice() {
+    private void calculateTotalPrice(){
         float total = 0.0f;
-        for (Item item : itemList) {
+        for(Item item: itemList){
             total += item.getValue();
         }
-        subTotalText.setText(String.format(Locale.CANADA, "Total: $%.2f", total));
+        subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
     }
 
 
@@ -131,10 +131,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
         itemListView.setAdapter(itemAdapter);
-
-        originalItemList = new ArrayList<>(itemList);
-
-
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
         setSupportActionBar(topbar);
@@ -156,7 +152,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 }
                 if (snapshots != null) {
                     itemList.clear();
-                    for (QueryDocumentSnapshot doc : snapshots) {
+                    for (QueryDocumentSnapshot doc: snapshots) {
                         String model = doc.getString("Model");
                         String make = doc.getString("Make");
                         Long date = doc.getLong("Date");
@@ -180,7 +176,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                                 .build();
 
                         itemList.add(item);
-                        originalItemList.add(item);
 
                     }
                     itemAdapter.notifyDataSetChanged();
@@ -195,6 +190,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
+
 
         // select multiple initialization:
         selectedItems = new ArrayList<>();
@@ -237,15 +233,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // handle item selection during multiselect and regular selection
         itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             // TODO: finish javadocs
-
             /**
              * When an item is clicked from the list
-             *
              * @param adapterView The AdapterView where the click happened.
-             * @param view        The view within the AdapterView that was clicked (this
-             *                    will be a view provided by the adapter)
-             * @param i           The position of the view in the adapter.
-             * @param l           The row id of the item that was clicked.
+             * @param view The view within the AdapterView that was clicked (this
+             *            will be a view provided by the adapter)
+             * @param i The position of the view in the adapter.
+             * @param l The row id of the item that was clicked.
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -310,7 +304,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     }
 
 //                    selectedItemViews.size();
-                    itemMultiSelectMode.setTitle(String.format(Locale.CANADA, "Selected %d Items", selectedItems.size()));
+                    itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", selectedItems.size()));
 
 
                     // deselect all items -> no longer selecting multiple
@@ -319,36 +313,39 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         itemMultiSelectMode.finish(); // close contextual app bar
                     }
                     // if delete multiple btn pressed -> isSelectMultiple = false
-                    // selectedItems.clear();
-                    // reset background colors
-                    // selectedItemViews.clear();
+                        // selectedItems.clear();
+                        // reset background colors
+                        // selectedItemViews.clear();
 
                 }
 
 
-                //updateSubtotal(); //update subtotal
-            }
+            //updateSubtotal(); //update subtotal
+        }
 
         });
-        originalItemList = new ArrayList<>(itemList);
+
         //for launching the sort fragment
         itemListFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                filterFragment startDatePickerFragment = filterFragment.newInstance(true);
-                startDatePickerFragment.show(getSupportFragmentManager(), "startDatePicker");
-                Fragment filterFragment = new filterFragment();
-                FragmentManager fragmentManager = getSupportFragmentManager();
+                new FilterFragment().show(getSupportFragmentManager(), "FILTER");
+                //Fragment filterFragment = new filterFragment(); //this is passed along so it can display the proper information
+
+
+                //inflates the filterFragment
+
+                /*
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction
+//                            .add(R.id.content_frame, detailFrag, null)
                         .add(R.id.itemListContent, filterFragment, null)
                         .addToBackStack("filter")
                         .commit();
-
+                        */
 
             }
         });
-
 
         itemListSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -373,8 +370,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // for adding new expenses:
         addButton.setOnClickListener(new View.OnClickListener() {
             // TODO: finish javadocs
-
             /**
+             *
              * @param view The view that was clicked.
              */
             @Override
@@ -384,16 +381,16 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 Fragment addFrag = new AddEditItemFragment();
 
                 Item newItem = new ItemBuilder()
-                        .build(); //creates a new city to be created
+                                .build(); //creates a new city to be created
                 // items.add(selectItem); //adds the empty city to the list (with no details)
 
                 Bundle itemBundle = new Bundle();
-                itemBundle.putParcelable("ITEM_OBJ", newItem);
+                itemBundle.putParcelable("item_key", newItem);
                 addFrag.setArguments(itemBundle);
 
 
                 //initalizes the detail fragment so that the newly created (empty) item can be filled with user data
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                FragmentTransaction transaction= fragmentManager.beginTransaction();
 
                 transaction
 //                        .add(R.id.content_frame, detailFrag, null)
@@ -407,77 +404,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         });
         calculateTotalPrice();
         itemAdapter.notifyDataSetChanged();
-
-        btnreset = findViewById(R.id.resetButton);
-        builder = new AlertDialog.Builder(this);
-
-        btnreset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                builder.setTitle("Alert!!")
-                        .setMessage("Do you want to reset your Date Filter")
-                        .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
-                                itemList.clear();
-                                itemList.addAll(originalItemList);
-                                itemAdapter.notifyDataSetChanged();
-                                calculateTotalPrice();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int which) {
-                                dialogInterface.cancel();
-                            }
-                        })
-                        .show();
-
-            }
-        });
-
-    }
-
-
-    @Override
-    public void onDateRangeSelected(Calendar start, Calendar end) {
-        startDate = start;
-        endDate = end;
-        itemList.clear();
-        itemList.addAll(originalItemList);
-        filterItemsByDateRange(startDate, endDate);
-        calculateTotalPrice();
-        itemAdapter.notifyDataSetChanged();
-    }
-
-
-    private void filterItemsByDateRange(Calendar startDate, Calendar endDate) {
-        startDate.set(Calendar.HOUR_OF_DAY, 0);
-        startDate.set(Calendar.MINUTE, 0);
-        startDate.set(Calendar.SECOND, 0);
-        startDate.set(Calendar.MILLISECOND, 0);
-
-        // Set time to the end of the day for endDate to include all items on this day
-        endDate.set(Calendar.HOUR_OF_DAY, 23);
-        endDate.set(Calendar.MINUTE, 59);
-        endDate.set(Calendar.SECOND, 59);
-        endDate.set(Calendar.MILLISECOND, 999);
-        ArrayList<Item> filteredItems = new ArrayList<>();
-        for (Item item : itemList) {
-            Calendar itemDate = item.getDateCalendar();
-            if ((itemDate.after(startDate) || itemDate.equals(startDate)) && itemDate.before(endDate)){
-                filteredItems.add(item);
-            }
-
-                // Include items with the same date as the start date
-
-        }
-
-        itemAdapter.clear();
-        itemAdapter.addAll(filteredItems);
-        itemAdapter.notifyDataSetChanged();
-
     }
 
 //    /**
@@ -558,18 +484,34 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         if (resultCode == RESULT_OK) {
             String action = data.getStringExtra("action");
             assert action != null;
+
+            // getting the position data, if it cant find pos it defaults to -1
+            int itemIndex = data.getIntExtra("pos", -1);
+
             if (action.contentEquals(DELETE_ITEM)) {
-                // getting the position data, if it cant find pos it defaults to -1
-                int itemIndexToDelete = data.getIntExtra("pos", -1);
-                if (itemIndexToDelete != -1) {
-                    Item itemToDelete = itemList.get(itemIndexToDelete);
-                    itemList.remove(itemIndexToDelete);
+
+                if (itemIndex != -1) {
+                    Item itemToDelete = itemList.get(itemIndex);
+                    itemList.remove(itemIndex);
                     deleteItemFromFirestore(itemToDelete);
-                    calculateTotalPrice();
+
+                }
+            } else if (action.contentEquals(EDIT_ITEM)) {
+                if (itemIndex != -1){
+                    // get the updated item
+                    Item editedItem = data.getParcelableExtra("edited_item");
+                    itemList.set(itemIndex, editedItem); // replace prev item with updated item
+                    itemAdapter.notifyDataSetChanged();
                 }
             }
+            calculateTotalPrice();
         }
     }
+    // TODO: update firestore for editied item
+    private void editItemFromFirestore(Item item) {
+        itemsRef.document(item.getItemID());
+    }
+
     // TODO: finish javadocs
     /**
      *
@@ -806,5 +748,30 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Get date range (and later tags) from filter dialog and use to filter list items
+     * @param dateStart start date in ms
+     * @param dateEnd end date in ms
+     */
+    @Override
+    public void onFilterOKPressed(long dateStart, long dateEnd) {
+        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"OK", selectedItems.size()),
+                Toast.LENGTH_SHORT).show(); // for testing
+
+        if (dateStart != 0 && dateEnd != 0) {
+            // filter items
+            dateRangeFilter(dateStart, dateEnd);
+        }
+        // TODO: add tags
+
+    }
+
+    public void dateRangeFilter(long dateStart, long dateEnd) {
+        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"FILTER", selectedItems.size()),
+                Toast.LENGTH_SHORT).show(); // for testing
+
+    }
+
 
 }
