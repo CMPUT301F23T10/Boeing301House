@@ -121,7 +121,7 @@ public class AddEditItemFragment extends Fragment {
         if (getArguments() != null) {
             currentItem = (Item) getArguments().getParcelable("item_key"); // get item from bundle
             isAdd = (boolean) getArguments().getBoolean(IS_ADD);
-//            isAdd = false;
+
         }
     }
 //    private void deleteFrag(){ //this deletes the fragment from the screen

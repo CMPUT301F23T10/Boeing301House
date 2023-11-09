@@ -240,8 +240,12 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
 //        return super.onOptionsItemSelected(item);
 //    }
     // TODO: finish javadocs
+
     /**
-     *
+     * Confirmation dialog allows users to confirm their changes. This can be deleting
+     * an item or editing an items details.
+     * @param isEdited Boolean to know if we are editing an item or deleting
+     *                 True for editing and False for deleting
      */
     private void ConfirmationDialog(boolean isEdited) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -249,6 +253,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         if (isEdited == true) {
             builder.setTitle("Confirm Item Edit");
             builder.setMessage("Are these changes correct?");
+
         }
         else {
             builder.setTitle("Confirm Delete");
@@ -275,6 +280,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // if were editing and they cancel we want to return to the ItemViewActivity
                 if (isEdited == true) {
                     finish();
                 }
@@ -298,7 +304,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
 
 
     /**
-     * Handle if user edits
+     * Handle if user edits by replacing the old values to the updated values
      * @param updatedItem
      */
     @Override
@@ -311,11 +317,14 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         selectedItem.setDescription(updatedItem.getDescription());
         selectedItem.setComment(updatedItem.getComment());
         selectedItem.setValue(updatedItem.getValue());
-        updateTexts();
-        exitAddEditFragment();
-//        exitAddEditFragment();
+        updateTexts(); // updates the text values
+        exitAddEditFragment(); // closing the fragment
+
     }
 
+    /**
+     * Exits the fragment
+     */
     private void exitAddEditFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("VIEW_TO_EDIT");
         if (fragment != null) {
