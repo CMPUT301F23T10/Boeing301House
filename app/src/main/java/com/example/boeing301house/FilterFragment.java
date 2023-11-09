@@ -94,10 +94,13 @@ public class FilterFragment extends DialogFragment {
 
 
         CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
-
+        final TimeZone local = Calendar.getInstance().getTimeZone();
         MaterialDatePicker.Builder<Pair<Long, Long>> materialDateRangeBuilder = MaterialDatePicker.Builder.dateRangePicker();
-        long currentDate = Calendar.getInstance().getTimeInMillis();
+//        long offset = local.getOffset(currentDate);
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_YEAR, -1); // go back one day
+
+        long currentDate = calendar.getTimeInMillis();
         calendar.add(Calendar.DAY_OF_YEAR, -1); // go back one day
         long prevDate = calendar.getTimeInMillis();
 
@@ -107,7 +110,7 @@ public class FilterFragment extends DialogFragment {
                 .setSelection(defaultSelection);
 
         final MaterialDatePicker<Pair<Long, Long>> materialDateRangePicker = materialDateRangeBuilder.build();
-        final TimeZone local = Calendar.getInstance().getTimeZone();
+
 
         TextInputLayout dateRange = view.findViewById(R.id.filterDateRange);
 
