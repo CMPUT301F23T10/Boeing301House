@@ -290,10 +290,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         exitAddEditFragment();
     }
 
-    @Override
-    public void onDateRangeSelected(Calendar start, Calendar end) {
 
-    }
+
 
     /**
      * Handle if user edits

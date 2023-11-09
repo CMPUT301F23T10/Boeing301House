@@ -41,6 +41,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -81,6 +82,14 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     // for contextual appbar
     private ActionMode itemMultiSelectMode;
+
+    Button btnReset;
+    AlertDialog.Builder builder;
+
+    public ArrayList<Item> originalItemList;
+
+    private long startDate;
+    private long endDate;
 
     // TODO: finish javadocs
     /**
@@ -131,6 +140,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
         itemListView.setAdapter(itemAdapter);
+
+        originalItemList = new ArrayList<>(itemList);
+
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
         setSupportActionBar(topbar);
@@ -176,6 +188,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                                 .build();
 
                         itemList.add(item);
+                        originalItemList.add(item);
 
                     }
                     itemAdapter.notifyDataSetChanged();
@@ -404,7 +417,38 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         });
         calculateTotalPrice();
         itemAdapter.notifyDataSetChanged();
+
+        btnReset = findViewById(R.id.resetButton);
+        builder = new AlertDialog.Builder(this);
+
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.setTitle("Alert!!")
+                        .setMessage("Do you want to reset you date filter")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                itemList.clear();
+                                itemList.addAll(originalItemList);
+                                itemAdapter.notifyDataSetChanged();
+                                calculateTotalPrice();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
+            }
+        });
+
     }
+
+
 
 //    /**
 //     * UpdateSubtotal just updates the subtotal at the bottom of the screen on the list activity
@@ -543,6 +587,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         addButton.show();
         exitAddEditFragment();
     }
+
+
     // TODO: finish javadocs
     /**
      *
@@ -758,18 +804,33 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     public void onFilterOKPressed(long dateStart, long dateEnd) {
         Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"OK", selectedItems.size()),
                 Toast.LENGTH_SHORT).show(); // for testing
-
-        if (dateStart != 0 && dateEnd != 0) {
+        startDate = dateStart;
+        endDate = dateEnd;
+//        if (dateStart != 0 && dateEnd != 0) {
+            itemList.clear();
+            itemList.addAll(originalItemList);
+            dateRangeFilter(startDate,endDate);
+            calculateTotalPrice();
+            itemAdapter.notifyDataSetChanged();
             // filter items
-            dateRangeFilter(dateStart, dateEnd);
-        }
+//        }
         // TODO: add tags
 
     }
 
-    public void dateRangeFilter(long dateStart, long dateEnd) {
+    public void dateRangeFilter(long startDate, long endDate) {
         Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"FILTER", selectedItems.size()),
                 Toast.LENGTH_SHORT).show(); // for testing
+        ArrayList<Item> filteredItems = new ArrayList<>();
+        for(Item item : itemList ){
+            long itemDate =  item.getDate();
+            if(itemDate >= startDate && itemDate < endDate){
+                filteredItems.add(item);
+            }
+        }
+        itemAdapter.clear();
+        itemAdapter.addAll(filteredItems);
+
 
     }
 
