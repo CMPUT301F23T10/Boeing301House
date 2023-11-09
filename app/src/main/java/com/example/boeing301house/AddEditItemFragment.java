@@ -115,7 +115,8 @@ public class AddEditItemFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            currentItem = (Item) getArguments().getParcelable("ITEM_OBJ"); // get item from bundle
+            currentItem = (Item) getArguments().getParcelable("item_key"); // get item from bundle
+            isAdd = false;
         }
     }
 //    private void deleteFrag(){ //this deletes the fragment from the screen

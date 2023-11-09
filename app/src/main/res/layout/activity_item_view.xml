@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".ItemViewActivity">
+
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/itemViewAppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/itemViewAppBarLayout"
         app:liftOnScroll="true"
-        app:liftOnScrollTargetViewId="@id/itemViewScrollView"
         app:liftOnScrollColor="@color/colorTitleBar"
+        app:liftOnScrollTargetViewId="@id/itemViewScrollView"
 
         >
 
@@ -35,54 +37,55 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/itemViewScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginBottom="?actionBarSize"
-        android:id="@+id/itemViewScrollView"
         android:paddingBottom="20dp"
-        >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/itemViewConstraintLayout"
             android:layout_width="match_parent"
             android:layout_height="0dp">
+
             <TextView
-                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/itemViewSN"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
                 android:text="SN: XXXXXXXXXXXX"
-
-                app:layout_constraintStart_toStartOf="parent"
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
 
-                >
-            </TextView>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                ></TextView>
+
             <TextView
                 android:id="@+id/itemViewModel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Model"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                app:layout_constraintTop_toBottomOf="@id/itemViewSN"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="Model"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineLarge"
                 android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/itemViewSN"
 
                 >
 
             </TextView>
+
             <TextView
                 android:id="@+id/itemViewMake"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="Make"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
                 app:layout_constraintTop_toBottomOf="@id/itemViewModel">
@@ -90,31 +93,30 @@
             </TextView>
 
             <TextView
-                android:layout_marginTop="15dp"
                 android:id="@+id/itemViewDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
                 android:layout_marginRight="10dp"
-                android:textSize="14sp"
                 android:text="Date: mm/dd/yy"
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                app:layout_constraintTop_toBottomOf="@id/itemViewMake"
-                >
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/itemViewMake">
 
             </TextView>
+
             <TextView
                 android:id="@+id/itemViewDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:textSize="14sp"
-                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-                android:text="Desc: "
-                app:layout_constraintTop_toBottomOf="@id/itemViewDate"
                 android:layout_marginTop="15dp"
-                >
+                android:layout_marginRight="10dp"
+                android:text="Desc: "
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/itemViewDate">
 
             </TextView>
 
@@ -122,13 +124,12 @@
                 android:id="@+id/itemViewComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/itemViewDesc"
                 android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                android:layout_marginRight="10dp"
                 android:text="Comment"
-                >
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+                app:layout_constraintTop_toBottomOf="@id/itemViewDesc">
 
             </TextView>
 
@@ -136,55 +137,55 @@
 
     </androidx.core.widget.NestedScrollView>
 
-<!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-<!--        android:id="@+id/itemViewDeleteButton"-->
-<!--        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:backgroundTint="@color/colorDelete"-->
-<!--        android:text="DELETE"-->
-<!--        android:layout_gravity="top"-->
-<!--        app:layout_anchor="@id/itemViewScrollView"-->
-<!--        app:layout_anchorGravity="bottom|end"-->
-<!--        android:layout_marginBottom="?actionBarSize"-->
+    <!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+    <!--        android:id="@+id/itemViewDeleteButton"-->
+    <!--        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:backgroundTint="@color/colorDelete"-->
+    <!--        android:text="DELETE"-->
+    <!--        android:layout_gravity="top"-->
+    <!--        app:layout_anchor="@id/itemViewScrollView"-->
+    <!--        app:layout_anchorGravity="bottom|end"-->
+    <!--        android:layout_marginBottom="?actionBarSize"-->
 
-<!--        >-->
+    <!--        >-->
 
-<!--    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
+    <!--    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
 
-<!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
-<!--        android:id="@+id/itemViewEditButton"-->
-<!--        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:backgroundTint="@color/colorButton"-->
-<!--        android:text="EDIT"-->
-<!--        android:layout_gravity="top"-->
-<!--        app:layout_anchor="@id/itemViewDeleteButton"-->
-<!--        app:layout_anchorGravity="end|top"-->
-<!--        android:layout_marginBottom="?actionBarSize"-->
+    <!--    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton-->
+    <!--        android:id="@+id/itemViewEditButton"-->
+    <!--        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:backgroundTint="@color/colorButton"-->
+    <!--        android:text="EDIT"-->
+    <!--        android:layout_gravity="top"-->
+    <!--        app:layout_anchor="@id/itemViewDeleteButton"-->
+    <!--        app:layout_anchorGravity="end|top"-->
+    <!--        android:layout_marginBottom="?actionBarSize"-->
 
 
-<!--        >-->
+    <!--        >-->
 
-<!--    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
+    <!--    </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>-->
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/itemViewBottomBar"
+        style="@style/Widget.MaterialComponents.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        style="@style/Widget.MaterialComponents.Toolbar"
-        android:minHeight="?actionBarSize"
         android:backgroundTint="@color/colorBottomBar"
-        >
+        android:minHeight="?actionBarSize">
+
         <TextView
             android:id="@+id/itemViewEstVal"
+            style="@style/TextAppearance.Material3.TitleMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="EST. VAL: $0.00"
-            android:textColor="@color/white"
-            style="@style/TextAppearance.Material3.TitleMedium">
+            android:textColor="@color/white">
 
         </TextView>
     </com.google.android.material.bottomappbar.BottomAppBar>

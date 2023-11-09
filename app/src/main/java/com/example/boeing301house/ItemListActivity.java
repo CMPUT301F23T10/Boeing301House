@@ -385,7 +385,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 // items.add(selectItem); //adds the empty city to the list (with no details)
 
                 Bundle itemBundle = new Bundle();
-                itemBundle.putParcelable("ITEM_OBJ", newItem);
+                itemBundle.putParcelable("item_key", newItem);
                 addFrag.setArguments(itemBundle);
 
 
@@ -484,18 +484,34 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         if (resultCode == RESULT_OK) {
             String action = data.getStringExtra("action");
             assert action != null;
+
+            // getting the position data, if it cant find pos it defaults to -1
+            int itemIndex = data.getIntExtra("pos", -1);
+
             if (action.contentEquals(DELETE_ITEM)) {
-                // getting the position data, if it cant find pos it defaults to -1
-                int itemIndexToDelete = data.getIntExtra("pos", -1);
-                if (itemIndexToDelete != -1) {
-                    Item itemToDelete = itemList.get(itemIndexToDelete);
-                    itemList.remove(itemIndexToDelete);
+
+                if (itemIndex != -1) {
+                    Item itemToDelete = itemList.get(itemIndex);
+                    itemList.remove(itemIndex);
                     deleteItemFromFirestore(itemToDelete);
-                    calculateTotalPrice();
+
+                }
+            } else if (action.contentEquals(EDIT_ITEM)) {
+                if (itemIndex != -1){
+                    // get the updated item
+                    Item editedItem = data.getParcelableExtra("edited_item");
+                    itemList.set(itemIndex, editedItem); // replace prev item with updated item
+                    itemAdapter.notifyDataSetChanged();
                 }
             }
+            calculateTotalPrice();
         }
     }
+    // TODO: update firestore for editied item
+    private void editItemFromFirestore(Item item) {
+        itemsRef.document(item.getItemID());
+    }
+
     // TODO: finish javadocs
     /**
      *
