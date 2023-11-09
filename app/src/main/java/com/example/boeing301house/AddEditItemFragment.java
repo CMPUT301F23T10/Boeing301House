@@ -16,6 +16,8 @@ import android.widget.DatePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -142,13 +144,22 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
 
-//        binding.itemAddEditMaterialToolBar.inflateMenu(R.menu.ab_item_add_edit_bar);
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: add functionality and check over
                 listener.onCancel();
                 // deleteFrag();
+            }
+        });
+        binding.itemAddEditMaterialToolBar.findViewById(R.id.itemAddEditTag).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment tagsFragment = TagsFragment.newInstance(currentItem);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.itemAddEditContent, tagsFragment, "tagsFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
         // TODO: STILL BUGGED
@@ -222,6 +233,7 @@ public class AddEditItemFragment extends Fragment {
 
             }
         });
+
 
         // material date picker behaviours
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {

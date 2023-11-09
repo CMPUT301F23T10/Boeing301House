@@ -90,5 +90,13 @@ public class TagsFragment extends Fragment {
                 // deleteFrag();
             }
         });
+
+        binding.tagsViewTopBar.findViewById(R.id.itemListProfileButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UserProfileActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
 }}
