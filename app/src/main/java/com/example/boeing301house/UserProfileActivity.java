@@ -2,6 +2,7 @@ package com.example.boeing301house;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -41,11 +42,15 @@ public class UserProfileActivity extends AppCompatActivity {
         userName = findViewById(R.id.userNameTextView);
         editUsernameBtn = findViewById(R.id.editUserNameButton);
 
+        SharedPreferences pref = getSharedPreferences("mypref", MODE_PRIVATE);
+        if(pref.getString("username", null) != null){
+            userName.setText(pref.getString("username", null));
+        }
+
         editUsernameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 View dialogview = LayoutInflater.from(UserProfileActivity.this).inflate(R.layout.edit_username_dialog, null);
-//                TextInputEditText editText = findViewById(R.id.userNameDialogEditText);
 
                 AlertDialog alertDialog = new MaterialAlertDialogBuilder(UserProfileActivity.this)
                         .setTitle("Change username")
@@ -56,6 +61,10 @@ public class UserProfileActivity extends AppCompatActivity {
                                 // TODO fix edit text : currently breaking when setting text
                                 TextInputLayout usernameInput = dialogview.findViewById(R.id.userNameDialogInputLayout);
                                 userName.setText(String.format(Locale.CANADA, "%s", Objects.requireNonNull(usernameInput.getEditText().getText().toString())));
+
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("username", String.format(Locale.CANADA, "%s", Objects.requireNonNull(usernameInput.getEditText().getText().toString())));
+                                editor.commit(); // apply changes
                                 dialog.dismiss();
                             }
                         })
