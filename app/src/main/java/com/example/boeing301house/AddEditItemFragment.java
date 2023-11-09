@@ -9,12 +9,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -152,15 +154,26 @@ public class AddEditItemFragment extends Fragment {
                 // deleteFrag();
             }
         });
-        binding.itemAddEditMaterialToolBar.findViewById(R.id.itemAddEditTag).setOnClickListener(new View.OnClickListener() {
-            // TODO: fix fragment being transparent and allow backing from fragment to fragment
+
+        binding.itemAddEditMaterialToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            // TODO: allow backing from fragment to fragment
             @Override
-            public void onClick(View v) {
-                Fragment tagsFragment = TagsFragment.newInstance(currentItem);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.itemAddEditContent, tagsFragment, "tagsFragment")
-                        .addToBackStack(null)
-                        .commit();
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.itemAddEditTag) {
+                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.itemAddEditContent, tagsFragment, "tagsFragment")
+                            .addToBackStack(null)
+                            .commit();
+                    return true;
+                } else if (item.getItemId() == R.id.itemAddEditPhotoButton) {
+                    // add camera functionality
+                    return true;
+                } else if (item.getItemId() == R.id.itemAddEditScanButton) {
+                    // add scanning functionality
+                    return true;
+                }
+                return false;
             }
         });
         // TODO: STILL BUGGED
