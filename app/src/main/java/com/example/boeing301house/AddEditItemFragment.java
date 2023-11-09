@@ -153,6 +153,7 @@ public class AddEditItemFragment extends Fragment {
             }
         });
         binding.itemAddEditMaterialToolBar.findViewById(R.id.itemAddEditTag).setOnClickListener(new View.OnClickListener() {
+            // TODO: fix fragment being transparent and allow backing from fragment to fragment
             @Override
             public void onClick(View v) {
                 Fragment tagsFragment = TagsFragment.newInstance(currentItem);
