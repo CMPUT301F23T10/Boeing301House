@@ -32,6 +32,7 @@ import java.util.Objects;
 public class UserProfileActivity extends AppCompatActivity {
     TextView userName;
     MaterialButton editUsernameBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,7 @@ public class UserProfileActivity extends AppCompatActivity {
         editUsernameBtn = findViewById(R.id.editUserNameButton);
 
         SharedPreferences pref = getSharedPreferences("mypref", MODE_PRIVATE);
-        if(pref.getString("username", null) != null){
+        if (pref.getString("username", null) != null) {
             userName.setText(pref.getString("username", null));
         }
 
@@ -79,10 +80,11 @@ public class UserProfileActivity extends AppCompatActivity {
         });
 
     }
+
     /**
      * Inflate menu items in app bar
-     * @param menu The options menu in which you place your items.
      *
+     * @param menu The options menu in which you place your items.
      * @return
      */
     @Override
@@ -93,8 +95,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
     /**
      * This handles option selection in UserProfileActivity
-     * @param item The menu item that was selected.
      *
+     * @param item The menu item that was selected.
      * @return
      */
     @Override
@@ -103,10 +105,5 @@ public class UserProfileActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showChangeUsername(){
-
-
     }
 }
