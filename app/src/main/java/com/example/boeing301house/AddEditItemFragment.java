@@ -38,6 +38,7 @@ import java.util.TimeZone;
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;
     public static String ITEM_KEY = "item_key"; // TODO: change (maybe)
+    public static String IS_ADD = "is_add";
 
     // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
     // handle passing through an expense object to fragment from activity
@@ -48,10 +49,11 @@ public class AddEditItemFragment extends Fragment {
      * @param item Parcelable {@link Item} object given to fragment
      * @return fragment instance
      */
-    public static AddEditItemFragment newInstance(Item item) {
+    public static AddEditItemFragment newInstance(Item item, boolean isAdd) {
         AddEditItemFragment fragment = new AddEditItemFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ITEM_KEY, item);
+        bundle.putBoolean(IS_ADD, isAdd);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -118,7 +120,8 @@ public class AddEditItemFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             currentItem = (Item) getArguments().getParcelable("item_key"); // get item from bundle
-            isAdd = false; // when we create a view it means were editing
+            isAdd = (boolean) getArguments().getBoolean(IS_ADD);
+
         }
     }
 //    private void deleteFrag(){ //this deletes the fragment from the screen
