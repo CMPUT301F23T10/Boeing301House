@@ -56,14 +56,11 @@ public class TagsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            // TODO: figure out multiple item selection vs single
             currentItem = (Item) getArguments().getParcelable("item_key"); // get item from bundle
         }
     }
-//    private void deleteFrag(){ //this deletes the fragment from the screen
-//
-//        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-//    }
-    // TODO: finish javadoc
+
     /**
      *
      * @param inflater The LayoutInflater object that can be used to inflate
