@@ -24,7 +24,7 @@ public class TagsFragment extends Fragment {
     public static TagsFragment newInstance(Item item) {
         TagsFragment fragment = new TagsFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable(ITEM_KEY, item);
+        bundle.putParcelable("item_key", item);
         fragment.setArguments(bundle);
 
         return fragment;

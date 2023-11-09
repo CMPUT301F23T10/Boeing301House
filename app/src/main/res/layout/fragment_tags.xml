@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
-            app:title="Profile"
+            app:title="Tags"
             app:titleTextColor="@color/white"
             app:navigationIcon="@drawable/ic_back_button_white_36dp"
             app:menu="@menu/ab_tag_view_bar"
@@ -35,6 +35,21 @@
         android:layout_marginBottom="?actionBarSize"
         android:id="@+id/itemViewScrollView"
         >
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/updateItemConfirm"
+            style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:backgroundTint="@color/colorButton"
+            android:text="Confirm"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+        </com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
