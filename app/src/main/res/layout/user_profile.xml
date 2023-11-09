@@ -8,11 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/loginViewAppBarLayout"
-        app:liftOnScroll="true"
-        app:liftOnScrollTargetViewId="@id/itemViewScrollView"
-        app:liftOnScrollColor="@color/colorTitleBar"
-
+        android:id="@+id/profileViewAppBarLayout"
         >
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -36,7 +32,6 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginBottom="?actionBarSize"
-        android:id="@+id/itemViewScrollView"
         >
 
         <ImageButton

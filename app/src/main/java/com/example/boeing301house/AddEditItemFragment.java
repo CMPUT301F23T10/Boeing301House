@@ -9,13 +9,17 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -147,13 +151,34 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
 
-//        binding.itemAddEditMaterialToolBar.inflateMenu(R.menu.ab_item_add_edit_bar);
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO: add functionality and check over
                 listener.onCancel();
                 // deleteFrag();
+            }
+        });
+
+        binding.itemAddEditMaterialToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            // TODO: allow backing from fragment to fragment
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.itemAddEditTag) {
+                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.itemAddEditContent, tagsFragment, "tagsFragment")
+                            .addToBackStack(null)
+                            .commit();
+                    return true;
+                } else if (item.getItemId() == R.id.itemAddEditPhotoButton) {
+                    // add camera functionality
+                    return true;
+                } else if (item.getItemId() == R.id.itemAddEditScanButton) {
+                    // add scanning functionality
+                    return true;
+                }
+                return false;
             }
         });
         // TODO: STILL BUGGED
@@ -227,6 +252,7 @@ public class AddEditItemFragment extends Fragment {
 
             }
         });
+
 
         // material date picker behaviours
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
