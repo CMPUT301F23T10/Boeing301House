@@ -261,6 +261,7 @@ public class AddEditItemFragment extends Fragment {
                     if(!checkFields()) {
                         newValue = Double.parseDouble(newValueString);
 
+                        // setting the current item with the new fields
                         currentItem.setComment(newComment);
                         currentItem.setMake(newMake);
                         currentItem.setModel(newModel);
@@ -272,8 +273,8 @@ public class AddEditItemFragment extends Fragment {
                         listener.onConfirmPressed(currentItem); // transfers the new data to main
                     }
 
-                } else { //TODO: no clue if this is right lol
-                    // during edit: replace empty fields with item vals
+                } else {
+                    // during edit: replace empty fields with item values
                     if (StringUtils.isBlank(newMake)) {
                         newMake = currentItem.getMake();
                     }
@@ -297,7 +298,7 @@ public class AddEditItemFragment extends Fragment {
                     if (StringUtils.isBlank(newDescription)) {
                         newDescription = currentItem.getDescription();
                     }
-
+                    // setting the values of the current item
                     currentItem.setComment(newComment);
                     currentItem.setMake(newMake);
                     currentItem.setModel(newModel);
@@ -309,40 +310,13 @@ public class AddEditItemFragment extends Fragment {
 
                 }
 
-                /*
-                newMake = binding.updateMake.getEditText().getText().toString();
-                newModel = binding.updateModel.getEditText().getText().toString();
-                newValue = Float.parseFloat(binding.updateValue.getEditText().getText().toString());
-                newComment = binding.updateComment.getEditText().getText().toString();
-                newSN = binding.updateSN.getEditText().getText().toString();
-                newDescription = binding.updateDesc.getEditText().getText().toString();
-
-                currentItem.setComment(newComment);
-                currentItem.setMake(newMake);
-                currentItem.setModel(newModel);
-                currentItem.setDate(newDate);
-                currentItem.setValue(newValue);
-                currentItem.setSN(newSN);
-                currentItem.setDescription(newDescription);
-
-
-                // Item newItem = new Item(newMake, newModel, newValue, newDescription, newDate, newSN, newComment);
-
-                listener.onConfirmPressed(currentItem); // transfers the new data to main
-                */
-
-
-                // deleteFrag(); //this removes the current fragment
             }
         });
-
-
         return view;
-
     }
     // TODO: finish java doc
     /**
-     *
+     * Destorys the view
      */
     @Override
     public void onDestroyView() {
@@ -350,6 +324,11 @@ public class AddEditItemFragment extends Fragment {
         binding = null;
     }
 
+    /**
+     * Checks if the required field were left blank, if any of them were left blank
+     * it alerts the user.
+     * @return boolean
+     */
     private boolean checkFields() {
         boolean isError = false;
         // reset errors

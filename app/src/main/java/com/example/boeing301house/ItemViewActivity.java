@@ -102,6 +102,10 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
 
     }
 
+    /**
+     * Updates the text fields in the item view when the details are edited.
+     * Any time a text field is changed, this is called.
+     */
     private void updateTexts() {
         // textviews
         tSN = findViewById(R.id.itemViewSN); // can be empty
@@ -185,7 +189,6 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         return true;
     }
 
-    // TODO: finish javadocs
     /**
      *
      * @param menu The options menu in which you place your items.
@@ -199,7 +202,9 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     }
 
     /**
-     * Handle user interaction with app bar menu items
+     * Handle user interaction with app bar menu items. This is editing or deleting a item.
+     * For editing will open the AddEditItemFragment, once edit is confirmed it calls the onSupportNavigateUp method
+     * to send the data back to the ItemListActivity
      * @param item The menu item that was selected.
      *
      * @return
@@ -207,27 +212,24 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
+        // if they clicked the edit icon
         if (itemId == R.id.itemViewEditButton) {
-            // begin editing item
-            //      open edit screen
-            //      send back updated item
-            //      update item properties here
-            //      finalize edits to list item in navigateup
             Fragment editItemFragment = AddEditItemFragment.newInstance(selectedItem);
+            // calling the fragment transaction manager to begin building the fragment
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            // replacing the current screen with the AddEditItemFragment
             fragmentTransaction.replace(R.id.itemView, editItemFragment, "VIEW_TO_EDIT").commit();
 
             return true;
-        } else if (itemId == R.id.itemViewDeleteButton) {
-            // delete item
-            //      delete -> delete item at given position
-            //      probably just send item or position back to list activity and delete from there
-
+        }
+        // else if they clicked the delete icon
+        else if (itemId == R.id.itemViewDeleteButton) {
+            // calling the confirmation dialog to delete an item. If they click confirm it send the position
+            // of the item back to ItemListActivity
             ConfirmationDialog(false);
-//            setResult(RESULT_OK);
             return true;
         }
-        // action not recognized
+        // otherwise action not recognized
         return super.onOptionsItemSelected(item);
     }
 
