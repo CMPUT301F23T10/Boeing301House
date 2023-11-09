@@ -241,8 +241,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         if (isEdited == true) {
-            builder.setTitle("Confirm Edit");
-            builder.setMessage("Confirm changes");
+            builder.setTitle("Confirm Item Edit");
+            builder.setMessage("Are these changes correct?");
         }
         else {
             builder.setTitle("Confirm Delete");
@@ -266,7 +266,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
                 finish();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isEdited == true) {
