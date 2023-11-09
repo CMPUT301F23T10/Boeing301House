@@ -43,9 +43,9 @@ public class AddEditItemFragment extends Fragment {
     // handle passing through an expense object to fragment from activity
 
     /**
-     * This function creates an instance of the fragment and passes an item to it.
+     * This function creates an instance of the fragment and passes an {@link Item} to it.
      * Creates fragment via a no-argument constructor
-     * @param item Parcelable Item object given to fragment
+     * @param item Parcelable {@link Item} object given to fragment
      * @return fragment instance
      */
     public static AddEditItemFragment newInstance(Item item) {
