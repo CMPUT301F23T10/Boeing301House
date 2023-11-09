@@ -84,6 +84,8 @@ public class AddEditItemFragment extends Fragment {
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();
+
+
         void onConfirmPressed(Item updatedItem);
     }
 
