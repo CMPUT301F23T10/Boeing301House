@@ -749,7 +749,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     public void dateRangeFilter(long dateStart, long dateEnd) {
         Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"FILTER", selectedItems.size()),
                 Toast.LENGTH_SHORT).show(); // for testing
-        
+
     }
 
 
