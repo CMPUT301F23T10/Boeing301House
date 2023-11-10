@@ -67,11 +67,13 @@
 
 
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:inputType="text"
-                    android:maxLines="1"
+                    android:id="@+id/makeText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -92,11 +94,13 @@
                 app:boxBackgroundColor="@color/textBoxColor"
 
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:inputType="text"
-                    android:maxLines="1"
+                    android:id="@+id/makeModel"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -117,11 +121,13 @@
                 app:boxBackgroundColor="@color/textBoxColor"
 
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:maxLines="1"
-                    android:inputType="numberDecimal"
+                    android:id="@+id/makeValue"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1">
 
                 </com.google.android.material.textfield.TextInputEditText>
 
@@ -140,11 +146,13 @@
                 app:boxBackgroundColor="@color/textBoxColor"
                 android:paddingBottom="20dp"
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:inputType="text"
-                    android:maxLines="1"
+                    android:id="@+id/makeSN"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -163,10 +171,12 @@
                 android:paddingBottom="20dp"
 
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:inputType="textLongMessage"
+                    android:id="@+id/makeDesc"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:inputType="textLongMessage">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -184,10 +194,12 @@
                 app:boxBackgroundColor="@color/textBoxColor"
                 android:paddingBottom="20dp"
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
-                    android:inputType="textLongMessage"
+                    android:id="@+id/makeComment"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:inputType="textLongMessage">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -206,15 +218,17 @@
                 style="?attr/textInputFilledStyle"
                 app:boxBackgroundColor="@color/textBoxColor"
                 >
+
                 <com.google.android.material.textfield.TextInputEditText
 
+                    android:id="@+id/makeDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:clickable="false"
+
                     android:cursorVisible="false"
                     android:focusable="false"
-                    android:focusableInTouchMode="false"
-
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:focusableInTouchMode="false">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
