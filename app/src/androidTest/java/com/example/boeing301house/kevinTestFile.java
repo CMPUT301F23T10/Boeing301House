@@ -61,24 +61,47 @@ public class kevinTestFile {
     }
 
     @Test
-    public void filterItemTest(){
+    public void filterItemResetTest(){
         onView(withId(R.id.addButton)).perform(click());
         onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample For Filter"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample For Filter"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.makeValue)).perform(ViewActions.typeText("100"), ViewActions.closeSoftKeyboard());
-
-        onView(withId(R.id.makeSN)).perform(typeText("Sample For Filter"), closeSoftKeyboard());
-        onView(withId(R.id.makeComment)).perform(typeText("Sample For Filter"), closeSoftKeyboard());
-        onView(withId(R.id.makeDesc)).perform(typeText("Sample For Filter"), closeSoftKeyboard());
         onView(withId(R.id.makeDate)).perform(click());
+        clickDialogVisibleDay(9);
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
+
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample For Reset"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample For Reset"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("100"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeDate)).perform(click());
+        clickDialogVisibleDay(2);
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+
         onView(withId(R.id.filterButton)).perform(click());
         onView(withId(R.id.dateRange)).perform(click());
         onView(withText("Save")).perform(click());
         onView(withText("OK")).perform(click());
+        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample For Filter"))));
+
+        onView(withId(R.id.resetButton)).perform(click());
+        onView(withText("Yes")).perform(click());
+        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample For Reset"))));
     }
 
+public  static void clickDialogVisibleDay(int day){
+        onView(
+                allOf(
+                        isDescendantOfA(withTagValue(equalTo("MONTHS_VIEW_GROUP_TAG"))),
+                        isCompletelyDisplayed(),
+                        withText(String.valueOf(day))))
+                .perform(click());
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
 
+
+}
 
 }
