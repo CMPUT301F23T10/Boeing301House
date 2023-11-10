@@ -6,6 +6,7 @@ package com.example.boeing301house;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -60,6 +61,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     private Query itemQuery;
     private CollectionReference itemsRef;
+    private CollectionReference usersRef;
     private ListView itemListView;
     //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
@@ -137,10 +139,39 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // navgraph
         // NavController navController = Navigation.findNavController(findViewById(R.id.nav_host_fragment));
 
-
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
         itemsRef = db.collection("items"); // switch to items_test to test adding
+
+        // check if app has been launched for the first time
+        // after updating sharedpreferences it will not be triggered again
+        SharedPreferences pref = getSharedPreferences("mypref", MODE_PRIVATE);
+        if(pref.getBoolean("firststart",true)) {
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("firststart", false);
+            editor.commit(); // apply changes
+
+            // add user info to firebase
+            usersRef = db.collection("users"); // switch to items_test to test adding
+            HashMap<String, Object> userData = new HashMap<>();
+            userData.put("UUID", (pref.getString("userID","Error")));
+            userData.put("password", "To be implemented");
+
+            usersRef.document(pref.getString("userID","Error"))
+                    .set(userData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.i("Firestore", "DocumentSnapshot successfully written");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("Firestore", "db write failed");
+                        }
+                    });
+        }
 
         itemList = new ArrayList<>();
 
@@ -711,7 +742,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             else if (item.getItemId() == R.id.itemMultiselectTag) {
                 // TODO: add tag dialog (pref maybe bottomsheet)
 
-                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Add tags to %d items", selectedItems.size()),
+//                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Add tags to %d items", selectedItems.size()),
+//                        Toast.LENGTH_SHORT).show(); // for testing
+                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Available on next version"),
                         Toast.LENGTH_SHORT).show(); // for testing
                 return true;
             }
