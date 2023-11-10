@@ -25,6 +25,10 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
+/**
+ * Allows user to choose sort behavior.
+ * Observer pattern used.
+ */
 public class SortFragment extends DialogFragment {
 
     String[] sortTypes = {"Description ", "Date", "Value", "Make"};
