@@ -15,6 +15,7 @@ import java.util.Locale;
 
 /**
  * Class representing {@link Item} object
+ * Made with {@link ItemBuilder} object
  */
 public class Item implements Parcelable {
     private String make;
@@ -93,42 +94,83 @@ public class Item implements Parcelable {
         }
     };
 
+    /**
+     * Getter for {@link Item} make
+     * @return
+     */
     public String getMake() {
         return make;
     }
 
+    /**
+     * Setter for {@link Item} make
+     * @return
+     */
     public void setMake(String make) {
         this.make = make;
     }
 
+
+    /**
+     * Getter for {@link Item} model
+     * @return model
+     */
     public String getModel() {
         return model;
     }
 
+    /**
+     * Setter for {@link Item} model
+     *
+     */
     public void setModel(String model) {
         this.model = model;
     }
 
+    /**
+     * Getter for {@link Item} value
+     * @return value
+     */
     public double getValue() {
         return value;
     }
 
+    /**
+     * Setter for {@link Item} value
+     *
+     */
     public void setValue(double value) {
         this.value = value;
     }
 
+    /**
+     * Getter for {@link Item} description
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Setter for {@link Item} description
+     *
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Getter for {@link Item} date
+     * @return date
+     */
     public long getDate() {
         return date;
     }
 
+    /**
+     * Getter for string rep of {@link Item} date
+     * @return string rep of date
+     */
     public String getDateString() {
         // return String.valueOf(date);
         String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(new Date(this.date));
@@ -137,17 +179,33 @@ public class Item implements Parcelable {
 
 
 
-
+    /**
+     * Getter for string rep of {@link Item} value
+     * @return string rep of
+     */
     public String getValueString(){return String.format(Locale.CANADA,"%.2f", value);}
 
+    /**
+     * Setter for {@link Item} date
+     *
+     */
     public void setDate(long date) {
         this.date = date;
     }
 
+
+    /**
+     * Getter for {@link Item} SN
+     * @return SN
+     */
     public String getSN() {
         return SN;
     }
 
+    /**
+     * Setter for {@link Item} SN
+     *
+     */
     public void setSN(String SN) {
         this.SN = SN;
     }
@@ -156,31 +214,58 @@ public class Item implements Parcelable {
         return comment;
     }
 
+    /**
+     * Setter for {@link Item} comment
+     *
+     */
     public void setComment(String comment) {
         this.comment = comment;
     }
 
+    /**
+     * Setter for {@link Item} selection
+     *
+     */
     public void select() {
         isSelected = true;
     }
+
+    /**
+     * Setter for {@link Item} selection
+     *
+     */
     public void deselect() {
         isSelected = false;
     }
+
+    /**
+     * Getter for {@link Item} selection status
+     * @return selection status
+     */
     public boolean isSelected() {
         return isSelected;
     }
 
+    /**
+     * Setter for {@link Item} ID
+     *
+     */
     public void setItemID(String id) {
         this.id = id;
     }
 
+
+    /**
+     * Getter for {@link Item} ID
+     * @return ID
+     */
     public String getItemID() {
         // long time = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
 //        return id;
         // return String.format(Locale.CANADA, "%s.%s", make, model);
         assert (!StringUtils.isBlank(id));
         return id;
-    } // TODO: convert to item id (or not)
+    }
 
     /**
      * Describe the kinds of special objects contained in this Parcelable instance's marshaled representation.

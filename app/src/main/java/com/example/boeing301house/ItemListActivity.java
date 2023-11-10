@@ -46,8 +46,8 @@ import java.util.Locale;
 // TODO: SEPARATE CLASSES, MAKE ITEMLISTACTIVITY MORE FOCUSED
 // TODO: finish javadocs
 /**
- * Source code for primary activity of app. Displays list of {@link com.example.boeing301house.Item}s and
- * allows users to interact and add {@link com.example.boeing301house.Item}s
+ * Source code for primary activity of app. Displays list of {@link Item}s and
+ * allows users to interact and add {@link Item}s
  *
  * This class is for the list activity, where you can see/interact with items
  */
