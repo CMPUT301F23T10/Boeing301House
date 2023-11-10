@@ -179,8 +179,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
         itemListView.setAdapter(itemAdapter);
 
-        originalItemList = new ArrayList<>(itemList);
-
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
         setSupportActionBar(topbar);

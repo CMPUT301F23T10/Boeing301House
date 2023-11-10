@@ -59,7 +59,7 @@ public class SortFragment extends DialogFragment {
 
 
     /**
-     *
+     * No arg constructor
      * @return
      */
     public static SortFragment newInstance() {
