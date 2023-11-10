@@ -55,6 +55,24 @@
         android:id="@+id/itemViewScrollView"
         >
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tags are after Halfway therefore..."
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/updateItemConfirm"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This fragment is only partially implemented"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toTopOf="@+id/updateItemConfirm"
+            app:layout_constraintTop_toBottomOf="@+id/textView"></TextView>
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/updateItemConfirm"
             style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton"
