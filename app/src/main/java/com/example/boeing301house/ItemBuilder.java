@@ -4,8 +4,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 /**
- * Builder pattern for {@link com.example.boeing301house.Item} object
- * Builder class for item
+ * Builder pattern for {@link Item} object
+ * Builder class for {@link Item}
  */
 public class ItemBuilder {
      private Item item;

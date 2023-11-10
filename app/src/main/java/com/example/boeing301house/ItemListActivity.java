@@ -1,7 +1,3 @@
-/**
- *
- */
-
 package com.example.boeing301house;
 
 import android.content.DialogInterface;
@@ -47,11 +43,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
-
+// TODO: SEPARATE CLASSES, MAKE ITEMLISTACTIVITY MORE FOCUSED
 // TODO: finish javadocs
 /**
- * Source code for primary activity of app. Displays list of {@link com.example.boeing301house.Item}s and
- * allows users to interact and add {@link com.example.boeing301house.Item}s
+ * Source code for primary activity of app. Displays list of {@link Item}s and
+ * allows users to interact and add {@link Item}s
  *
  * This class is for the list activity, where you can see/interact with items
  */
@@ -96,9 +92,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     AlertDialog.Builder builder;
 
     public ArrayList<Item> originalItemList;
-
-    private long startDate;
-    private long endDate;
 
     // TODO: finish javadocs
     /**
@@ -178,8 +171,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
         itemListView.setAdapter(itemAdapter);
-
-        originalItemList = new ArrayList<>(itemList);
 
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
@@ -466,6 +457,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"PLACEHOLDER BUTTON", selectedItems.size()),
+                        Toast.LENGTH_SHORT).show(); // for testing
                 builder.setTitle("Alert!!")
                         .setMessage("Do you want to reset you date filter")
                         .setCancelable(true)
@@ -686,7 +679,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private ActionMode.Callback itemMultiSelectModeCallback = new ActionMode.Callback() {
         // TODO: finish javadocs
         /**
-         *
+         * Behavior for contextual app bar's creation (at beginning of multiselect)
          * @param mode ActionMode being created
          * @param menu Menu used to populate action buttons
          * @return
@@ -703,7 +696,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             }
             return true;
         }
-        // TODO: finish javadocs
+
         /**
          *
          * @param mode ActionMode being prepared
@@ -714,30 +707,20 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
         }
-        // TODO: finish javadocs
+
         /**
          *
          * @param mode The current ActionMode
          * @param item The item that was clicked
-         * @return
+         * @return true if action chosen + confirmed, false otherwise (contextual appbar remains present if false)
          */
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             // handle user tap on delete
             if (item.getItemId() == R.id.itemMultiselectDelete) {
                 return deleteConfirmationDialog(mode);
-//                if (deleteConfirmationDialog())
-//                {
-//                    Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Deleting %d items", selectedItems.size()),
-//                            Toast.LENGTH_SHORT).show(); // for testing
-//                    mode.finish(); // end
-//                    return true;
-//                }
-//
-//
-//
-//                return false;
             }
+
             // handle user tap on tag
             else if (item.getItemId() == R.id.itemMultiselectTag) {
                 // TODO: add tag dialog (pref maybe bottomsheet)
@@ -752,7 +735,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         }
         // TODO: finish javadocs
         /**
-         *
+         * Behavior once contextual app bar is destroyed (reset any visual changes caused by selection)
          * @param mode The current ActionMode being destroyed
          */
         @Override
@@ -785,7 +768,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         builder.setTitle("Confirm Delete");
         builder.setMessage(String.format(Locale.CANADA, "Are you sure you want to delete %d items?", selectedItems.size()));
         final boolean[] isDelete = new boolean[1];
-        isDelete[0] = false;
+        // isDelete[0] = false;
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 
             @Override
@@ -883,12 +866,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     @Override
     public void onFilterOKPressed(long dateStart, long dateEnd) {
-        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"OK", selectedItems.size()),
-                Toast.LENGTH_SHORT).show(); // for testing
-        startDate = dateStart;
-        endDate = dateEnd;
+
 //        if (dateStart != 0 && dateEnd != 0) {
-        itemList.clear();
         itemQuery = itemsRef.whereGreaterThanOrEqualTo("Date", dateStart).whereLessThanOrEqualTo("Date", dateEnd);
         updateItemListView();
 //            itemList.addAll(originalItemList);
@@ -903,6 +882,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     /**
      * Snapshot listener, updates how items are displayed (when called or when changes made)
+     * Called explicitly when itemQuery changes or on first launch
      */
     public void updateItemListView() {
         itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {

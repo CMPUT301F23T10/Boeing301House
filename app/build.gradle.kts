@@ -53,4 +53,5 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
     implementation("com.google.firebase:firebase-firestore")
+    compileOnly(files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"))
 }

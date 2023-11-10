@@ -1,7 +1,3 @@
-/**
- * Source code for activity dedicated to viewing a chosen {@link com.example.boeing301house.Item} object
- */
-
 package com.example.boeing301house;
 
 import androidx.annotation.NonNull;
@@ -26,6 +22,7 @@ import java.util.Calendar;
 
 /**
  * Class for item view activity (lets user view specific {@link Item})
+ * Pushes {@link Item} changes to ItemList via Result in {@link Intent}
  */
 public class ItemViewActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
     private Item selectedItem; // item user selected

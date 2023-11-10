@@ -26,7 +26,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
- * Allows user to choose sort behavior.
+ * Allows user to choose sort behavior for {@link Item}s.
  * Observer pattern used.
  */
 public class SortFragment extends DialogFragment {
@@ -59,7 +59,7 @@ public class SortFragment extends DialogFragment {
 
 
     /**
-     *
+     * No arg constructor
      * @return
      */
     public static SortFragment newInstance() {

@@ -1,8 +1,3 @@
-/**
- * Source code for custom array adapter (for {@link com.example.boeing301house.Item} object)
- * Adapter pattern used
- */
-
 package com.example.boeing301house;
 
 import android.content.Context;
@@ -20,7 +15,7 @@ import java.util.Locale;
 
 /**
  * An {@link ArrayAdapter} subclass.
- * Allows Item to work with ListView via Adapter pattern.
+ * Allows {@link Item} to work with {@link android.widget.ListView} via Adapter pattern.
  */
 public class ItemAdapter extends ArrayAdapter<Item> {
     private final Context context;
