@@ -72,7 +72,7 @@
                     android:id="@+id/makeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textCapSentences"
                     android:maxLines="1">
 
                 </com.google.android.material.textfield.TextInputEditText>
@@ -99,7 +99,7 @@
                     android:id="@+id/makeModel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textCapSentences"
                     android:maxLines="1">
 
                 </com.google.android.material.textfield.TextInputEditText>
@@ -151,7 +151,7 @@
                     android:id="@+id/makeSN"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
+                    android:inputType="textCapCharacters"
                     android:maxLines="1">
 
                 </com.google.android.material.textfield.TextInputEditText>
@@ -176,7 +176,7 @@
                     android:id="@+id/makeDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textLongMessage">
+                    android:inputType="textLongMessage|textCapSentences">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
@@ -199,7 +199,7 @@
                     android:id="@+id/makeComment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textLongMessage">
+                    android:inputType="textLongMessage|textCapSentences">
 
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
