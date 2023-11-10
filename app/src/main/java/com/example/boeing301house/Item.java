@@ -181,7 +181,7 @@ public class Item implements Parcelable {
 
     /**
      * Getter for string rep of {@link Item} value
-     * @return string rep of
+     * @return string rep of value
      */
     public String getValueString(){return String.format(Locale.CANADA,"%.2f", value);}
 
