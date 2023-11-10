@@ -10,9 +10,12 @@ import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.content.Context;
@@ -68,6 +71,7 @@ public class dannyUItest {
         onView(withId(R.id.makeComment)).perform(typeText("Sample Comment2"), closeSoftKeyboard());
         onView(withId(R.id.makeDesc)).perform(typeText("Sample Description2"), closeSoftKeyboard());
         onView(withId(R.id.makeDate)).perform(click());
+        clickDialogVisibleDay(2);
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
@@ -92,33 +96,37 @@ public class dannyUItest {
     @Test
     public void sortByValue() {
         //this tests adds 2 sample objects, then sorts them by value
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
 
-//        onView(withId(R.id.addButton)).perform(click());
-//        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample Make"), ViewActions.closeSoftKeyboard());
-//        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model"), ViewActions.closeSoftKeyboard());
-//        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
-//
-//        onView(withId(R.id.makeSN)).perform(typeText("Sample SN"), closeSoftKeyboard());
-//        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment"), closeSoftKeyboard());
-//        onView(withId(R.id.makeDesc)).perform(typeText("Sample Description"), closeSoftKeyboard());
-//        onView(withId(R.id.makeDate)).perform(click());
-//        onView(withText("OK")).perform(click());
-//        onView(withId(R.id.updateItemConfirm)).perform(click());
-//
-//        //this adds the first item (of the most value).
-//
-//        //=================================================================================================================================//
-//        onView(withId(R.id.addButton)).perform(click());
-//        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample Make"), ViewActions.closeSoftKeyboard());
-//        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model"), ViewActions.closeSoftKeyboard());
-//        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("10"), ViewActions.closeSoftKeyboard());
-//
-//        onView(withId(R.id.makeSN)).perform(typeText("Sample SN"), closeSoftKeyboard());
-//        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment"), closeSoftKeyboard());
-//        onView(withId(R.id.makeDesc)).perform(typeText("Sample Description"), closeSoftKeyboard());
-//        onView(withId(R.id.makeDate)).perform(click());
-//        onView(withText("OK")).perform(click());
-//        onView(withId(R.id.updateItemConfirm)).perform(click());
+        onView(withId(R.id.makeSN)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.makeDesc)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.makeDate)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample Make2"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("1000"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.makeSN)).perform(typeText("Sample SN2"), closeSoftKeyboard());
+        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment2"), closeSoftKeyboard());
+        onView(withId(R.id.makeDesc)).perform(typeText("Sample Description2"), closeSoftKeyboard());
+        onView(withId(R.id.makeDate)).perform(click());
+        clickDialogVisibleDay(2);
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+//        onData(equalTo("Sample Make1")).perform(longClick());
+//        onData(equalTo("Sample Make2")).perform(click());
+
+
+        onView(withText("Sample Model1")).check(matches(isDisplayed()));
+        onView(withText("Sample Model2")).check(matches(isDisplayed()));
 
         //this adds the first item (of the least value).
 
@@ -138,5 +146,30 @@ public class dannyUItest {
         onView(withText("Value")).check(matches(isDisplayed()));
         // TODO: do rest of test
 
+
+
+
+        // delete
+        onView(withText("Sample Model1")).perform(longClick());
+        onView(withText("Sample Model2")).perform(click());
+
+        onView(withId(R.id.itemMultiselectDelete)).perform(click());
+//        onView(withContentDescription("Delete all selected items")).perform(click());
+        onView(withText("Confirm")).perform(click());
+        onView(withText("Sample Model1")).check(doesNotExist());
+        onView(withText("Sample Model2")).check(doesNotExist());
+
     }
+
+    // from https://github.com/material-components/material-components-android/blob/master/tests/javatests/com/google/android/material/datepicker/MaterialDatePickerTestUtils.java
+    public static void clickDialogVisibleDay(int day) {
+        onView(
+                allOf(
+                        isDescendantOfA(withTagValue(equalTo("MONTHS_VIEW_GROUP_TAG"))),
+                        isCompletelyDisplayed(),
+                        withText(String.valueOf(day))))
+                .perform(click());
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync();
+    }
+
 }
