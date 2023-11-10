@@ -44,6 +44,33 @@ public class AddEditItemFragment extends Fragment {
     private Item currentItem;
     public static String ITEM_KEY = "item_key"; // TODO: change (maybe)
     public static String IS_ADD = "is_add";
+    private FragmentAddEditItemBinding binding; //used to access the things in add_edit_item_fragment_view.xml
+
+    private String newMake;
+    private String newModel;
+
+    private double newValue;
+
+    private String newComment;
+    private String newDescription;
+
+    private Long newDate = null;
+
+    private String newSN;
+
+    private OnAddEditFragmentInteractionListener listener;
+    private boolean isAdd = true; // if adding item
+
+    // TODO: finish javadoc
+    /**
+     * Listener object for Adding/Editing {@link Item}. Uses Observer pattern.
+     */
+    public interface OnAddEditFragmentInteractionListener {
+        void onCancel();
+
+
+        void onConfirmPressed(Item updatedItem);
+    }
 
     // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
     // handle passing through an expense object to fragment from activity
@@ -63,39 +90,6 @@ public class AddEditItemFragment extends Fragment {
 
         return fragment;
     }
-
-
-
-    private FragmentAddEditItemBinding binding; //used to access the things in add_edit_item_fragment_view.xml
-
-    private String newMake;
-    private String newModel;
-
-    private double newValue;
-
-    private String newComment;
-    private String newDescription;
-
-    private Long newDate = null;
-
-    private String newSN;
-
-    private Calendar itemCalendarDate;
-
-    private OnAddEditFragmentInteractionListener listener;
-    private boolean isAdd = true; // if adding item
-
-    // TODO: finish javadoc
-    /**
-     * Listener object for Adding/Editing {@link Item}. Uses Observer pattern.
-     */
-    public interface OnAddEditFragmentInteractionListener {
-        void onCancel();
-
-
-        void onConfirmPressed(Item updatedItem);
-    }
-
 
     // this is the code that will allow the transfer of the updated expense to the main listview
     /**
@@ -129,10 +123,7 @@ public class AddEditItemFragment extends Fragment {
 
         }
     }
-//    private void deleteFrag(){ //this deletes the fragment from the screen
-//
-//        getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
-//    }
+
     // TODO: finish javadoc
     /**
      *
@@ -190,7 +181,6 @@ public class AddEditItemFragment extends Fragment {
             }
         });
 
-        // TODO: STILL BUGGED
         //this sets the current text of the edit expense fragment to the current expense name, cost, date and summary
 //        View view = inflater.inflate(R.layout.add_edit_item_fragment, container, false);
 //        EditText editCost = view.findViewById(R.id.editCost);
@@ -209,7 +199,7 @@ public class AddEditItemFragment extends Fragment {
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
 
         // create instance of material date picker builder
-        //  creating datepicker (use daterange for filter)
+        //  creating datepicker
         MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
 
         // create constraint for date picker (only let user choose dates on and before current"
@@ -228,36 +218,7 @@ public class AddEditItemFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-//                final Calendar c = Calendar.getInstance();
-//
-//
-//                int year = c.get(Calendar.YEAR);
-//                int month = c.get(Calendar.MONTH);
-//                int day = c.get(Calendar.DATE);
-//
-//                itemCalendarDate = Calendar.getInstance();
-//
-//                DatePickerDialog datePickerDialog = new DatePickerDialog(
-//                        getContext(),
-//                        new DatePickerDialog.OnDateSetListener() {
-//                            @Override
-//                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                                itemCalendarDate.set(year, month, dayOfMonth);
-//                                binding.updateDate.getEditText().setText(String.format(Locale.CANADA,"%02d/%02d/%d", month + 1, dayOfMonth, year));
-//
-//
-//                                 newDate = itemCalendarDate.getTimeInMillis();
-////                                String dateString = new SimpleDateFormat("MM/dd/yyyy").format(new Date(itemCalendarDate.getTimeInMillis()));
-////                                CharSequence text = dateString;
-////                                int duration = Toast.LENGTH_SHORT;
-////                                Toast toast = Toast.makeText(getContext(), text, duration);
-////                                toast.show();
-//                            }
-//
-//                        }, year, month, day // initial state
-//                );
-//                datePickerDialog.getDatePicker().setMaxDate(itemCalendarDate.getTimeInMillis() + 1000);
-//                datePickerDialog.show();
+
 
             }
         });
@@ -352,9 +313,9 @@ public class AddEditItemFragment extends Fragment {
         });
         return view;
     }
-    // TODO: finish java doc
+
     /**
-     * Destorys the view
+     * Destroys the view
      */
     @Override
     public void onDestroyView() {
@@ -363,7 +324,7 @@ public class AddEditItemFragment extends Fragment {
     }
 
     /**
-     * Checks if the required field were left blank, if any of them were left blank
+     * Checks if any required fields were left blank, if any of them were left blank
      * it alerts the user.
      * @return boolean
      */
