@@ -36,8 +36,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -53,6 +55,8 @@ import java.util.Locale;
 public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener {
 
     private FirebaseFirestore db;
+
+    private Query itemQuery;
     private CollectionReference itemsRef;
     private ListView itemListView;
 //    private FloatingActionButton addButton;
@@ -151,52 +155,53 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         itemListSortButton = findViewById(R.id.sortButton);
         itemListFilterButton = findViewById(R.id.filterButton);
-
+        itemQuery = itemsRef.orderBy(FieldPath.documentId());
 
         /**
          * update items (list) in real time
          */
-        itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", error.toString());
-                    return;
-                }
-                if (snapshots != null) {
-                    itemList.clear();
-                    for (QueryDocumentSnapshot doc: snapshots) {
-                        String model = doc.getString("Model");
-                        String make = doc.getString("Make");
-                        Long date = doc.getLong("Date");
-                        String SN = doc.getString("SN");
-                        Double value = doc.getDouble("Est Value");
-                        String desc = doc.getString("Desc");
-                        String comment = doc.getString("Comment");
-                        String id = doc.getId();
-
-                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-
-                        Item item = new ItemBuilder()
-                                .addID(id)
-                                .addMake(make)
-                                .addModel(model)
-                                .addDate(date)
-                                .addSN(SN)
-                                .addValue(value)
-                                .addDescription(desc)
-                                .addComment(comment)
-                                .build();
-
-                        itemList.add(item);
-                        originalItemList.add(item);
-
-                    }
-                    itemAdapter.notifyDataSetChanged();
-                    calculateTotalPrice();
-                }
-            }
-        });
+        updateItemListView();
+//        itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+//                if (error != null) {
+//                    Log.e("Firestore", error.toString());
+//                    return;
+//                }
+//                if (snapshots != null) {
+//                    itemList.clear();
+//                    for (QueryDocumentSnapshot doc: snapshots) {
+//                        String model = doc.getString("Model");
+//                        String make = doc.getString("Make");
+//                        Long date = doc.getLong("Date");
+//                        String SN = doc.getString("SN");
+//                        Double value = doc.getDouble("Est Value");
+//                        String desc = doc.getString("Desc");
+//                        String comment = doc.getString("Comment");
+//                        String id = doc.getId();
+//
+//                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+//
+//                        Item item = new ItemBuilder()
+//                                .addID(id)
+//                                .addMake(make)
+//                                .addModel(model)
+//                                .addDate(date)
+//                                .addSN(SN)
+//                                .addValue(value)
+//                                .addDescription(desc)
+//                                .addComment(comment)
+//                                .build();
+//
+//                        itemList.add(item);
+//                        originalItemList.add(item);
+//
+//                    }
+//                    itemAdapter.notifyDataSetChanged();
+//                    calculateTotalPrice();
+//                }
+//            }
+//        });
 
         //used to swap the fragment in to edit/add fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -418,7 +423,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             }
         });
         calculateTotalPrice();
-        itemAdapter.notifyDataSetChanged();
+//        itemAdapter.notifyDataSetChanged();
 
         btnReset = findViewById(R.id.resetButton);
         builder = new AlertDialog.Builder(this);
@@ -432,9 +437,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                itemList.clear();
-                                itemList.addAll(originalItemList);
-                                itemAdapter.notifyDataSetChanged();
+                                itemQuery = itemsRef.orderBy(FieldPath.documentId()); // TODO: change
+                                updateItemListView();
+//                                itemList.clear();
+//                                itemList.addAll(originalItemList);
+//                                itemAdapter.notifyDataSetChanged();
                                 calculateTotalPrice();
                             }
                         })
@@ -482,7 +489,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // TODO: implement
         ArrayList<String> tags = new ArrayList<>(); // placeholder
         itemData.put("Tags", tags); // placeholder
-
+//        updateItemListView();
         itemsRef.document(updatedItem.getItemID())
                 .set(itemData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -508,7 +515,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
 
-
+//
     }
     // TODO: finish javadocs
     /**
@@ -845,31 +852,63 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         endDate = dateEnd;
 //        if (dateStart != 0 && dateEnd != 0) {
             itemList.clear();
-            itemList.addAll(originalItemList);
-            dateRangeFilter(startDate,endDate);
+            itemQuery = itemsRef.whereGreaterThan("Date", dateStart).whereLessThan("Date", dateEnd);
+            updateItemListView();
+//            itemList.addAll(originalItemList);
+//            dateRangeFilter(startDate,endDate);
             calculateTotalPrice();
-            itemAdapter.notifyDataSetChanged();
+//            itemAdapter.notifyDataSetChanged();
             // filter items
 //        }
         // TODO: add tags
 
     }
 
-    public void dateRangeFilter(long startDate, long endDate) {
-        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"FILTER", selectedItems.size()),
-                Toast.LENGTH_SHORT).show(); // for testing
-        ArrayList<Item> filteredItems = new ArrayList<>();
-        for(Item item : itemList ){
-            long itemDate =  item.getDate();
-            if(itemDate >= startDate && itemDate < endDate){
-                filteredItems.add(item);
+    /**
+     * Snapshot listener
+     */
+    public void updateItemListView() {
+        itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Firestore", error.toString());
+                    return;
+                }
+                if (snapshots != null) {
+                    itemList.clear();
+                    for (QueryDocumentSnapshot doc: snapshots) {
+                        String model = doc.getString("Model");
+                        String make = doc.getString("Make");
+                        Long date = doc.getLong("Date");
+                        String SN = doc.getString("SN");
+                        Double value = doc.getDouble("Est Value");
+                        String desc = doc.getString("Desc");
+                        String comment = doc.getString("Comment");
+                        String id = doc.getId();
+
+                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+
+                        Item item = new ItemBuilder()
+                                .addID(id)
+                                .addMake(make)
+                                .addModel(model)
+                                .addDate(date)
+                                .addSN(SN)
+                                .addValue(value)
+                                .addDescription(desc)
+                                .addComment(comment)
+                                .build();
+
+                        itemList.add(item);
+//                        originalItemList.add(item);
+
+                    }
+                    itemAdapter.notifyDataSetChanged();
+                    calculateTotalPrice();
+                }
             }
-        }
-        itemAdapter.clear();
-        itemAdapter.addAll(filteredItems);
-
-
+        });
     }
-
 
 }
