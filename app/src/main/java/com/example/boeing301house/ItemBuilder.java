@@ -1,13 +1,10 @@
-/**
- * Builder pattern for {@link com.example.boeing301house.Item} object
- */
-
 package com.example.boeing301house;
 
 import java.util.Calendar;
 import java.util.Locale;
 
 /**
+ * Builder pattern for {@link com.example.boeing301house.Item} object
  * Builder class for item
  */
 public class ItemBuilder {
