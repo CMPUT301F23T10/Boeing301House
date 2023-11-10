@@ -1,4 +1,5 @@
 package com.example.boeing301house;
+
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -43,4 +44,5 @@ public class MainActivityTest {
         String userid = pref.getString("userID","");
         assertTrue((pref.getString("userID","")!=""));
     }
+
 }

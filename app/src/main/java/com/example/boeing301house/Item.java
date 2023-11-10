@@ -140,6 +140,8 @@ public class Item implements Parcelable {
     }
 
 
+
+
     public String getValueString(){return String.format(Locale.CANADA,"%.2f", value);}
 
     public void setDate(long date) {

@@ -22,6 +22,8 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Calendar;
+
 /**
  * Class for item view activity (lets user view specific {@link Item})
  */
@@ -211,7 +213,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             //      send back updated item
             //      update item properties here
             //      finalize edits to list item in navigateup
-            Fragment editItemFragment = AddEditItemFragment.newInstance(selectedItem);
+            Fragment editItemFragment = new AddEditItemFragment();
+            Bundle itemBundle = new Bundle();
+            itemBundle.putParcelable("item_key", selectedItem);
+            itemBundle.putBoolean("is_add", false);
+            editItemFragment.setArguments(itemBundle);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.itemView, editItemFragment, "VIEW_TO_EDIT").commit();
 
@@ -234,15 +240,20 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
 //        return super.onOptionsItemSelected(item);
 //    }
     // TODO: finish javadocs
+
     /**
-     *
+     * Confirmation dialog allows users to confirm their changes. This can be deleting
+     * an item or editing an items details.
+     * @param isEdited Boolean to know if we are editing an item or deleting
+     *                 True for editing and False for deleting
      */
     private void ConfirmationDialog(boolean isEdited) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         if (isEdited == true) {
-            builder.setTitle("Confirm Item Edit");
-            builder.setMessage("Are these changes correct?");
+            builder.setTitle("Confirm Edit");
+            builder.setMessage("Please confirm changes?");
+
         }
         else {
             builder.setTitle("Confirm Delete");
@@ -269,6 +280,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // if were editing and they cancel we want to return to the ItemViewActivity
                 if (isEdited == true) {
                     finish();
                 }
@@ -288,8 +300,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         exitAddEditFragment();
     }
 
+
+
+
     /**
-     * Handle if user edits
+     * Handle if user edits by replacing the old values to the updated values
      * @param updatedItem
      */
     @Override
@@ -302,11 +317,14 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         selectedItem.setDescription(updatedItem.getDescription());
         selectedItem.setComment(updatedItem.getComment());
         selectedItem.setValue(updatedItem.getValue());
-        updateTexts();
-        exitAddEditFragment();
-        exitAddEditFragment();
+        updateTexts(); // updates the text values
+        exitAddEditFragment(); // closing the fragment
+
     }
 
+    /**
+     * Exits the fragment
+     */
     private void exitAddEditFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("VIEW_TO_EDIT");
         if (fragment != null) {

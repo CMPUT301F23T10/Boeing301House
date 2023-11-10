@@ -9,6 +9,15 @@
     android:id="@+id/itemListContent"
     >
 
+    <FrameLayout
+        android:id="@+id/frameForSort"
+        android:layout_width="250dp"
+        android:layout_height="333dp"
+        android:layout_gravity="center"
+        android:translationY="-200sp">
+
+    </FrameLayout>
+
     <ListView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/itemList"
@@ -127,6 +136,17 @@
                         android:layout_height="wrap_content"
                         android:text="FILTER"></Button>
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/resetButton"
+                    android:layout_width="61dp"
+                    android:layout_height="36dp"
+                    android:text="↻"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/itemListFilter"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
