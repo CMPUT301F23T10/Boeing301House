@@ -18,7 +18,7 @@
             android:minHeight="?attr/actionBarSize"
             app:title="Login"
             app:titleTextColor="@color/white"
-            app:menu="@menu/ab_user_profile_bar"
+            app:menu="@menu/ab_user_login_bar"
             app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
             >
 
