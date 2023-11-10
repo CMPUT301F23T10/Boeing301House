@@ -30,7 +30,6 @@ public class SortFragment extends DialogFragment {
     String[] sortTypes = {"Description ", "Date", "Value", "Make"};
 
 
-    private String direction;
     String type;
     String order;
     private FragmentSortBinding binding;
@@ -102,7 +101,8 @@ public class SortFragment extends DialogFragment {
 
         descendingButton = view.findViewById(R.id.Desc);
         ascendingButton = view.findViewById(R.id.Asc);
-
+        order = "ASC"; // TODO: change default
+        type = "Date Added"; // TODO: change default
         MaterialButtonToggleGroup buttonGroup = view.findViewById(R.id.sortButtonGroup);
         buttonGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
