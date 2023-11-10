@@ -1,7 +1,3 @@
-/**
- * Source code for fragment dedicated to adding/editing an {@link com.example.boeing301house.Item}
- */
-
 package com.example.boeing301house;
 
 import android.app.DatePickerDialog;
@@ -38,7 +34,8 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 /**
- * Fragment for Adding and Editing items
+ * Fragment for Adding and Editing an {@link Item}
+ * Observer pattern used
  */
 public class AddEditItemFragment extends Fragment {
     private Item currentItem;

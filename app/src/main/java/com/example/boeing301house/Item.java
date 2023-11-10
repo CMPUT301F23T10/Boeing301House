@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- * Class representing item object
+ * Class representing {@link Item} object
  */
 public class Item implements Parcelable {
     private String make;
