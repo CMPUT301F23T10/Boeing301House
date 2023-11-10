@@ -444,7 +444,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 //                                itemList.clear();
 //                                itemList.addAll(originalItemList);
 //                                itemAdapter.notifyDataSetChanged();
-                                calculateTotalPrice();
+//                                calculateTotalPrice();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -854,7 +854,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         endDate = dateEnd;
 //        if (dateStart != 0 && dateEnd != 0) {
         itemList.clear();
-        itemQuery = itemsRef.whereGreaterThan("Date", dateStart).whereLessThan("Date", dateEnd);
+        itemQuery = itemsRef.whereGreaterThanOrEqualTo("Date", dateStart).whereLessThanOrEqualTo("Date", dateEnd);
         updateItemListView();
 //            itemList.addAll(originalItemList);
 //            dateRangeFilter(startDate,endDate);
