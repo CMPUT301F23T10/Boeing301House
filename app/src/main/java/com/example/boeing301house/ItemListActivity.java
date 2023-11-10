@@ -1,7 +1,3 @@
-/**
- *
- */
-
 package com.example.boeing301house;
 
 import android.content.DialogInterface;
@@ -47,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
-
+// TODO: SEPARATE CLASSES, MAKE ITEMLISTACTIVITY MORE FOCUSED
 // TODO: finish javadocs
 /**
  * Source code for primary activity of app. Displays list of {@link com.example.boeing301house.Item}s and
