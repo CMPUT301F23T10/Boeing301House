@@ -160,6 +160,7 @@ public class AddEditItemFragment extends Fragment {
             }
         });
 
+
         binding.itemAddEditMaterialToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             // TODO: allow backing from fragment to fragment
             @Override
@@ -181,6 +182,7 @@ public class AddEditItemFragment extends Fragment {
                 return false;
             }
         });
+
         // TODO: STILL BUGGED
         //this sets the current text of the edit expense fragment to the current expense name, cost, date and summary
 //        View view = inflater.inflate(R.layout.add_edit_item_fragment, container, false);
