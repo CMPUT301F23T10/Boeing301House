@@ -56,5 +56,29 @@ public class ItemUnitTest {
         assertEquals("09/14/2001", item.getDateString());
     }
 
+    @Test
+    public void testItemValueString() {
+        Item item = mockItem();
+        assertEquals("2.00", item.getValueString());
+
+        item.setValue(1231421.134214124124123);
+        assertEquals("1231421.13", item.getValueString());
+
+        item.setValue(1231421.139214124124123);
+        assertEquals("1231421.14", item.getValueString());
+    }
+
+    @Test
+    public void testItemSelection() {
+        Item item = mockItem();
+        assertFalse(item.isSelected());
+
+        item.select();
+        assertTrue(item.isSelected());
+
+        item.deselect();
+        assertFalse(item.isSelected());
+    }
+
 
 }

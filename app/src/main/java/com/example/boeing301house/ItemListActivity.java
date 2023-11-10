@@ -464,6 +464,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"PLACEHOLDER BUTTON", selectedItems.size()),
+                        Toast.LENGTH_SHORT).show(); // for testing
                 builder.setTitle("Alert!!")
                         .setMessage("Do you want to reset you date filter")
                         .setCancelable(true)
@@ -881,8 +883,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     @Override
     public void onFilterOKPressed(long dateStart, long dateEnd) {
-        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"OK", selectedItems.size()),
-                Toast.LENGTH_SHORT).show(); // for testing
+//        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"OK", selectedItems.size()),
+//                Toast.LENGTH_SHORT).show(); // for testing
         startDate = dateStart;
         endDate = dateEnd;
 //        if (dateStart != 0 && dateEnd != 0) {

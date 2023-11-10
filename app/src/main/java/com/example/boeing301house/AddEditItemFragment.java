@@ -167,6 +167,8 @@ public class AddEditItemFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.itemAddEditTag) {
+                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
+                            Toast.LENGTH_SHORT).show(); // for testing
                     Fragment tagsFragment = TagsFragment.newInstance(currentItem);
                     getActivity().getSupportFragmentManager().beginTransaction()
                             .replace(R.id.itemAddEditContent, tagsFragment, "tagsFragment")
