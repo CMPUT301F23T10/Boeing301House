@@ -93,8 +93,7 @@ public class SortFragment extends DialogFragment {
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = adapterItems.getItem(position).toString();
-                //at this point, this runs if oen of the sort types is selected from the drop down
+                 type = adapterItems.getItem(position).toString();
             }
         });
 
@@ -103,7 +102,6 @@ public class SortFragment extends DialogFragment {
 
         descendingButton = view.findViewById(R.id.Desc);
         ascendingButton = view.findViewById(R.id.Asc);
-        confirmButton = view.findViewById(R.id.okButton);
 
         MaterialButtonToggleGroup buttonGroup = view.findViewById(R.id.sortButtonGroup);
         buttonGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {

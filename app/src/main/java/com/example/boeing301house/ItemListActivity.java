@@ -52,7 +52,7 @@ import java.util.Locale;
 /**
  * This class is for the list activity, where you can see/interact with items
  */
-public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener {
+public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
 
     private FirebaseFirestore db;
 
@@ -369,6 +369,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                new SortFragment().show(getSupportFragmentManager(), "SORT");
                 //Fragment sortFragment = new sortFragment(); //this is passed along so it can display the proper information
 
 
@@ -911,4 +913,32 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         });
     }
 
+    /**
+     * @param sortMethod
+     * @param sortOrder
+     */
+    @Override
+    public void onSortOKPressed(String sortMethod, String sortOrder) {
+        Query.Direction direction;
+
+        if (sortOrder.matches("ASC")) {
+            direction = Query.Direction.ASCENDING;
+        } else {
+            direction = Query.Direction.DESCENDING;
+        }
+
+        if (sortMethod.matches("Date")){ //if the sort type is date
+            itemQuery = itemsRef.orderBy("Date", direction);
+        } else if (sortMethod.matches("Description")) { //if the sort type is description
+            itemQuery = itemsRef.orderBy("Desc", direction);
+        } else if (sortMethod.matches("Value")) { //if the sort type is description
+            itemQuery = itemsRef.orderBy("Est Value", direction);
+        } else if (sortMethod.matches("Make")) { //if the sort type is description
+            itemQuery = itemsRef.orderBy("Make", direction);
+        } else{ //by default, sort by date added!
+            itemQuery = itemsRef.orderBy(FieldPath.documentId(), direction);
+        }
+
+        updateItemListView();
+    }
 }
