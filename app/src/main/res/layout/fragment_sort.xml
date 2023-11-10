@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SortFragment"
+
+    >
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="250dp"
+        android:layout_height="200sp"
+        android:background="@drawable/bottomsheet_bg"
+
+        android:backgroundTint="@color/colorButton"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+<!--        <Button-->
+<!--            android:id="@+id/okButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="ok"-->
+<!--            android:translationX="70sp"-->
+<!--            android:translationY="135sp" />-->
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            android:id="@+id/sortButtonGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+
+            android:layout_marginBottom="40dp"
+
+            >
+
+            <Button
+                android:id="@+id/Asc"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ASC">
+
+            </Button>
+
+            <Button
+                android:id="@+id/Desc"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="DESC">
+
+            </Button>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sort By:"
+            android:translationX="20sp"
+            android:translationY="0sp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="200sp"
+            android:layout_height="wrap_content"
+            android:hint="Select Sort Type"
+            android:translationX="15sp"
+            android:translationY="20sp">
+
+            <AutoCompleteTextView
+                android:id="@+id/autoCompleteTextView"
+                android:layout_width="200sp"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                app:layout_anchorGravity="center" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </FrameLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

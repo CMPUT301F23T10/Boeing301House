@@ -1,3 +1,8 @@
+/**
+ * Source code for primary activity of app. Displays list of {@link com.example.boeing301house.Item}s and
+ * allows users to interact and add {@link com.example.boeing301house.Item}s
+ */
+
 package com.example.boeing301house;
 
 import android.content.DialogInterface;
@@ -10,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,13 +34,17 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -42,19 +52,21 @@ import java.util.Locale;
 /**
  * This class is for the list activity, where you can see/interact with items
  */
-public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
+public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener {
 
     private FirebaseFirestore db;
+
+    private Query itemQuery;
     private CollectionReference itemsRef;
     private ListView itemListView;
-//    private FloatingActionButton addButton;
+    //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
 
     private TextView subTotalText;
     public ArrayList<Item> itemList;
 
-//    private ArrayList<View> selectedItemViews = new ArrayList<>();
+    //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
 
     private Button itemListFilterButton;
@@ -72,8 +84,17 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
 
+
     // for contextual appbar
     private ActionMode itemMultiSelectMode;
+
+    Button btnReset;
+    AlertDialog.Builder builder;
+
+    public ArrayList<Item> originalItemList;
+
+    private long startDate;
+    private long endDate;
 
     // TODO: finish javadocs
     /**
@@ -124,6 +145,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
         itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
         itemListView.setAdapter(itemAdapter);
+
+        originalItemList = new ArrayList<>(itemList);
+
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
         setSupportActionBar(topbar);
@@ -131,51 +155,53 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         itemListSortButton = findViewById(R.id.sortButton);
         itemListFilterButton = findViewById(R.id.filterButton);
-
+        itemQuery = itemsRef.orderBy(FieldPath.documentId());
 
         /**
          * update items (list) in real time
          */
-        itemsRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", error.toString());
-                    return;
-                }
-                if (snapshots != null) {
-                    itemList.clear();
-                    for (QueryDocumentSnapshot doc: snapshots) {
-                        String model = doc.getString("Model");
-                        String make = doc.getString("Make");
-                        Long date = doc.getLong("Date");
-                        String SN = doc.getString("SN");
-                        Double value = doc.getDouble("Est Value");
-                        String desc = doc.getString("Desc");
-                        String comment = doc.getString("Comment");
-                        String id = doc.getId();
-
-                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-
-                        Item item = new ItemBuilder()
-                                .addID(id)
-                                .addMake(make)
-                                .addModel(model)
-                                .addDate(date)
-                                .addSN(SN)
-                                .addValue(value)
-                                .addDescription(desc)
-                                .addComment(comment)
-                                .build();
-
-                        itemList.add(item);
-
-                    }
-                    itemAdapter.notifyDataSetChanged();
-                    calculateTotalPrice();
-                }
-            }
-        });
+        updateItemListView();
+//        itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+//            @Override
+//            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+//                if (error != null) {
+//                    Log.e("Firestore", error.toString());
+//                    return;
+//                }
+//                if (snapshots != null) {
+//                    itemList.clear();
+//                    for (QueryDocumentSnapshot doc: snapshots) {
+//                        String model = doc.getString("Model");
+//                        String make = doc.getString("Make");
+//                        Long date = doc.getLong("Date");
+//                        String SN = doc.getString("SN");
+//                        Double value = doc.getDouble("Est Value");
+//                        String desc = doc.getString("Desc");
+//                        String comment = doc.getString("Comment");
+//                        String id = doc.getId();
+//
+//                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+//
+//                        Item item = new ItemBuilder()
+//                                .addID(id)
+//                                .addMake(make)
+//                                .addModel(model)
+//                                .addDate(date)
+//                                .addSN(SN)
+//                                .addValue(value)
+//                                .addDescription(desc)
+//                                .addComment(comment)
+//                                .build();
+//
+//                        itemList.add(item);
+//                        originalItemList.add(item);
+//
+//                    }
+//                    itemAdapter.notifyDataSetChanged();
+//                    calculateTotalPrice();
+//                }
+//            }
+//        });
 
         //used to swap the fragment in to edit/add fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -183,6 +209,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
+
 
         // select multiple initialization:
         selectedItems = new ArrayList<>();
@@ -305,15 +332,15 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         itemMultiSelectMode.finish(); // close contextual app bar
                     }
                     // if delete multiple btn pressed -> isSelectMultiple = false
-                        // selectedItems.clear();
-                        // reset background colors
-                        // selectedItemViews.clear();
+                    // selectedItems.clear();
+                    // reset background colors
+                    // selectedItemViews.clear();
 
                 }
 
 
-            //updateSubtotal(); //update subtotal
-        }
+                //updateSubtotal(); //update subtotal
+            }
 
         });
 
@@ -321,6 +348,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                new FilterFragment().show(getSupportFragmentManager(), "FILTER");
                 //Fragment filterFragment = new filterFragment(); //this is passed along so it can display the proper information
 
 
@@ -372,11 +400,12 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 Fragment addFrag = new AddEditItemFragment();
 
                 Item newItem = new ItemBuilder()
-                                .build(); //creates a new city to be created
+                        .build(); //creates a new city to be created
                 // items.add(selectItem); //adds the empty city to the list (with no details)
 
                 Bundle itemBundle = new Bundle();
-                itemBundle.putParcelable("ITEM_OBJ", newItem);
+                itemBundle.putParcelable("item_key", newItem);
+                itemBundle.putBoolean("is_add", true);
                 addFrag.setArguments(itemBundle);
 
 
@@ -394,8 +423,41 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             }
         });
         calculateTotalPrice();
-        itemAdapter.notifyDataSetChanged();
+//        itemAdapter.notifyDataSetChanged();
+
+        btnReset = findViewById(R.id.resetButton);
+        builder = new AlertDialog.Builder(this);
+
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                builder.setTitle("Alert!!")
+                        .setMessage("Do you want to reset you date filter")
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                itemQuery = itemsRef.orderBy(FieldPath.documentId()); // TODO: change
+                                updateItemListView();
+//                                itemList.clear();
+//                                itemList.addAll(originalItemList);
+//                                itemAdapter.notifyDataSetChanged();
+                                calculateTotalPrice();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        })
+                        .show();
+            }
+        });
+
     }
+
+
 
 //    /**
 //     * UpdateSubtotal just updates the subtotal at the bottom of the screen on the list activity
@@ -427,7 +489,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         // TODO: implement
         ArrayList<String> tags = new ArrayList<>(); // placeholder
         itemData.put("Tags", tags); // placeholder
-
+//        updateItemListView();
         itemsRef.document(updatedItem.getItemID())
                 .set(itemData)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -453,7 +515,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
 
 
-
+//
     }
     // TODO: finish javadocs
     /**
@@ -475,18 +537,69 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         if (resultCode == RESULT_OK) {
             String action = data.getStringExtra("action");
             assert action != null;
+
+            // getting the position data, if it cant find pos it defaults to -1
+            int itemIndex = data.getIntExtra("pos", -1);
+
             if (action.contentEquals(DELETE_ITEM)) {
-                // getting the position data, if it cant find pos it defaults to -1
-                int itemIndexToDelete = data.getIntExtra("pos", -1);
-                if (itemIndexToDelete != -1) {
-                    Item itemToDelete = itemList.get(itemIndexToDelete);
-                    itemList.remove(itemIndexToDelete);
+
+                if (itemIndex != -1) {
+                    Item itemToDelete = itemList.get(itemIndex);
+                    itemList.remove(itemIndex);
                     deleteItemFromFirestore(itemToDelete);
-                    calculateTotalPrice();
+
+                }
+            } else if (action.contentEquals(EDIT_ITEM)) {
+                if (itemIndex != -1){
+                    // get the updated item
+                    Item editedItem = data.getParcelableExtra("edited_item");
+                    itemList.set(itemIndex, editedItem); // replace prev item with updated item
+                    itemAdapter.notifyDataSetChanged();
+                    editItemFromFirestore(editedItem);
                 }
             }
+            calculateTotalPrice();
         }
     }
+
+    /**
+     * Updates the item in firestore if it has been edited
+     * @param item The edited item
+     */
+    private void editItemFromFirestore(Item item) {
+        // putting the values in a hashmap bc the doc on firestore is the same format
+        HashMap<String, Object> itemData = new HashMap<>();
+        itemData.put("Make", item.getMake());
+        itemData.put("Model", item.getModel());
+        itemData.put("Date", item.getDate());
+        itemData.put("SN", item.getSN());
+        itemData.put("Est Value", item.getValue());
+        itemData.put("Desc", item.getDescription());
+        itemData.put("Comment", item.getComment());
+
+        // TODO: implement
+        ArrayList<String> tags = new ArrayList<>(); // placeholder
+        itemData.put("Tags", tags); // placeholder for tags since we haven't done it yet
+
+        // Get the document reference for the item
+        DocumentReference itemRef = itemsRef.document(item.getItemID());
+
+        itemRef
+                .update(itemData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("Firestore", "DocumentSnapshot successfully written");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Firestore", "db write failed: " + e.getMessage());
+                    }
+                });
+    }
+
     // TODO: finish javadocs
     /**
      *
@@ -518,6 +631,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         addButton.show();
         exitAddEditFragment();
     }
+
+
     // TODO: finish javadocs
     /**
      *
@@ -681,7 +796,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.itemListProfileButton) {
-            // TODO: open profile
+            Intent intent = new Intent(ItemListActivity.this, UserProfileActivity.class);
+            startActivity(intent);
+            return true;
         }
         else if (item.getItemId() == R.id.itemListSearchButton) {
 
@@ -722,5 +839,76 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Get date range (and later tags) from filter dialog and use to filter list items
+     * @param dateStart start date in ms
+     * @param dateEnd end date in ms
+     */
+    @Override
+    public void onFilterOKPressed(long dateStart, long dateEnd) {
+        Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"OK", selectedItems.size()),
+                Toast.LENGTH_SHORT).show(); // for testing
+        startDate = dateStart;
+        endDate = dateEnd;
+//        if (dateStart != 0 && dateEnd != 0) {
+        itemList.clear();
+        itemQuery = itemsRef.whereGreaterThan("Date", dateStart).whereLessThan("Date", dateEnd);
+        updateItemListView();
+//            itemList.addAll(originalItemList);
+//            dateRangeFilter(startDate,endDate);
+        calculateTotalPrice();
+//            itemAdapter.notifyDataSetChanged();
+        // filter items
+//        }
+        // TODO: add tags
+
+    }
+
+    /**
+     * Snapshot listener
+     */
+    public void updateItemListView() {
+        itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("Firestore", error.toString());
+                    return;
+                }
+                if (snapshots != null) {
+                    itemList.clear();
+                    for (QueryDocumentSnapshot doc: snapshots) {
+                        String model = doc.getString("Model");
+                        String make = doc.getString("Make");
+                        Long date = doc.getLong("Date");
+                        String SN = doc.getString("SN");
+                        Double value = doc.getDouble("Est Value");
+                        String desc = doc.getString("Desc");
+                        String comment = doc.getString("Comment");
+                        String id = doc.getId();
+
+                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+
+                        Item item = new ItemBuilder()
+                                .addID(id)
+                                .addMake(make)
+                                .addModel(model)
+                                .addDate(date)
+                                .addSN(SN)
+                                .addValue(value)
+                                .addDescription(desc)
+                                .addComment(comment)
+                                .build();
+
+                        itemList.add(item);
+//                        originalItemList.add(item);
+
+                    }
+                    itemAdapter.notifyDataSetChanged();
+                    calculateTotalPrice();
+                }
+            }
+        });
+    }
 
 }
