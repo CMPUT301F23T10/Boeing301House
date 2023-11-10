@@ -1,7 +1,3 @@
-/**
- * Source code for Item object
- */
-
 package com.example.boeing301house;
 
 import android.os.Parcel;

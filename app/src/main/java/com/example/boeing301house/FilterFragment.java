@@ -1,9 +1,3 @@
-/**
- * Source code for {@link androidx.fragment.app.DialogFragment} subclass used
- * for determining how to filter items (via date or tags)
- * Observer pattern used.
- */
-
 package com.example.boeing301house;
 
 import android.app.AlertDialog;
@@ -36,6 +30,7 @@ import java.util.TimeZone;
  * Use the {@link FilterFragment#newInstance} factory method to
  * create an instance of this fragment.
  * Allows user to choose a specific date range to filter items from
+ * Observer pattern used
  */
 public class FilterFragment extends DialogFragment {
     private long dateStart = 0;

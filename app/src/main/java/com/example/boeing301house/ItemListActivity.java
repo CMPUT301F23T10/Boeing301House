@@ -1,6 +1,5 @@
 /**
- * Source code for primary activity of app. Displays list of {@link com.example.boeing301house.Item}s and
- * allows users to interact and add {@link com.example.boeing301house.Item}s
+ *
  */
 
 package com.example.boeing301house;
@@ -50,6 +49,9 @@ import java.util.Locale;
 
 // TODO: finish javadocs
 /**
+ * Source code for primary activity of app. Displays list of {@link com.example.boeing301house.Item}s and
+ * allows users to interact and add {@link com.example.boeing301house.Item}s
+ *
  * This class is for the list activity, where you can see/interact with items
  */
 public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
@@ -867,7 +869,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     }
 
     /**
-     * Snapshot listener
+     * Snapshot listener, updates how items are displayed (when called or when changes made)
      */
     public void updateItemListView() {
         itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -914,6 +916,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     }
 
     /**
+     * Handles sort behavior
      * @param sortMethod
      * @param sortOrder
      */
