@@ -709,7 +709,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             else if (item.getItemId() == R.id.itemMultiselectTag) {
                 // TODO: add tag dialog (pref maybe bottomsheet)
 
-                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Add tags to %d items", selectedItems.size()),
+//                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Add tags to %d items", selectedItems.size()),
+//                        Toast.LENGTH_SHORT).show(); // for testing
+                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Available on next version"),
                         Toast.LENGTH_SHORT).show(); // for testing
                 return true;
             }
