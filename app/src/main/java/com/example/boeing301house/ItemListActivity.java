@@ -52,21 +52,21 @@ import java.util.Locale;
 /**
  * This class is for the list activity, where you can see/interact with items
  */
-public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener {
+public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
 
     private FirebaseFirestore db;
 
     private Query itemQuery;
     private CollectionReference itemsRef;
     private ListView itemListView;
-//    private FloatingActionButton addButton;
+    //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
     private Item selectItem;
 
     private TextView subTotalText;
     public ArrayList<Item> itemList;
 
-//    private ArrayList<View> selectedItemViews = new ArrayList<>();
+    //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
 
     private Button itemListFilterButton;
@@ -332,15 +332,15 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         itemMultiSelectMode.finish(); // close contextual app bar
                     }
                     // if delete multiple btn pressed -> isSelectMultiple = false
-                        // selectedItems.clear();
-                        // reset background colors
-                        // selectedItemViews.clear();
+                    // selectedItems.clear();
+                    // reset background colors
+                    // selectedItemViews.clear();
 
                 }
 
 
-            //updateSubtotal(); //update subtotal
-        }
+                //updateSubtotal(); //update subtotal
+            }
 
         });
 
@@ -369,6 +369,8 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         itemListSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                new SortFragment().show(getSupportFragmentManager(), "SORT");
                 //Fragment sortFragment = new sortFragment(); //this is passed along so it can display the proper information
 
 
@@ -400,7 +402,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 Fragment addFrag = new AddEditItemFragment();
 
                 Item newItem = new ItemBuilder()
-                                .build(); //creates a new city to be created
+                        .build(); //creates a new city to be created
                 // items.add(selectItem); //adds the empty city to the list (with no details)
 
                 Bundle itemBundle = new Bundle();
@@ -851,14 +853,14 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         startDate = dateStart;
         endDate = dateEnd;
 //        if (dateStart != 0 && dateEnd != 0) {
-            itemList.clear();
-            itemQuery = itemsRef.whereGreaterThan("Date", dateStart).whereLessThan("Date", dateEnd);
-            updateItemListView();
+        itemList.clear();
+        itemQuery = itemsRef.whereGreaterThan("Date", dateStart).whereLessThan("Date", dateEnd);
+        updateItemListView();
 //            itemList.addAll(originalItemList);
 //            dateRangeFilter(startDate,endDate);
-            calculateTotalPrice();
+        calculateTotalPrice();
 //            itemAdapter.notifyDataSetChanged();
-            // filter items
+        // filter items
 //        }
         // TODO: add tags
 
@@ -911,4 +913,32 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         });
     }
 
+    /**
+     * @param sortMethod
+     * @param sortOrder
+     */
+    @Override
+    public void onSortOKPressed(String sortMethod, String sortOrder) {
+        Query.Direction direction;
+
+        if (sortOrder.matches("ASC")) {
+            direction = Query.Direction.ASCENDING;
+        } else {
+            direction = Query.Direction.DESCENDING;
+        }
+
+        if (sortMethod.matches("Date")){ //if the sort type is date
+            itemQuery = itemsRef.orderBy("Date", direction);
+        } else if (sortMethod.matches("Description")) { //if the sort type is description
+            itemQuery = itemsRef.orderBy("Desc", direction);
+        } else if (sortMethod.matches("Value")) { //if the sort type is description
+            itemQuery = itemsRef.orderBy("Est Value", direction);
+        } else if (sortMethod.matches("Make")) { //if the sort type is description
+            itemQuery = itemsRef.orderBy("Make", direction);
+        } else{ //by default, sort by date added!
+            itemQuery = itemsRef.orderBy(FieldPath.documentId(), direction);
+        }
+
+        updateItemListView();
+    }
 }
