@@ -69,7 +69,7 @@
         android:id="@+id/itemListAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="12dp">
+        >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/itemListMaterialToolbar"
@@ -136,6 +136,17 @@
                         android:layout_height="wrap_content"
                         android:text="FILTER"></Button>
                 </LinearLayout>
+
+                <Button
+                    android:id="@+id/resetButton"
+                    android:layout_width="61dp"
+                    android:layout_height="36dp"
+                    android:text="↻"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/itemListFilter"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

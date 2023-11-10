@@ -8,11 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/loginViewAppBarLayout"
-        app:liftOnScroll="true"
-        app:liftOnScrollTargetViewId="@id/itemViewScrollView"
-        app:liftOnScrollColor="@color/colorTitleBar"
-
+        android:id="@+id/profileViewAppBarLayout"
         >
 
         <com.google.android.material.appbar.MaterialToolbar
@@ -36,7 +32,6 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginBottom="?actionBarSize"
-        android:id="@+id/itemViewScrollView"
         >
 
         <ImageButton
@@ -47,7 +42,7 @@
             android:clickable="false"
             android:contentDescription="Add item"
             android:src="@drawable/ic_profile_button_96dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView"
+            app:layout_constraintBottom_toTopOf="@+id/userNameTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -56,7 +51,7 @@
         </ImageButton>
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/userNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="UserID"
@@ -67,8 +62,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.589">
-
         </TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/editUserNameButton"
+            android:layout_width="90dp"
+            android:layout_height="35dp"
+            android:textSize="11sp"
+            android:text="Edit"
+            android:backgroundTint="@color/colorButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
+            >
+
+        </com.google.android.material.button.MaterialButton>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
