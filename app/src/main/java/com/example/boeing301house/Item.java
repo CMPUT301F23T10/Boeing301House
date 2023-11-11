@@ -104,7 +104,8 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} make
-     * @return
+     * @param make
+     *
      */
     public void setMake(String make) {
         this.make = make;
@@ -121,7 +122,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} model
-     *
+     * @param model
      */
     public void setModel(String model) {
         this.model = model;
@@ -137,6 +138,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} value
+     * @param value
      *
      */
     public void setValue(double value) {
@@ -153,7 +155,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} description
-     *
+     * @param description
      */
     public void setDescription(String description) {
         this.description = description;
@@ -181,13 +183,13 @@ public class Item implements Parcelable {
 
     /**
      * Getter for string rep of {@link Item} value
-     * @return string rep of
+     * @return string rep of value
      */
     public String getValueString(){return String.format(Locale.CANADA,"%.2f", value);}
 
     /**
      * Setter for {@link Item} date
-     *
+     * @param date
      */
     public void setDate(long date) {
         this.date = date;
@@ -204,19 +206,23 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} SN
-     *
+     * @param SN
      */
     public void setSN(String SN) {
         this.SN = SN;
     }
 
+    /**
+     * Getter for {@link Item} comment
+     * @return
+     */
     public String getComment() {
         return comment;
     }
 
     /**
      * Setter for {@link Item} comment
-     *
+     * @param comment
      */
     public void setComment(String comment) {
         this.comment = comment;
@@ -248,7 +254,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} ID
-     *
+     * @param id
      */
     public void setItemID(String id) {
         this.id = id;
@@ -257,7 +263,7 @@ public class Item implements Parcelable {
 
     /**
      * Getter for {@link Item} ID
-     * @return ID
+     * @return id itemID
      */
     public String getItemID() {
         // long time = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
