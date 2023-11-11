@@ -104,6 +104,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} make
+     * @param make
      * @return
      */
     public void setMake(String make) {
@@ -121,7 +122,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} model
-     *
+     * @param model
      */
     public void setModel(String model) {
         this.model = model;
@@ -137,6 +138,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} value
+     * @param value
      *
      */
     public void setValue(double value) {
@@ -153,7 +155,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} description
-     *
+     * @param description
      */
     public void setDescription(String description) {
         this.description = description;
