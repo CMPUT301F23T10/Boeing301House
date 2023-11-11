@@ -76,6 +76,7 @@ public class AddEditItemFragment extends Fragment {
      * This function creates an instance of the fragment and passes an {@link Item} to it.
      * Creates fragment via a no-argument constructor
      * @param item Parcelable {@link Item} object given to fragment
+     * @param isAdd boolean (true if adding, false if editing)
      * @return fragment instance
      */
     public static AddEditItemFragment newInstance(Item item, boolean isAdd) {

@@ -38,6 +38,7 @@ public class ItemBuilder {
     /**
      * Builder method for declaring the id of an {@link Item}
      * @param id
+     * @return this ItemBuilder object
      */
     public ItemBuilder addID(String id) {
 //        this.id = id;
@@ -48,6 +49,7 @@ public class ItemBuilder {
     /**
      * Builder method for declaring make of an {@link Item}
      * @param make
+     * @return this ItemBuilder object
      */
     public ItemBuilder addMake(String make) {
 //        this.make = make;
@@ -58,6 +60,7 @@ public class ItemBuilder {
     /**
      * Builder method for declaring model of an {@link Item}
      * @param model
+     * @return this ItemBuilder object
      */
     public ItemBuilder addModel(String model) {
 //        this.model = model;
@@ -68,6 +71,7 @@ public class ItemBuilder {
     /**
      * Builder method for declaring serial number of an {@link Item}
      * @param SN
+     * @return this ItemBuilder object
      */
     public ItemBuilder addSN(String SN) {
 //        this.SN = SN;
@@ -78,6 +82,7 @@ public class ItemBuilder {
     /**
      * Builder method for adding a description to an {@link Item}
      * @param desc
+     * @return this ItemBuilder object
      */
     public ItemBuilder addDescription(String desc) {
 //        this.description = desc;
@@ -88,6 +93,7 @@ public class ItemBuilder {
     /**
      * Builder method for adding comments to an {@link Item}
      * @param comment
+     * @return this ItemBuilder object
      */
     public ItemBuilder addComment(String comment) {
 //        this.comment = comment;
@@ -98,6 +104,7 @@ public class ItemBuilder {
     /**
      * Builder method for declaring the date (in milliseconds) an {@link Item} was acquired
      * @param date purchase date
+     * @return this ItemBuilder object
      */
     public ItemBuilder addDate(long date) {
 //        this.date = date;
@@ -108,6 +115,7 @@ public class ItemBuilder {
     /**
      * Builder method for declaring value/price of an {@link Item}
      * @param value estimated value/price of the item
+     * @return this ItemBuilder object
      */
     public ItemBuilder addValue(double value) {
 //        this.value = value;
