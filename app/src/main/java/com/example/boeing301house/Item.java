@@ -189,7 +189,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} date
-     *
+     * @param date
      */
     public void setDate(long date) {
         this.date = date;
@@ -206,19 +206,23 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} SN
-     *
+     * @param SN
      */
     public void setSN(String SN) {
         this.SN = SN;
     }
 
+    /**
+     * Getter for {@link Item} comment
+     * @return
+     */
     public String getComment() {
         return comment;
     }
 
     /**
      * Setter for {@link Item} comment
-     *
+     * @param comment
      */
     public void setComment(String comment) {
         this.comment = comment;
@@ -250,7 +254,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} ID
-     *
+     * @param id
      */
     public void setItemID(String id) {
         this.id = id;
@@ -259,7 +263,7 @@ public class Item implements Parcelable {
 
     /**
      * Getter for {@link Item} ID
-     * @return ID
+     * @return id itemID
      */
     public String getItemID() {
         // long time = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
