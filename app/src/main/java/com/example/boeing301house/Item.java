@@ -15,7 +15,7 @@ import java.util.Locale;
 
 /**
  * Class representing {@link Item} object
- * Made with {@link ItemBuilder} object
+ * Made with ItemBuilder object
  */
 public class Item implements Parcelable {
     private String make;
@@ -105,7 +105,7 @@ public class Item implements Parcelable {
     /**
      * Setter for {@link Item} make
      * @param make
-     * @return
+     *
      */
     public void setMake(String make) {
         this.make = make;
