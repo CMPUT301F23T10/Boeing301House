@@ -91,8 +91,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     Button btnReset;
     AlertDialog.Builder builder;
 
-    public ArrayList<Item> originalItemList;
-
     // TODO: finish javadocs
     /**
      *
