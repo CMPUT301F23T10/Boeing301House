@@ -52,7 +52,7 @@ public class ItemList {
 
     /**
      * Add {@link Item} object to {@link ItemList}
-     * @param item
+     * @param item item to be added
      */
     public void add(Item item) {
         this.itemList.add(item);
@@ -60,7 +60,7 @@ public class ItemList {
 
     /**
      * Remove {@link Item} object from list by reference
-     * @param item
+     * @param item item to be removed
      */
     public void remove(Item item) {
         this.itemList.remove(item);
@@ -97,53 +97,58 @@ public class ItemList {
 
 
     /**
-     * Update and get firestore snapshot listener for list of items
+     * Update firestore snapshot listener for list of items
      *
      */
-    public void listener() {
+    public void updateListener() {
         listener.remove();
 
-        listener = itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", error.toString());
-                    return;
-                }
-                if (snapshots != null) {
-                    itemList.clear();
-                    for (QueryDocumentSnapshot doc: snapshots) {
-                        String model = doc.getString("Model");
-                        String make = doc.getString("Make");
-                        Long date = doc.getLong("Date");
-                        String SN = doc.getString("SN");
-                        Double value = doc.getDouble("Est Value");
-                        String desc = doc.getString("Desc");
-                        String comment = doc.getString("Comment");
-                        String id = doc.getId();
-                        // TODO: tags and images
+        listener = itemQuery.addSnapshotListener( (snapshots, error) -> {
+            if (error != null) {
+                Log.e("Firestore", error.toString());
+                return;
+            }
+            if (snapshots != null) {
+                itemList.clear();
+                for (QueryDocumentSnapshot doc: snapshots) {
+                    String model = doc.getString("Model");
+                    String make = doc.getString("Make");
+                    Long date = doc.getLong("Date");
+                    String SN = doc.getString("SN");
+                    Double value = doc.getDouble("Est Value");
+                    String desc = doc.getString("Desc");
+                    String comment = doc.getString("Comment");
+                    String id = doc.getId();
+                    // TODO: tags and images
 
-                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+                    Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
 
-                        Item item = new ItemBuilder()
-                                .addID(id)
-                                .addMake(make)
-                                .addModel(model)
-                                .addDate(date)
-                                .addSN(SN)
-                                .addValue(value)
-                                .addDescription(desc)
-                                .addComment(comment)
-                                .build();
+                    Item item = new ItemBuilder()
+                            .addID(id)
+                            .addMake(make)
+                            .addModel(model)
+                            .addDate(date)
+                            .addSN(SN)
+                            .addValue(value)
+                            .addDescription(desc)
+                            .addComment(comment)
+                            .build();
 
-                        itemList.add(item);
+                    itemList.add(item);
 
-                    }
                 }
             }
         });
 
         // return listener;
+    }
+
+    /**
+     * Getter for firestore snapshot listener for list of items
+     * @return listener listener object for item list
+     */
+    public ListenerRegistration getListener() {
+        return listener;
     }
 
 
