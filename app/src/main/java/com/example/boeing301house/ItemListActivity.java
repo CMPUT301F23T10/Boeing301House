@@ -687,7 +687,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
             int n = selectedItems.size();
-            
+
             if (n == 0) {
                 mode.setTitle("Select Items"); // tell user to select items (when none selected yet)
             } else {

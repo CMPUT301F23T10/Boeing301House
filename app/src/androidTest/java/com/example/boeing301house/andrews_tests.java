@@ -126,8 +126,7 @@ public class andrews_tests {
         clickDialogVisibleDay(5);
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
-
-        // onView(withId(R.id.itemMultiselectBar)).check(doesNotExist());
+        
 
         onData(anything())
                 .inAdapterView(withId(R.id.itemList))
