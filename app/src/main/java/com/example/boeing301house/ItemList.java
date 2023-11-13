@@ -125,6 +125,17 @@ public class ItemList {
     }
 
     /**
+     * Remove selected items in list
+     */
+    public void removeSelected() {
+        for (Item item: itemList) {
+            if (item.isSelected()) {
+                this.remove(item);
+            }
+        }
+    }
+
+    /**
      * Clears list of items
      */
     public void clear() {
