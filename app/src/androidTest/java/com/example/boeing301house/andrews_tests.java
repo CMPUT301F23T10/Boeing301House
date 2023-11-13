@@ -133,7 +133,7 @@ public class andrews_tests {
                 .inAdapterView(withId(R.id.itemList))
                 .atPosition(0) // position we want to long click
                 .perform(ViewActions.longClick());
-        
+
         onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
 
         onData(anything())
