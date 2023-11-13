@@ -5,12 +5,15 @@ import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.typeText;
+import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.hasMinimumChildCount;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -98,6 +101,52 @@ public class andrews_tests {
 
     @Test
     public void testMultiSelect() {
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
+        clickDialogVisibleDay(4);
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
+        clickDialogVisibleDay(5);
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+        // onView(withId(R.id.itemMultiselectBar)).check(doesNotExist());
+
+        onData(anything())
+                .inAdapterView(withId(R.id.itemList))
+                .atPosition(0) // position we want to long click
+                .perform(ViewActions.longClick());
+        
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+        onData(anything())
+                .inAdapterView(withId(R.id.itemList))
+                .atPosition(1)
+                .perform(ViewActions.click());
+
+        onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("Confirm")).inRoot(isDialog()).perform(click());
+
+
 
     }
 
