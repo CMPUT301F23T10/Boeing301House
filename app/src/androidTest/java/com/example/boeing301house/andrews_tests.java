@@ -126,7 +126,7 @@ public class andrews_tests {
         clickDialogVisibleDay(5);
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
-        
+
 
         onData(anything())
                 .inAdapterView(withId(R.id.itemList))

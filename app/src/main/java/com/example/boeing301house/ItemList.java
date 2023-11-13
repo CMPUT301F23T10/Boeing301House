@@ -1,5 +1,6 @@
 package com.example.boeing301house;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,6 +9,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -18,6 +20,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Class dedicated for keeping track of list of {@link Item} objects and maintaining it
@@ -45,11 +48,20 @@ public class ItemList {
      */
     public ItemList(CollectionReference itemsRef) {
         this.itemsRef = itemsRef;
-        itemQuery = itemsRef.orderBy(FieldPath.documentId());
-        itemFilterQuery = itemQuery;
+//        this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
+//        this.itemFilterQuery = itemQuery;
 
-        itemList = new ArrayList<>();
+        this.itemList = new ArrayList<>();
+//        this.updateListener();
+
+    }
+
+    public ArrayList<Item> resetQuery() {
+        this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
+        this.itemFilterQuery = itemQuery;
         this.updateListener();
+
+        return itemList;
     }
 
 
@@ -86,7 +98,35 @@ public class ItemList {
      * @param item item to be added
      */
     public void add(Item item) {
+        HashMap<String, Object> itemData = new HashMap<>();
+        itemData.put("Make", item.getMake());
+        itemData.put("Model", item.getModel());
+        itemData.put("Date", item.getDate());
+        itemData.put("SN", item.getSN());
+        itemData.put("Est Value", item.getValue());
+        itemData.put("Desc", item.getDescription());
+        itemData.put("Comment", item.getComment());
+
+
+        ArrayList<String> tags = new ArrayList<>(); // placeholder
+        itemData.put("Tags", tags); // placeholder
+//        updateItemListView();
+        itemsRef.document(item.getItemID())
+                .set(itemData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("Firestore", "DocumentSnapshot successfully written");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Firestore", "db write failed");
+                    }
+                });
         this.itemList.add(item);
+        this.updateListener();
     }
 
     /**
@@ -122,6 +162,56 @@ public class ItemList {
         this.remove(item);
 
 
+    }
+
+    /**
+     * Replace {@link Item} at specified position in list of items with given {@link Item} object
+     * @param i index of {@link Item} to be replaced
+     * @param item {@link Item} used to replace
+     */
+    public void set(int i, Item item) {
+        itemList.set(i, item);
+        this.firestoreEdit(item);
+    }
+
+    /**
+     * Updates item in firestore if it has been edited
+     * @param item edited item
+     */
+    private void firestoreEdit(Item item) {
+        HashMap<String, Object> itemData = new HashMap<>();
+        itemData.put("Make", item.getMake());
+        itemData.put("Model", item.getModel());
+        itemData.put("Date", item.getDate());
+        itemData.put("SN", item.getSN());
+        itemData.put("Est Value", item.getValue());
+        itemData.put("Desc", item.getDescription());
+        itemData.put("Comment", item.getComment());
+
+        // TODO: implement
+        ArrayList<String> tags = new ArrayList<>(); // placeholder
+        itemData.put("Tags", tags); // placeholder for tags since we haven't done it yet
+
+        // Get the document reference for the item
+        DocumentReference itemRef = itemsRef.document(item.getItemID());
+
+        itemRef
+                .update(itemData)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.i("Firestore", "DocumentSnapshot successfully written");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("Firestore", "db write failed: " + e.getMessage());
+                    }
+                });
+        // this.getListener().notify();
+
+        // this.updateListener();
     }
 
     /**
@@ -346,7 +436,16 @@ public class ItemList {
         return itemList;
     }
 
-
+    /**
+     * Get item adapter for current {@link ItemList}
+     * @param context
+     * @param resource
+     * @return
+     */
+    public ItemAdapter getAdapter(Context context, int resource) {
+        ItemAdapter itemAdapter = new ItemAdapter(context, resource, this.itemList);
+        return itemAdapter;
+    }
 
 
 
