@@ -62,6 +62,18 @@ public class ItemList {
     }
 
     /**
+     * Set Firestore Reference for {@link ItemList}
+     * @param itemsRef Firestore {@link CollectionReference}
+     */
+    public void setReference(CollectionReference itemsRef) {
+        this.itemsRef = itemsRef;
+        this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
+        this.itemFilterQuery = itemQuery;
+
+        this.updateListener();
+    }
+
+    /**
      * Getter for list
      * @return lists of items
      */
@@ -301,8 +313,13 @@ public class ItemList {
 
     }
 
+    /**
+     * Filter list of items by substring (of make and desc)
+     * @param text
+     * @return
+     */
     public ArrayList<Item> filterSearch(String text) {
-
+        // TODO: implement w/ typesense
 
         return itemList;
     }
