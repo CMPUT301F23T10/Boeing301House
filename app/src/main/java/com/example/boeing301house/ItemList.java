@@ -301,7 +301,9 @@ public class ItemList {
 
     }
 
-    public ArrayList<Item> filterSearch() {
+    public ArrayList<Item> filterSearch(String text) {
+
+
         return itemList;
     }
 
