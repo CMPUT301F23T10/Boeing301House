@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public class ItemList {
     private Query itemFilterQuery;
     private ListenerRegistration listener;
     private OnCompleteListener<ArrayList<Item>> dblistener;
+    boolean dateFiltered = false;
 
     /**
      * Default no arg constructor
@@ -244,9 +246,9 @@ public class ItemList {
      * No arg default update (for sorting)
      */
     public void updateListener() {
-        if (listener != null) {
-            listener.remove();
-        }
+//        if (listener != null) {
+//            listener.remove();
+//        }
 
         listener = itemQuery.addSnapshotListener( (snapshots, error) -> {
             if (error != null) {
@@ -266,7 +268,7 @@ public class ItemList {
                     String id = doc.getId();
                     // TODO: tags and images
 
-                    Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
+                    Log.d("Firestore", "def item fetched"); // TODO: change, add formatted string
 
                     Item item = new ItemBuilder()
                             .addID(id)
@@ -287,7 +289,6 @@ public class ItemList {
                 }
             }
         });
-
         // return listener;
     }
 
@@ -301,10 +302,9 @@ public class ItemList {
             this.updateListener();
             return; // exit function
         }
-
-        if (listener != null) {
-            listener.remove();
-        }
+//        if (listener != null) {
+//            listener.remove();
+//        }
 
         listener = itemFilterQuery.addSnapshotListener( (snapshots, error) -> {
             if (error != null) {
@@ -345,8 +345,6 @@ public class ItemList {
                 dblistener.onComplete(itemList, true);
             }
         });
-
-        // return listener;
     }
 
     /**
@@ -361,9 +359,9 @@ public class ItemList {
      * Sort list of items
      * @param method field to sort by
      * @param order sort order
-     * @return list of items
+     *
      */
-    public ArrayList<Item> sort(String method, String order) {
+    public void sort(String method, String order) {
         Query.Direction direction;
 
         if (order.matches("ASC")) {
@@ -395,7 +393,6 @@ public class ItemList {
         }
 
         this.updateListener();
-        return itemList;
     };
 
     /**
@@ -404,46 +401,111 @@ public class ItemList {
      * @param end end date
      * @return list of items
      */
-    public ArrayList<Item> filterDate(long start, long end) {
-        itemFilterQuery = itemFilterQuery.whereGreaterThanOrEqualTo("Date", start).whereLessThanOrEqualTo("Date", end);
+    public void filterDate(long start, long end) {
+        itemFilterQuery = itemsRef.orderBy("Date").whereGreaterThanOrEqualTo("Date", start).whereLessThanOrEqualTo("Date", end);
+//        this.sort("Date Added", "Asc");
         this.updateListener(true);
-
-        return itemList;
 
     }
 
     /**
      * Filter list of items by substring (of make and desc)
      * @param text
-     * @return
+     *
      */
-    public ArrayList<Item> filterSearch(String text) {
+    public void filterSearch(String text) {
         // TODO: implement w/ typesense
 
-        return itemList;
+        return;
     }
 
     /**
      * Remove filter for list of items
-     * @return list of items
+     *
      */
-    public ArrayList<Item> clearFilter() {
+    public void clearFilter() {
         itemFilterQuery = itemQuery;
         this.updateListener();
 
-        return itemList;
+        return;
     }
 
-    /**
-     * Get item adapter for current {@link ItemList}
-     * @param context
-     * @param resource
-     * @return
-     */
-    public ItemAdapter getAdapter(Context context, int resource) {
-        ItemAdapter itemAdapter = new ItemAdapter(context, resource, this.itemList);
-        return itemAdapter;
+    public void getFiltered() {
+        ArrayList<Item> list = new ArrayList<>();
+        itemFilterQuery.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (QueryDocumentSnapshot doc: snapshots) {
+                    String model = doc.getString("Model");
+                    String make = doc.getString("Make");
+                    Long date = doc.getLong("Date");
+                    String SN = doc.getString("SN");
+                    Double value = doc.getDouble("Est Value");
+                    String desc = doc.getString("Desc");
+                    String comment = doc.getString("Comment");
+                    String id = doc.getId();
+
+
+                    Log.d("Firestore", "filter item fetched"); // TODO: change, add formatted string
+
+                    Item item = new ItemBuilder()
+                            .addID(id)
+                            .addMake(make)
+                            .addModel(model)
+                            .addDate(date)
+                            .addSN(SN)
+                            .addValue(value)
+                            .addDescription(desc)
+                            .addComment(comment)
+                            .build();
+
+                    list.add(item);
+
+                }
+                dblistener.onComplete(list, true);
+            }
+        });
+
     }
+    public void getSorted() {
+        ArrayList<Item> list = new ArrayList<>();
+        itemQuery.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot snapshots) {
+                for (QueryDocumentSnapshot doc: snapshots) {
+                    String model = doc.getString("Model");
+                    String make = doc.getString("Make");
+                    Long date = doc.getLong("Date");
+                    String SN = doc.getString("SN");
+                    Double value = doc.getDouble("Est Value");
+                    String desc = doc.getString("Desc");
+                    String comment = doc.getString("Comment");
+                    String id = doc.getId();
+
+
+                    Log.d("Firestore", "filter item fetched"); // TODO: change, add formatted string
+
+                    Item item = new ItemBuilder()
+                            .addID(id)
+                            .addMake(make)
+                            .addModel(model)
+                            .addDate(date)
+                            .addSN(SN)
+                            .addValue(value)
+                            .addDescription(desc)
+                            .addComment(comment)
+                            .build();
+
+                    list.add(item);
+
+                }
+                dblistener.onComplete(list, true);
+            }
+        });
+
+    }
+
+
 
 
 
