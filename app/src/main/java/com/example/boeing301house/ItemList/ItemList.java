@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.boeing301house.Item;
-import com.example.boeing301house.ItemAdapter;
 import com.example.boeing301house.ItemBuilder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +30,7 @@ public class ItemList {
     private Query itemQuery;
     private Query itemFilterQuery;
     private ListenerRegistration listener;
-
+    private OnCompleteListener<ArrayList<Item>> dblistener;
 
     /**
      * Default no arg constructor
@@ -54,6 +53,13 @@ public class ItemList {
 
     }
 
+    public void setDBListener(OnCompleteListener<ArrayList<Item>> listener) {
+        this.dblistener = listener;
+    }
+    /**
+     * Reset query
+     * @return: item list
+     */
     public ArrayList<Item> resetQuery() {
         this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
         this.itemFilterQuery = itemQuery;
@@ -276,6 +282,9 @@ public class ItemList {
                     itemList.add(item);
 
                 }
+                if (this.dblistener != null) {
+                    dblistener.onComplete(itemList, true);
+                }
             }
         });
 
@@ -331,6 +340,9 @@ public class ItemList {
                     itemList.add(item);
 
                 }
+            }
+            if (this.dblistener != null) {
+                dblistener.onComplete(itemList, true);
             }
         });
 

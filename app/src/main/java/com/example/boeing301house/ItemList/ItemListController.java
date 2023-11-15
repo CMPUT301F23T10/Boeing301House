@@ -1,5 +1,7 @@
 package com.example.boeing301house.ItemList;
 
+import android.content.Context;
+
 import com.example.boeing301house.Item;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,18 +19,34 @@ public class ItemListController {
     private ItemList itemList; // model
     FirebaseFirestore db;
     CollectionReference itemsRef;
+    ItemAdapter itemAdapter;
 
 
     /**
+     * No arg constructor for controller
      * Called on startup, data setup
      */
-    public void onStartup() {
+    public ItemListController(Context context) {
         db = FirebaseFirestore.getInstance();
         itemsRef = db.collection("items");
         itemList = new ItemList(itemsRef); // maybe use db object
-
+        itemAdapter = new ItemAdapter(context.getApplicationContext(), 0, itemList.get());
+        itemList.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
+            @Override
+            public void onComplete(ArrayList<Item> item, boolean success) {
+                if (success) {
+                    itemAdapter.updateList(item);
+                    itemAdapter.notifyDataSetChanged();
+                }
+                return;
+            }
+        });
 
         return;
+    }
+
+    public void calculateTotal() {
+
     }
 
     /**

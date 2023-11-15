@@ -27,7 +27,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.boeing301house.AddEditItemFragment;
 import com.example.boeing301house.FilterFragment;
 import com.example.boeing301house.Item;
-import com.example.boeing301house.ItemAdapter;
 import com.example.boeing301house.ItemBuilder;
 import com.example.boeing301house.ItemViewActivity;
 import com.example.boeing301house.R;
