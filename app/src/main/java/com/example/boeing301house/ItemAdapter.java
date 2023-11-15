@@ -102,6 +102,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         return view;
     }
+
+
+    public void updateList(ArrayList<Item> items) {
+        this.items = items;
+        super.notifyDataSetChanged();
+    }
     
 
 }

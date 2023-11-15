@@ -28,7 +28,7 @@ import java.util.HashMap;
 public class ItemList {
     private ArrayList<Item> itemList;
 
-//    private FirebaseFirestore db;
+    //    private FirebaseFirestore db;
     private CollectionReference itemsRef;
     private Query itemQuery;
     private Query itemFilterQuery;
@@ -39,7 +39,7 @@ public class ItemList {
      * Default no arg constructor
      */
     public ItemList() {
-         itemList = new ArrayList<>();
+        itemList = new ArrayList<>();
     }
 
     /**
@@ -48,11 +48,11 @@ public class ItemList {
      */
     public ItemList(CollectionReference itemsRef) {
         this.itemsRef = itemsRef;
-//        this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
-//        this.itemFilterQuery = itemQuery;
+        this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
+        this.itemFilterQuery = itemQuery;
 
         this.itemList = new ArrayList<>();
-//        this.updateListener();
+        this.updateListener();
 
     }
 
@@ -73,17 +73,6 @@ public class ItemList {
         this.itemList = list;
     }
 
-    /**
-     * Set Firestore Reference for {@link ItemList}
-     * @param itemsRef Firestore {@link CollectionReference}
-     */
-    public void setReference(CollectionReference itemsRef) {
-        this.itemsRef = itemsRef;
-        this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
-        this.itemFilterQuery = itemQuery;
-
-        this.updateListener();
-    }
 
     /**
      * Getter for list
@@ -125,8 +114,7 @@ public class ItemList {
                         Log.e("Firestore", "db write failed");
                     }
                 });
-        this.itemList.add(item);
-        this.updateListener();
+//        this.itemList.add(item);
     }
 
     /**
