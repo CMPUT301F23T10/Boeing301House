@@ -21,6 +21,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 
+import com.example.boeing301house.ItemList.ItemListActivity;
+
 import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;

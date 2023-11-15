@@ -5,24 +5,17 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.example.boeing301house.ItemList.ItemList;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import org.checkerframework.checker.units.qual.C;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import androidx.annotation.NonNull;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
@@ -55,7 +48,7 @@ public class ItemListDBUnitTest {
                 .addComment("tasd")
                 .addDate(123131)
                 .addDescription("asdads")
-                .addID("12324213")
+                .addID("123242131")
                 .addMake("SAD")
                 .addModel("SADDSD")
                 .addValue(12)
