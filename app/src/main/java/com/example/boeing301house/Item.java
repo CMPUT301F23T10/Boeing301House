@@ -48,14 +48,13 @@ public class Item implements Parcelable {
         this.SN = "";
         this.comment = "";
         this.id = String.format(Locale.CANADA,"%d",Calendar.getInstance(Locale.CANADA).getTimeInMillis());
+        this.tags = new ArrayList<>();
 //        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
     }
 
 
-    /**
-     * Constructor for parcelable
-     * @param in
-     */
+    // TODO: finish java doc
+
     protected Item(Parcel in) {
         make = in.readString();
         model = in.readString();
@@ -64,30 +63,17 @@ public class Item implements Parcelable {
         date = in.readLong();
         SN = in.readString();
         comment = in.readString();
-        id = in.readString();
         isSelected = in.readByte() != 0;
+        id = in.readString();
+        tags = in.createStringArrayList();
     }
 
-    // TODO: finish java doc
-    /**
-     *
-     */
     public static final Creator<Item> CREATOR = new Creator<Item>() {
-        /**
-         * Creates new instance of the Parcelable class
-         * @param in The Parcel to read the object's data from.
-         * @return
-         */
         @Override
         public Item createFromParcel(Parcel in) {
             return new Item(in);
         }
 
-        /**
-         * Create array of Parcelable class
-         * @param size Size of the array.
-         * @return
-         */
         @Override
         public Item[] newArray(int size) {
             return new Item[size];
@@ -274,20 +260,43 @@ public class Item implements Parcelable {
     }
 
     /**
-     * Describe the kinds of special objects contained in this Parcelable instance's marshaled representation.
-     * @return
+     * Add tag to item
+     * @param tag tag
      */
+    public void addTags(String tag) {
+        tags.add(tag);
+    }
+
+    /**
+     * Add tags to item
+     * @param tag list of tags
+     */
+    public void addTags(ArrayList<String> tag) {
+        tags.addAll(tag);
+    }
+
+    /**
+     * Remove tag from item
+     * @param tag tag to be removed
+     */
+    public void removeTag(String tag) {
+        tags.remove(tag);
+    }
+
+    /**
+     * Getter for tags
+     * @return list of tags
+     */
+    public ArrayList<String> getTags() {
+        return this.tags;
+    }
+
+
     @Override
     public int describeContents() {
         return 0;
     }
 
-    /**
-     * Adds content to parcel, creator uses constructor to read content back in
-     * @param dest The Parcel in which the object should be written.
-     * @param flags Additional flags about how the object should be written.
-     * May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
-     */
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(make);
@@ -297,11 +306,10 @@ public class Item implements Parcelable {
         dest.writeLong(date);
         dest.writeString(SN);
         dest.writeString(comment);
-        dest.writeString(id);
         dest.writeByte((byte) (isSelected ? 1 : 0));
+        dest.writeString(id);
+        dest.writeStringList(tags);
     }
-
-
 }
 
 

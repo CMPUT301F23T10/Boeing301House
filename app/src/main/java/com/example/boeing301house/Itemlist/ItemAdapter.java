@@ -1,4 +1,4 @@
-package com.example.boeing301house.ItemList;
+package com.example.boeing301house.Itemlist;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -106,7 +106,10 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         return view;
     }
 
-
+    /**
+     * Update list the adapter is referencing
+     * @param items new list
+     */
     public void updateList(ArrayList<Item> items) {
         this.items = items;
         super.notifyDataSetChanged();

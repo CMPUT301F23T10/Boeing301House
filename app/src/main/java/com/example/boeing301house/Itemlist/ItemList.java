@@ -1,9 +1,9 @@
-package com.example.boeing301house.ItemList;
+package com.example.boeing301house.Itemlist;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
@@ -15,42 +15,49 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Predicate;
 
 /**
- * Class dedicated for keeping track of list of {@link Item} objects and maintaining it
+ * Class dedicated for keeping track of list of {@link Item} objects and maintaining it.
+ * Model for item list
  */
 public class ItemList {
+    private static final String TAG = "ITEM_LIST";
     private ArrayList<Item> itemList;
+    private ArrayList<Item> returnList;
+    private ArrayList<Predicate<Item>> searchFilters;
+    private ArrayList<Predicate<Item>> dateFilter;
+    private ArrayList<Predicate<Item>> tagFilter;
 
     //    private FirebaseFirestore db;
     private CollectionReference itemsRef;
     private Query itemQuery;
-    private Query itemFilterQuery;
     private ListenerRegistration listener;
     private OnCompleteListener<ArrayList<Item>> dblistener;
-    boolean dateFiltered = false;
 
-    /**
-     * Default no arg constructor
-     */
-    public ItemList() {
-        itemList = new ArrayList<>();
-    }
+//    /**
+//     * Default no arg constructor
+//     */
+//    public ItemList() {
+//        itemList = new ArrayList<>();
+//    }
 
     /**
      * Constructor for passing through an item
-     * @param itemsRef
+     * @param itemsRef: reference to db collection
      */
     public ItemList(CollectionReference itemsRef) {
         this.itemsRef = itemsRef;
         this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
-        this.itemFilterQuery = itemQuery;
+        searchFilters = new ArrayList<>();
+        tagFilter = new ArrayList<>();
+        dateFilter = new ArrayList<>();
 
         this.itemList = new ArrayList<>();
+        this.returnList = new ArrayList<>();
         this.updateListener();
 
     }
@@ -60,23 +67,12 @@ public class ItemList {
     }
     /**
      * Reset query
-     * @return: item list
+     *
      */
-    public ArrayList<Item> resetQuery() {
+    public void resetQuery() {
         this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
-        this.itemFilterQuery = itemQuery;
         this.updateListener();
 
-        return itemList;
-    }
-
-
-    /**
-     * Constructor for passing through an existing list
-     * @param list of existing {@link ArrayList} of {@link Item}s
-     */
-    public ItemList(ArrayList<Item> list) {
-        this.itemList = list;
     }
 
 
@@ -85,14 +81,19 @@ public class ItemList {
      * @return lists of items
      */
     public ArrayList<Item> get() {
-        return itemList;
+        returnList.clear();
+        returnList.addAll(itemList);
+        filter();
+        return returnList;
+//        return itemList;
     }
 
     /**
      * Add {@link Item} object to {@link ItemList}
      * @param item item to be added
+     * @param completeListener OnCompleteListener to notify failures (Nullable)
      */
-    public void add(Item item) {
+    public void add(@NonNull Item item, @Nullable OnCompleteListener<Item> completeListener) {
         HashMap<String, Object> itemData = new HashMap<>();
         itemData.put("Make", item.getMake());
         itemData.put("Model", item.getModel());
@@ -112,12 +113,18 @@ public class ItemList {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.i("Firestore", "DocumentSnapshot successfully written");
+                        if (completeListener != null) {
+                            completeListener.onComplete(item, true);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("Firestore", "db write failed");
+                        if (completeListener != null) {
+                            completeListener.onComplete(item, false);
+                        }
                     }
                 });
 //        this.itemList.add(item);
@@ -127,8 +134,8 @@ public class ItemList {
      * Remove {@link Item} object from list by reference
      * @param item item to be removed
      */
-    public void remove(Item item) {
-        this.itemList.remove(item);
+    public void remove(@NonNull Item item, @Nullable OnCompleteListener<Item> completeListener) {
+//        this.itemList.remove(item);
 
         itemsRef.document(item.getItemID())
                 .delete()
@@ -136,12 +143,18 @@ public class ItemList {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d("Firestore", "Item successfully deleted!");
+                        if (completeListener != null) {
+                            completeListener.onComplete(item, true);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("Firestore", "Error deleting item: " + e.getMessage());
+                        if (completeListener != null) {
+                            completeListener.onComplete(null, false);
+                        }
                     }
                 });
     }
@@ -150,10 +163,10 @@ public class ItemList {
      * Remove {@link Item} object from list by position
      * @param i position of item in list
      */
-    public void remove(int i) {
+    public void remove(int i, @Nullable OnCompleteListener<Item> completeListener) {
         Item item = this.itemList.get(i);
         // this.itemList.remove(i);
-        this.remove(item);
+        this.remove(item, completeListener);
 
 
     }
@@ -163,16 +176,17 @@ public class ItemList {
      * @param i index of {@link Item} to be replaced
      * @param item {@link Item} used to replace
      */
-    public void set(int i, Item item) {
+    public void set(int i, Item item, @Nullable OnCompleteListener<Item> completeListener) {
         itemList.set(i, item);
-        this.firestoreEdit(item);
+        this.firestoreEdit(item, completeListener);
     }
 
     /**
      * Updates item in firestore if it has been edited
      * @param item edited item
      */
-    private void firestoreEdit(Item item) {
+    private void firestoreEdit(Item item, @Nullable OnCompleteListener<Item> completeListener) {
+//        TODO: convert to WriteBatch
         HashMap<String, Object> itemData = new HashMap<>();
         itemData.put("Make", item.getMake());
         itemData.put("Model", item.getModel());
@@ -195,12 +209,18 @@ public class ItemList {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.i("Firestore", "DocumentSnapshot successfully written");
+                        if (completeListener != null) {
+                            completeListener.onComplete(item, true);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("Firestore", "db write failed: " + e.getMessage());
+                        if (completeListener != null) {
+                            completeListener.onComplete(null, false);
+                        }
                     }
                 });
         // this.getListener().notify();
@@ -209,14 +229,30 @@ public class ItemList {
     }
 
     /**
+     * Remove selected items in list (w/ OnCompleteListener)
+     * @param completeListener OnCompleteListener
+     */
+    public void removeSelected(@Nullable OnCompleteListener<Item> completeListener) {
+        ArrayList<Item> list = new ArrayList<>(itemList);
+        for (Item item: list) {
+            if (item.isSelected()) {
+                this.remove(item, completeListener);
+            }
+        }
+        list.clear();
+    }
+
+    /**
      * Remove selected items in list
      */
     public void removeSelected() {
-        for (Item item: itemList) {
+        ArrayList<Item> list = new ArrayList<>(itemList);
+        for (Item item: list) {
             if (item.isSelected()) {
-                this.remove(item);
+                this.remove(item, null);
             }
         }
+        list.clear();
     }
 
     /**
@@ -285,68 +321,14 @@ public class ItemList {
 
                 }
                 if (this.dblistener != null) {
-                    Log.d("DBLISTENER", "updateListener");
-                    dblistener.onComplete(itemList, true);
+                    Log.d(TAG, "dblistener");
+                    returnList.clear();
+                    returnList.addAll(itemList);
+                    dblistener.onComplete(returnList, true);
                 }
             }
         });
         // return listener;
-    }
-
-    /**
-     * Update firestore snapshot listener for list of items
-     * @param isFilter true if filter applied, false otherwise
-     */
-    public void updateListener(boolean isFilter) {
-        Log.d("DBLISTENER", "FILTERING LISTENER");
-        if (!isFilter) {
-            this.updateListener();
-            return; // exit function
-        }
-//        if (listener != null) {
-//            listener.remove();
-//        }
-
-        listener = itemFilterQuery.addSnapshotListener( (snapshots, error) -> {
-            if (error != null) {
-                Log.e("Firestore", error.toString());
-                return;
-            }
-            if (snapshots != null) {
-                itemList.clear();
-                for (QueryDocumentSnapshot doc: snapshots) {
-                    String model = doc.getString("Model");
-                    String make = doc.getString("Make");
-                    Long date = doc.getLong("Date");
-                    String SN = doc.getString("SN");
-                    Double value = doc.getDouble("Est Value");
-                    String desc = doc.getString("Desc");
-                    String comment = doc.getString("Comment");
-                    String id = doc.getId();
-
-
-                    Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-
-                    Item item = new ItemBuilder()
-                            .addID(id)
-                            .addMake(make)
-                            .addModel(model)
-                            .addDate(date)
-                            .addSN(SN)
-                            .addValue(value)
-                            .addDescription(desc)
-                            .addComment(comment)
-                            .build();
-
-                    itemList.add(item);
-
-                }
-            }
-            if (this.dblistener != null) {
-                Log.d("DBLISTENER", "updateListener filter");
-                dblistener.onComplete(itemList, true);
-            }
-        });
     }
 
     /**
@@ -374,23 +356,18 @@ public class ItemList {
 
         if (method.matches("Date")){ //if the sort type is date
             itemQuery = itemsRef.orderBy("Date", direction);
-            itemFilterQuery = itemFilterQuery.orderBy("Date", direction);
 
         } else if (method.matches("Description")) { //if the sort type is description
             itemQuery = itemsRef.orderBy("Desc", direction);
-            itemFilterQuery = itemFilterQuery.orderBy("Desc", direction);
 
         } else if (method.matches("Value")) { //if the sort type is description
             itemQuery = itemsRef.orderBy("Est Value", direction);
-            itemFilterQuery = itemFilterQuery.orderBy("Est Value", direction);
 
         } else if (method.matches("Make")) { //if the sort type is description
             itemQuery = itemsRef.orderBy("Make", direction);
-            itemFilterQuery = itemFilterQuery.orderBy("Make", direction);
 
         } else{ //by default, sort by date added!
             itemQuery = itemsRef.orderBy(FieldPath.documentId(), direction);
-            itemFilterQuery = itemFilterQuery.orderBy(FieldPath.documentId(), direction);
 
         }
 
@@ -401,12 +378,22 @@ public class ItemList {
      * Filter list of items
      * @param start start date
      * @param end end date
-     * @return list of items
+     *
      */
     public void filterDate(long start, long end) {
-        itemFilterQuery = itemsRef.orderBy("Date").whereGreaterThanOrEqualTo("Date", start).whereLessThanOrEqualTo("Date", end);
+//        itemFilterQuery = itemsRef.orderBy("Date").whereGreaterThanOrEqualTo("Date", start).whereLessThanOrEqualTo("Date", end);
+        dateFilter.clear();
+        dateFilter.add(
+                item -> !(item.getDate() <= end)
+        );
+        dateFilter.add(
+                item -> !(item.getDate() >= start)
+        );
 //        this.sort("Date Added", "Asc");
-        this.updateListener(true);
+//        this.updateListener(true);
+        filter();
+
+        return;
 
     }
 
@@ -416,9 +403,50 @@ public class ItemList {
      *
      */
     public void filterSearch(String text) {
-        // TODO: implement w/ typesense
+        searchFilters.clear();
+        if (!text.isEmpty()) {
+            searchFilters.add(
+                    item -> !(item.getDescription().toLowerCase().contains(text.toLowerCase()) ||
+                            (item.getMake().toLowerCase().contains(text.toLowerCase()))
+            ));
+
+//            searchFilters.add(
+//                    item -> !(item.getMake().toLowerCase().contains(text.toLowerCase()))
+//            );
+        }
+        filter();
 
         return;
+    }
+
+    /**
+     * Filter by selected tags
+     * @param tags array of selected tags
+     */
+    public void filterTag(ArrayList<String> tags) {
+        tagFilter.clear();
+        tagFilter.add(
+                item -> !(item.getTags().containsAll(tags))
+        );
+        filter();
+    }
+
+    /**
+     * Handle filtering
+     */
+    public void filter() {
+        this.returnList.clear();
+        this.returnList.addAll(itemList);
+        ArrayList<Predicate<Item>> filters = new ArrayList<>();
+        filters.addAll(searchFilters);
+        filters.addAll(tagFilter);
+        filters.addAll(dateFilter);
+
+        for (Predicate<Item> filter: filters) {
+            returnList.removeIf(filter);
+        }
+//        Log.d("TEST_FILTER_DATE", returnList.toString());
+//        Log.d("TEST_FILTER_DATE", returnList.toString());
     }
 
     /**
@@ -426,86 +454,16 @@ public class ItemList {
      *
      */
     public void clearFilter() {
-        itemFilterQuery = itemQuery;
-        this.updateListener();
+        searchFilters.clear();
+        tagFilter.clear();
+        dateFilter.clear();
+        returnList.clear();
+        returnList.addAll(itemList);
 
         return;
     }
 
-    public void getFiltered() {
-        ArrayList<Item> list = new ArrayList<>();
-        itemFilterQuery.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot snapshots) {
-                for (QueryDocumentSnapshot doc: snapshots) {
-                    String model = doc.getString("Model");
-                    String make = doc.getString("Make");
-                    Long date = doc.getLong("Date");
-                    String SN = doc.getString("SN");
-                    Double value = doc.getDouble("Est Value");
-                    String desc = doc.getString("Desc");
-                    String comment = doc.getString("Comment");
-                    String id = doc.getId();
 
-
-                    Log.d("Firestore", "filter item fetched"); // TODO: change, add formatted string
-
-                    Item item = new ItemBuilder()
-                            .addID(id)
-                            .addMake(make)
-                            .addModel(model)
-                            .addDate(date)
-                            .addSN(SN)
-                            .addValue(value)
-                            .addDescription(desc)
-                            .addComment(comment)
-                            .build();
-
-                    list.add(item);
-
-                }
-                dblistener.onComplete(list, true);
-            }
-        });
-
-    }
-    public void getSorted() {
-        ArrayList<Item> list = new ArrayList<>();
-        itemQuery.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot snapshots) {
-                for (QueryDocumentSnapshot doc: snapshots) {
-                    String model = doc.getString("Model");
-                    String make = doc.getString("Make");
-                    Long date = doc.getLong("Date");
-                    String SN = doc.getString("SN");
-                    Double value = doc.getDouble("Est Value");
-                    String desc = doc.getString("Desc");
-                    String comment = doc.getString("Comment");
-                    String id = doc.getId();
-
-
-                    Log.d("Firestore", "filter item fetched"); // TODO: change, add formatted string
-
-                    Item item = new ItemBuilder()
-                            .addID(id)
-                            .addMake(make)
-                            .addModel(model)
-                            .addDate(date)
-                            .addSN(SN)
-                            .addValue(value)
-                            .addDescription(desc)
-                            .addComment(comment)
-                            .build();
-
-                    list.add(item);
-
-                }
-                dblistener.onComplete(list, true);
-            }
-        });
-
-    }
 
 
 
