@@ -230,29 +230,25 @@ public class ItemList {
 
     /**
      * Remove selected items in list (w/ OnCompleteListener)
+     * @param selectedList list of selected items
      * @param completeListener OnCompleteListener
      */
-    public void removeSelected(@Nullable OnCompleteListener<Item> completeListener) {
-        ArrayList<Item> list = new ArrayList<>(itemList);
-        for (Item item: list) {
+    public void removeSelected(ArrayList<Item> selectedList, @Nullable OnCompleteListener<Item> completeListener) {
+        for (Item item: selectedList) {
             if (item.isSelected()) {
                 this.remove(item, completeListener);
             }
         }
-        list.clear();
     }
 
     /**
+     * @param selectedList list of selected items
      * Remove selected items in list
      */
-    public void removeSelected() {
-        ArrayList<Item> list = new ArrayList<>(itemList);
-        for (Item item: list) {
-            if (item.isSelected()) {
-                this.remove(item, null);
-            }
+    public void removeSelected(ArrayList<Item> selectedList) {
+        for (Item item: selectedList) {
+            this.remove(item, null);
         }
-        list.clear();
     }
 
     /**
@@ -409,10 +405,6 @@ public class ItemList {
                     item -> !(item.getDescription().toLowerCase().contains(text.toLowerCase()) ||
                             (item.getMake().toLowerCase().contains(text.toLowerCase()))
             ));
-
-//            searchFilters.add(
-//                    item -> !(item.getMake().toLowerCase().contains(text.toLowerCase()))
-//            );
         }
         filter();
 
@@ -459,8 +451,6 @@ public class ItemList {
         dateFilter.clear();
         returnList.clear();
         returnList.addAll(itemList);
-
-        return;
     }
 
 
