@@ -16,12 +16,14 @@ public class ItemListController {
     private final ActivityBase activity;
     private ArrayList<Item> selectedItems;
 
-    private boolean isMultiSelect = false;
+    // private boolean isMultiSelect = false;
 
     private ItemList itemList; // model
     FirebaseFirestore db;
     CollectionReference itemsRef;
     ItemAdapter itemAdapter;
+
+    private OnCompleteListener<Double> totalListener = null;
 
 
     /**
@@ -34,17 +36,28 @@ public class ItemListController {
         itemsRef = db.collection("items");
         itemList = new ItemList(itemsRef); // maybe use db object
         itemAdapter = new ItemAdapter(activity.getApplicationContext(), 0, itemList.get());
+        selectedItems = new ArrayList<>();
         itemList.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
             @Override
             public void onComplete(ArrayList<Item> list, boolean success) {
                 if (success) {
                     itemAdapter.updateList(list);
                     itemAdapter.notifyDataSetChanged();
+                    if (totalListener != null) {
+                        calculateTotal(totalListener);
+                    }
+
                 }
             }
         });
+    }
 
-        return;
+    /**
+     * Sets total listener
+     * @param listener that gets called whenever total updated
+     */
+    public void setTotalListener(OnCompleteListener<Double> listener) {
+        totalListener = listener;
     }
 
     /**
@@ -73,30 +86,55 @@ public class ItemListController {
     }
 
     /**
+     * Calculates total estimated value of all items (including those filtered out)
+     * @return total estimated value of items
+     */
+    public void calculateTotal(OnCompleteListener<Double> listener) {
+        double total = itemList.getTotal();
+        listener.onComplete(total, true);
+
+    }
+
+    /**
      * Item multiselect behavior startup
      * @param item selected item
      */
     public void onMultiSelectStart(Item item) {
         item.select();
         selectedItems.add(item);
-        isMultiSelect = true;
-        return;
+        // isMultiSelect = true;
     }
+
+
 
     /**
      * Item selection behavior
-     * @param item selected item
+     * @param items selected item (list to simulate pass by ref)
      */
-    public void onSelect(Item item) {
+    public boolean onMultiSelect(ArrayList<Item> items) {
         // TODO: finish
-        if (isMultiSelect) {
-            // multiselect behavior
+        Item item = items.get(0);
+        // multiselect behavior
+        if (item.isSelected()) {
+            item.deselect();
+            selectedItems.remove(item);
+            return false;
+
+        } else {
             item.select();
+            selectedItems.add(item);
+            return true;
+
         }
-        else {
-            // regular select behavior
-        }
-        return;
+
+    }
+
+    /**
+     * Returns number of selected items
+     * @return number of selected items
+     */
+    public int itemsSelectedSize() {
+        return selectedItems.size();
     }
 
     // TODO: sort, filter, add/edit, update
@@ -108,7 +146,12 @@ public class ItemListController {
      * @param end end date
      */
     public void filter(long start, long end) {
-        itemList.filterDate(start, end);
+        if (start == 0 && end == 0) {
+            itemList.filterDateClear();
+        }
+        else {
+            itemList.filterDate(start, end);
+        }
         itemAdapter.updateList(itemList.get());
         itemAdapter.notifyDataSetChanged();
     }
@@ -195,9 +238,29 @@ public class ItemListController {
                 activity.makeSnackbar("Failed to delete one or more items");
             } else {
                 selectedItems.clear();
+                itemAdapter.notifyDataSetChanged();
             }
         });
         // calls oncompletelistener
+    }
+
+    /**
+     * Deselect all items
+     */
+    public void deselectItems() {
+        for (Item item: selectedItems) {
+            item.deselect();
+        }
+        selectedItems.clear();
+        itemAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Gets Item Adapter
+     * @return
+     */
+    public ItemAdapter getItemAdapter() {
+        return itemAdapter;
     }
 
 

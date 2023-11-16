@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.boeing301house.ActivityBase;
 import com.example.boeing301house.AddEditItemFragment;
 import com.example.boeing301house.FilterFragment;
 import com.example.boeing301house.Item;
@@ -57,17 +58,15 @@ import java.util.Locale;
  *
  * This class is for the list activity, where you can see/interact with items
  */
-public class ItemListActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
+public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
 
     private FirebaseFirestore db;
 
-    private Query itemQuery;
     private CollectionReference itemsRef;
     private CollectionReference usersRef;
     private ListView itemListView;
     //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
-    private Item selectItem;
 
     private TextView subTotalText;
     public ArrayList<Item> itemList;
@@ -84,18 +83,20 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     private FloatingActionButton addButton;
 
     // intent return codes
-    private static int select = 1;
+    private static final int select = 1;
 
     // action codes
-    private static String DELETE_ITEM = "DELETE_ITEM";
-    private static String EDIT_ITEM = "EDIT_ITEM";
+    private static final String DELETE_ITEM = "DELETE_ITEM";
+    private static final String EDIT_ITEM = "EDIT_ITEM";
 
 
     // for contextual appbar
     private ActionMode itemMultiSelectMode;
 
-    Button btnReset;
-    AlertDialog.Builder builder;
+    private Button btnReset;
+    private AlertDialog.Builder builder;
+
+    private ItemListController controller;
 
     // TODO: finish javadocs
     /**
@@ -105,25 +106,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
      *
      */
-
-    /**
-     * Update the subtotal by calculating the total cost of all items in the list.
-     * This method iterates through the list of items and calculates the sum of their
-     * individual costs to determine the total cost. The result is then displayed to
-     * the user to provide an overview of the total estimated expenses.
-     *
-     * This method should be called when initializing the item list and whenever an item
-     * is added, edited, or deleted to ensure that the total cost is up-to-date.
-     */
-    private void calculateTotalPrice(){
-        float total = 0.0f;
-        for(Item item: itemList){
-            total += item.getValue();
-        }
-        subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,9 +114,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         setContentView(R.layout.activity_item_list);
         subTotalText = findViewById(R.id.itemListTotalText);
 
-
-        // navgraph
-        // NavController navController = Navigation.findNavController(findViewById(R.id.nav_host_fragment));
+        // create controller
+        controller = new ItemListController(this);
+        controller.setTotalListener((total, success) -> {
+            calculateTotalPrice(total, success);
+        });
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
@@ -170,11 +154,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                     });
         }
 
-        itemList = new ArrayList<>();
-
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
-        itemAdapter = new ItemAdapter(getApplicationContext(), 0, itemList);
+
+        itemAdapter = controller.getItemAdapter();
         itemListView.setAdapter(itemAdapter);
+//        calculateTotalPrice();
 
 //        updateSubtotal(); //sets the subtotal to 0 at the start of the program
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
@@ -183,53 +167,12 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
         itemListSortButton = findViewById(R.id.sortButton);
         itemListFilterButton = findViewById(R.id.filterButton);
-        itemQuery = itemsRef.orderBy(FieldPath.documentId());
 
-        /**
-         * update items (list) in real time
-         */
-        updateItemListView();
-//        itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-//            @Override
-//            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-//                if (error != null) {
-//                    Log.e("Firestore", error.toString());
-//                    return;
-//                }
-//                if (snapshots != null) {
-//                    itemList.clear();
-//                    for (QueryDocumentSnapshot doc: snapshots) {
-//                        String model = doc.getString("Model");
-//                        String make = doc.getString("Make");
-//                        Long date = doc.getLong("Date");
-//                        String SN = doc.getString("SN");
-//                        Double value = doc.getDouble("Est Value");
-//                        String desc = doc.getString("Desc");
-//                        String comment = doc.getString("Comment");
-//                        String id = doc.getId();
-//
-//                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-//
-//                        Item item = new ItemBuilder()
-//                                .addID(id)
-//                                .addMake(make)
-//                                .addModel(model)
-//                                .addDate(date)
-//                                .addSN(SN)
-//                                .addValue(value)
-//                                .addDescription(desc)
-//                                .addComment(comment)
-//                                .build();
-//
-//                        itemList.add(item);
-//                        originalItemList.add(item);
-//
-//                    }
-//                    itemAdapter.notifyDataSetChanged();
-//                    calculateTotalPrice();
-//                }
-//            }
-//        });
+//        /**
+//         * update items (list) in real time
+//         */
+//        updateItemListView();
+
 
         //used to swap the fragment in to edit/add fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -238,9 +181,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
 
-
-        // select multiple initialization:
-        selectedItems = new ArrayList<>();
 
         // Handle multiselect first step
         itemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -253,16 +193,16 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                 if (!isSelectMultiple) {
                     Item current = (Item) itemListView.getItemAtPosition(position);
-                    current.select();
+                    controller.onMultiSelectStart(current);
+
                     isSelectMultiple = true;
-//                    selectedItemViews.add(view);
-                    selectedItems.add(current);
                     view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
 
                     // contextual app bar
                     if (itemMultiSelectMode != null) {
                         return false;
                     }
+
                     itemMultiSelectMode = startActionMode(itemMultiSelectModeCallback); // TODO: convert to startSupportActionBar
 
                     // for testing
@@ -290,12 +230,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              */
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Item item = (Item) itemListView.getItemAtPosition(i);
+                ArrayList<Item> itemRef = new ArrayList<>();
+                itemRef.add(item);
+
                 if (!isSelectMultiple) {
-//                    CharSequence text = "Selecting item";
-//                    int duration = Toast.LENGTH_SHORT;
-//                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
-//                    toast.show();
-                    Item item = (Item) itemListView.getItemAtPosition(i); // for debug
                     Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
                     intent.putExtra("Selected Item", item);
 
@@ -304,70 +243,27 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                     startActivityForResult(intent, select);
 
-                    // during call back: return item + position
-                    // delete -> delete item at given position
-                    // edit -> set item in list as newly returned item
-
-                    /*
-                    selectItem = (Item) (itemList.getItemAtPosition(i));
-
-                    //initializes the detail frag, given the clicked item
-                    Fragment detailFrag = new AddEditItemFragment(selectItem); //this is passed along so it can display the proper information
-
-
-                    //inflates the detailFragment
-
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction
-//                            .add(R.id.content_frame, detailFrag, null)
-                            .add(R.id.itemListContent, detailFrag, null)
-                            .addToBackStack("Details")
-                            .commit();
-
-
-                    itemAdapter.notifyDataSetChanged(); //this notifies the adapter of either the removal of an item
-
-                     */
                 } else { // select multiple + delete multiple functionality
-//                    CharSequence text;
-//                    int temp = i;
-//                    ListView tempItems = itemList;
-//                    selectedItemViews.size();
-                    Item current = (Item) itemListView.getItemAtPosition(i);
-
-                    if (selectedItems.contains(current)) {
-                        current.deselect();
-//                        selectedItemViews.remove(view);
-                        selectedItems.remove(current);
-                        view.setBackgroundColor(0); // visually deselect
-
-//                        text = "removing existing";
-                    } else {
-                        current.select();
-//                        selectedItemViews.add(view);
-                        selectedItems.add(current);
+                    if (controller.onMultiSelect(itemRef)) {
                         view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
-//                        text = "adding another";
+                    }
+                    else {
+                        view.setBackgroundColor(0); // visually deselect
                     }
 
+
 //                    selectedItemViews.size();
-                    itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", selectedItems.size()));
+                    itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", controller.itemsSelectedSize()));
 
 
                     // deselect all items -> no longer selecting multiple
-                    if (selectedItems.size() == 0) {
+                    if (controller.itemsSelectedSize() == 0) {
                         isSelectMultiple = false;
                         itemMultiSelectMode.finish(); // close contextual app bar
                     }
-                    // if delete multiple btn pressed -> isSelectMultiple = false
-                    // selectedItems.clear();
-                    // reset background colors
-                    // selectedItemViews.clear();
 
                 }
 
-
-                //updateSubtotal(); //update subtotal
             }
 
         });
@@ -377,41 +273,13 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             @Override
             public void onClick(View v) {
                 new FilterFragment().show(getSupportFragmentManager(), "FILTER");
-                //Fragment filterFragment = new filterFragment(); //this is passed along so it can display the proper information
-
-
-                //inflates the filterFragment
-
-                /*
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction
-//                            .add(R.id.content_frame, detailFrag, null)
-                        .add(R.id.itemListContent, filterFragment, null)
-                        .addToBackStack("filter")
-                        .commit();
-                        */
-
             }
         });
 
         itemListSortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 new SortFragment().show(getSupportFragmentManager(), "SORT");
-                //Fragment sortFragment = new sortFragment(); //this is passed along so it can display the proper information
-
-
-                //inflates the sortFragment
-
-                /*
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction
-//                            .add(R.id.content_frame, detailFrag, null)
-                        .add(R.id.itemListContent, sortFragment, null)
-                        .addToBackStack("sort")
-                        .commit();
-                        */
 
             }
         });
@@ -425,13 +293,11 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
              */
             @Override
             public void onClick(View view) { //if the text isn't empty
-//                view.requestLayout();
                 addButton.hide();
                 Fragment addFrag = new AddEditItemFragment();
 
                 Item newItem = new ItemBuilder()
                         .build(); //creates a new city to be created
-                // items.add(selectItem); //adds the empty city to the list (with no details)
 
                 Bundle itemBundle = new Bundle();
                 itemBundle.putParcelable("item_key", newItem);
@@ -439,7 +305,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                 addFrag.setArguments(itemBundle);
 
 
-                //initalizes the detail fragment so that the newly created (empty) item can be filled with user data
+                // initializes the detail fragment so that the newly created (empty) item can be filled with user data
                 FragmentTransaction transaction= fragmentManager.beginTransaction();
 
                 transaction
@@ -452,8 +318,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
             }
         });
-        calculateTotalPrice();
-//        itemAdapter.notifyDataSetChanged();
+//        calculateTotalPrice();
 
         btnReset = findViewById(R.id.resetButton);
         builder = new AlertDialog.Builder(this);
@@ -461,7 +326,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"PLACEHOLDER BUTTON", selectedItems.size()),
+                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"PLACEHOLDER BUTTON"),
                         Toast.LENGTH_SHORT).show(); // for testing
                 builder.setTitle("Alert!!")
                         .setMessage("Do you want to reset you date filter")
@@ -469,12 +334,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                itemQuery = itemsRef.orderBy(FieldPath.documentId()); // TODO: change
-                                updateItemListView();
-//                                itemList.clear();
-//                                itemList.addAll(originalItemList);
-//                                itemAdapter.notifyDataSetChanged();
-//                                calculateTotalPrice();
+                                controller.filterClear();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -489,16 +349,22 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     }
 
-
-
-//    /**
-//     * UpdateSubtotal just updates the subtotal at the bottom of the screen on the list activity
-//     */
-//    private void updateSubtotal(){
-//        Double subtotal = 0.0;
-//
-//
-//    }
+    /**
+     * Update the subtotal by calculating the total cost of all items in the list.
+     * This method iterates through the list of items and calculates the sum of their
+     * individual costs to determine the total cost. The result is then displayed to
+     * the user to provide an overview of the total estimated expenses.
+     *
+     * This method should be called when initializing the item list and whenever an item
+     * is added, edited, or deleted to ensure that the total cost is up-to-date.
+     *
+     * Listener object
+     * @param total total value
+     * @param calculated if calculation successful
+     */
+    private void calculateTotalPrice(Double total, boolean calculated){
+        subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
+    }
 
     /**
      * This function calls when the confirm button is pressed in the listActivity, and the new updated information is passed down from the edit/add screen to this class
@@ -508,46 +374,9 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     public void onConfirmPressed(Item updatedItem) {
         exitAddEditFragment();
         addButton.show();
+        controller.add(updatedItem);
+//        calculateTotalPrice();
 
-        HashMap<String, Object> itemData = new HashMap<>();
-        itemData.put("Make", updatedItem.getMake());
-        itemData.put("Model", updatedItem.getModel());
-        itemData.put("Date", updatedItem.getDate());
-        itemData.put("SN", updatedItem.getSN());
-        itemData.put("Est Value", updatedItem.getValue());
-        itemData.put("Desc", updatedItem.getDescription());
-        itemData.put("Comment", updatedItem.getComment());
-
-        // TODO: implement
-        ArrayList<String> tags = new ArrayList<>(); // placeholder
-        itemData.put("Tags", tags); // placeholder
-//        updateItemListView();
-        itemsRef.document(updatedItem.getItemID())
-                .set(itemData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.i("Firestore", "DocumentSnapshot successfully written");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Firestore", "db write failed");
-                    }
-                });
-
-
-        itemList.add(updatedItem);
-
-        // items.add(updatedItem); // TODO: change?
-        calculateTotalPrice();
-        itemAdapter.notifyDataSetChanged();
-        // updateSubtotal(); //this checks all the costs of all of the items and displays them accordingly
-
-
-
-//
     }
     // TODO: finish javadocs
     /**
@@ -577,83 +406,19 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                 if (itemIndex != -1) {
                     Item itemToDelete = itemList.get(itemIndex);
-                    itemList.remove(itemIndex);
-                    deleteItemFromFirestore(itemToDelete);
-
+                    controller.removeItem(itemToDelete);
                 }
             } else if (action.contentEquals(EDIT_ITEM)) {
-                if (itemIndex != -1){
+                if (itemIndex != -1) {
                     // get the updated item
                     Item editedItem = data.getParcelableExtra("edited_item");
-                    itemList.set(itemIndex, editedItem); // replace prev item with updated item
-                    itemAdapter.notifyDataSetChanged();
-                    editItemFromFirestore(editedItem);
+                    controller.editItem(itemIndex, editedItem);
                 }
             }
-            calculateTotalPrice();
+//            calculateTotalPrice();
         }
     }
 
-    /**
-     * Updates the item in firestore if it has been edited
-     * @param item The edited item
-     */
-    private void editItemFromFirestore(Item item) {
-        // putting the values in a hashmap bc the doc on firestore is the same format
-        HashMap<String, Object> itemData = new HashMap<>();
-        itemData.put("Make", item.getMake());
-        itemData.put("Model", item.getModel());
-        itemData.put("Date", item.getDate());
-        itemData.put("SN", item.getSN());
-        itemData.put("Est Value", item.getValue());
-        itemData.put("Desc", item.getDescription());
-        itemData.put("Comment", item.getComment());
-
-        // TODO: implement
-        ArrayList<String> tags = new ArrayList<>(); // placeholder
-        itemData.put("Tags", tags); // placeholder for tags since we haven't done it yet
-
-        // Get the document reference for the item
-        DocumentReference itemRef = itemsRef.document(item.getItemID());
-
-        itemRef
-                .update(itemData)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.i("Firestore", "DocumentSnapshot successfully written");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Firestore", "db write failed: " + e.getMessage());
-                    }
-                });
-    }
-
-    // TODO: finish javadocs
-    /**
-     *
-     * @param item
-     */
-    private void deleteItemFromFirestore(Item item) {
-        // Delete the Item from Firestore
-        itemsRef.document(item.getItemID())
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Firestore", "Item successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("Firestore", "Error deleting item: " + e.getMessage());
-                    }
-                });
-    }
     // TODO: finish javadocs
     /**
      *
@@ -680,7 +445,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     /**
      * Create callback functions for actionmode appbar
      */
-    private ActionMode.Callback itemMultiSelectModeCallback = new ActionMode.Callback() {
+    private final ActionMode.Callback itemMultiSelectModeCallback = new ActionMode.Callback() {
         // TODO: finish javadocs
         /**
          * Behavior for contextual app bar's creation (at beginning of multiselect)
@@ -692,7 +457,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
-            int n = selectedItems.size();
+            int n = controller.itemsSelectedSize();
 
             if (n == 0) {
                 mode.setTitle("Select Items"); // tell user to select items (when none selected yet)
@@ -728,12 +493,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
             // handle user tap on tag
             else if (item.getItemId() == R.id.itemMultiselectTag) {
-                // TODO: add tag dialog (pref maybe bottomsheet)
-
-//                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Add tags to %d items", selectedItems.size()),
-//                        Toast.LENGTH_SHORT).show(); // for testing
-                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"Available on next version"),
-                        Toast.LENGTH_SHORT).show(); // for testing
+                makeSnackbar("Available on next version");
                 return true;
             }
             return false;
@@ -746,27 +506,12 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             isSelectMultiple = false;
-            for (Item item : selectedItems) {
-                // selectedItems.get(i).deselect();
-                item.deselect();
-            }
-            selectedItems.clear();
+            controller.deselectItems();
+
             itemMultiSelectMode = null;
-            itemAdapter.notifyDataSetChanged();
-            findViewById(R.id.itemListSFBar).setVisibility(View.VISIBLE); // temp
+            findViewById(R.id.itemListSFBar).setVisibility(View.VISIBLE);
         }
     };
-
-    /**
-     * This function deletes selected items
-     */
-    private void deleteSelectedItems() {
-        for (Item item : selectedItems) {
-            itemList.remove(item);
-            deleteItemFromFirestore(item);
-        }
-        selectedItems.clear();
-    }
 
     private boolean deleteConfirmationDialog(ActionMode mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -778,9 +523,10 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                deleteSelectedItems();
+                controller.removeSelectedItems();
                 mode.finish();
                 isDelete[0] = true;
+//                calculateTotalPrice();
             }
         });
 
@@ -840,22 +586,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
                 @Override
                 public boolean onQueryTextChange(String newText) { //when user changes some of the search
-                    ArrayList<Item> filteredItems = new ArrayList<Item>();
-                    for(Item listItem: itemList){
-                        //if the current item contains this word in description
-                        if (listItem.getDescription().toLowerCase().contains(newText.toLowerCase())) {
-                            filteredItems.add(listItem);
-                        }
-                        else if(listItem.getMake().toLowerCase().contains(newText.toLowerCase())){
-                            filteredItems.add(listItem);
-                        }
-                    }
-
-                    ItemAdapter filterAdapter = new ItemAdapter(getApplicationContext(), 0, filteredItems);
-                    itemListView.setAdapter(filterAdapter);
-
-                    itemAdapter.getFilter().filter(newText);
-
+                    controller.filter(newText);
                     return false;
                 }
             });
@@ -865,72 +596,22 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
     }
 
     /**
-     * Get date range (and later tags) from filter dialog and use to filter list items
+     * Get date range from filter dialog and use to filter list items
      * @param dateStart start date in ms
      * @param dateEnd end date in ms
      */
     @Override
     public void onFilterOKPressed(long dateStart, long dateEnd) {
-
-//        if (dateStart != 0 && dateEnd != 0) {
-        itemQuery = itemsRef.whereGreaterThanOrEqualTo("Date", dateStart).whereLessThanOrEqualTo("Date", dateEnd);
-        updateItemListView();
-//            itemList.addAll(originalItemList);
-//            dateRangeFilter(startDate,endDate);
-        calculateTotalPrice();
-//            itemAdapter.notifyDataSetChanged();
-        // filter items
-//        }
-        // TODO: add tags
-
+        controller.filter(dateStart, dateEnd);
     }
 
     /**
-     * Snapshot listener, updates how items are displayed (when called or when changes made)
-     * Called explicitly when itemQuery changes or on first launch
+     * Get list of tags from filter dialog and use to filter list items
+     * @param tags list of tags
      */
-    public void updateItemListView() {
-        itemQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException error) {
-                if (error != null) {
-                    Log.e("Firestore", error.toString());
-                    return;
-                }
-                if (snapshots != null) {
-                    itemList.clear();
-                    for (QueryDocumentSnapshot doc: snapshots) {
-                        String model = doc.getString("Model");
-                        String make = doc.getString("Make");
-                        Long date = doc.getLong("Date");
-                        String SN = doc.getString("SN");
-                        Double value = doc.getDouble("Est Value");
-                        String desc = doc.getString("Desc");
-                        String comment = doc.getString("Comment");
-                        String id = doc.getId();
-
-                        Log.d("Firestore", "item fetched"); // TODO: change, add formatted string
-
-                        Item item = new ItemBuilder()
-                                .addID(id)
-                                .addMake(make)
-                                .addModel(model)
-                                .addDate(date)
-                                .addSN(SN)
-                                .addValue(value)
-                                .addDescription(desc)
-                                .addComment(comment)
-                                .build();
-
-                        itemList.add(item);
-//                        originalItemList.add(item);
-
-                    }
-                    itemAdapter.notifyDataSetChanged();
-                    calculateTotalPrice();
-                }
-            }
-        });
+    @Override
+    public void onFilterOKPressed(ArrayList<String> tags) {
+        return;
     }
 
     /**
@@ -940,26 +621,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
      */
     @Override
     public void onSortOKPressed(String sortMethod, String sortOrder) {
-        Query.Direction direction;
-
-        if (sortOrder.matches("ASC")) {
-            direction = Query.Direction.ASCENDING;
-        } else {
-            direction = Query.Direction.DESCENDING;
-        }
-
-        if (sortMethod.matches("Date")){ //if the sort type is date
-            itemQuery = itemsRef.orderBy("Date", direction);
-        } else if (sortMethod.matches("Description")) { //if the sort type is description
-            itemQuery = itemsRef.orderBy("Desc", direction);
-        } else if (sortMethod.matches("Value")) { //if the sort type is description
-            itemQuery = itemsRef.orderBy("Est Value", direction);
-        } else if (sortMethod.matches("Make")) { //if the sort type is description
-            itemQuery = itemsRef.orderBy("Make", direction);
-        } else{ //by default, sort by date added!
-            itemQuery = itemsRef.orderBy(FieldPath.documentId(), direction);
-        }
-
-        updateItemListView();
+        controller.sort(sortMethod, sortOrder);
     }
 }

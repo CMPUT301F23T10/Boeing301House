@@ -46,6 +46,7 @@ public class FilterFragment extends DialogFragment {
      */
     public interface OnFilterFragmentInteractionListener {
         void onFilterOKPressed(long dateStart, long dateEnd);
+        void onFilterOKPressed(ArrayList<String> tags);
 
     }
     /**

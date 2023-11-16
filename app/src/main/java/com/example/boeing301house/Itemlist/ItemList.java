@@ -112,6 +112,7 @@ public class ItemList {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
+                        clearFilter();
                         Log.i("Firestore", "DocumentSnapshot successfully written");
                         if (completeListener != null) {
                             completeListener.onComplete(item, true);
@@ -391,6 +392,14 @@ public class ItemList {
 
         return;
 
+    }
+
+    /**
+     * Removes date filter
+     */
+    public void filterDateClear() {
+        dateFilter.clear();
+        filter();
     }
 
     /**
