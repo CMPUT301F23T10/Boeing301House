@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
@@ -95,8 +96,9 @@ public class ItemList {
     /**
      * Add {@link Item} object to {@link ItemList}
      * @param item item to be added
+     * @param completeListener: OnCompleteListener to notify failures (Nullable)
      */
-    public void add(Item item) {
+    public void add(@NonNull Item item, @Nullable OnCompleteListener<Item> completeListener) {
         HashMap<String, Object> itemData = new HashMap<>();
         itemData.put("Make", item.getMake());
         itemData.put("Model", item.getModel());
@@ -116,12 +118,18 @@ public class ItemList {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.i("Firestore", "DocumentSnapshot successfully written");
+                        if (completeListener != null) {
+                            completeListener.onComplete(item, true);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("Firestore", "db write failed");
+                        if (completeListener != null) {
+                            completeListener.onComplete(item, false);
+                        }
                     }
                 });
 //        this.itemList.add(item);
@@ -131,8 +139,8 @@ public class ItemList {
      * Remove {@link Item} object from list by reference
      * @param item item to be removed
      */
-    public void remove(Item item) {
-        this.itemList.remove(item);
+    public void remove(@NonNull Item item, @Nullable OnCompleteListener<Item> completeListener) {
+//        this.itemList.remove(item);
 
         itemsRef.document(item.getItemID())
                 .delete()
@@ -140,12 +148,18 @@ public class ItemList {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.d("Firestore", "Item successfully deleted!");
+                        if (completeListener != null) {
+                            completeListener.onComplete(item, true);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("Firestore", "Error deleting item: " + e.getMessage());
+                        if (completeListener != null) {
+                            completeListener.onComplete(null, false);
+                        }
                     }
                 });
     }
@@ -154,10 +168,10 @@ public class ItemList {
      * Remove {@link Item} object from list by position
      * @param i position of item in list
      */
-    public void remove(int i) {
+    public void remove(int i, @Nullable OnCompleteListener<Item> completeListener) {
         Item item = this.itemList.get(i);
         // this.itemList.remove(i);
-        this.remove(item);
+        this.remove(item, completeListener);
 
 
     }
@@ -167,16 +181,16 @@ public class ItemList {
      * @param i index of {@link Item} to be replaced
      * @param item {@link Item} used to replace
      */
-    public void set(int i, Item item) {
+    public void set(int i, Item item, @Nullable OnCompleteListener<Item> completeListener) {
         itemList.set(i, item);
-        this.firestoreEdit(item);
+        this.firestoreEdit(item, completeListener);
     }
 
     /**
      * Updates item in firestore if it has been edited
      * @param item edited item
      */
-    private void firestoreEdit(Item item) {
+    private void firestoreEdit(Item item, @Nullable OnCompleteListener<Item> completeListener) {
 //        TODO: convert to WriteBatch
         HashMap<String, Object> itemData = new HashMap<>();
         itemData.put("Make", item.getMake());
@@ -200,17 +214,37 @@ public class ItemList {
                     @Override
                     public void onSuccess(Void unused) {
                         Log.i("Firestore", "DocumentSnapshot successfully written");
+                        if (completeListener != null) {
+                            completeListener.onComplete(item, true);
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e("Firestore", "db write failed: " + e.getMessage());
+                        if (completeListener != null) {
+                            completeListener.onComplete(null, false);
+                        }
                     }
                 });
         // this.getListener().notify();
 
         // this.updateListener();
+    }
+
+    /**
+     * Remove selected items in list (w/ OnCompleteListener)
+     * @param completeListener: OnCompleteListener
+     */
+    public void removeSelected(@Nullable OnCompleteListener<Item> completeListener) {
+        ArrayList<Item> list = new ArrayList<>(itemList);
+        for (Item item: list) {
+            if (item.isSelected()) {
+                this.remove(item, completeListener);
+            }
+        }
+        list.clear();
     }
 
     /**
@@ -220,7 +254,7 @@ public class ItemList {
         ArrayList<Item> list = new ArrayList<>(itemList);
         for (Item item: list) {
             if (item.isSelected()) {
-                this.remove(item);
+                this.remove(item, null);
             }
         }
         list.clear();
@@ -292,7 +326,7 @@ public class ItemList {
 
                 }
                 if (this.dblistener != null) {
-                    Log.d("DBLISTENER", "updateListener");
+                    Log.d(TAG, "dblistener");
                     returnList.clear();
                     returnList.addAll(itemList);
                     dblistener.onComplete(returnList, true);

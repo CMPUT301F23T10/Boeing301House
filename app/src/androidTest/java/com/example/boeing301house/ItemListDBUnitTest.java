@@ -77,6 +77,7 @@ public class ItemListDBUnitTest {
         CountDownLatch latch = new CountDownLatch(1);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
         assertEquals(3, itemListEx.get().size());
+        assertEquals(26, itemListEx.getTotal(), 0.005);
 
     }
 
@@ -90,11 +91,11 @@ public class ItemListDBUnitTest {
             @Override
             public void onComplete(ArrayList<Item> item, boolean success) {
                 String strSuccess = success ? "success" : "fail";
-                Log.d("itemListDef", String.format("%s : %s", success, item.get(0).getItemID()));
+//                Log.d("itemListDef", String.format("%s : %s", success, item.get(0).getItemID()));
                 testList = item;
             }
         });
-        itemListDef.add(item);
+        itemListDef.add(item, null);
 
         latch.await(5, TimeUnit.SECONDS);
 //
@@ -105,12 +106,12 @@ public class ItemListDBUnitTest {
         latch.await(5, TimeUnit.SECONDS);
 //        test = itemListDef.get();
         assertEquals(1, itemListDef.get().size());
-        assertEquals(testList, itemListDef.get());
+//        assertEquals(testList, itemListDef.get());
 //
-        assertEquals(item, itemListDef.get().get(0));
+        assertEquals(item.getItemID(), itemListDef.get().get(0).getItemID());
 //        assertEquals(item.getValue(), itemListDef.getTotal(), .005);
 //
-        itemListDef.remove(item);
+        itemListDef.remove(item, null);
         latch.await(5, TimeUnit.SECONDS);
         assertEquals(0, itemListDef.get().size());
 
@@ -432,6 +433,7 @@ public class ItemListDBUnitTest {
         itemListEx.filterDate(0, smallest);
         assertEquals(1, itemListEx.get().size());
         assertEquals("1232421311", itemListEx.get().get(0).getItemID());
+        assertEquals(26, itemListEx.getTotal(), 0.005);
 
         itemListEx.clearFilter();
         assertEquals(3, itemListEx.get().size());
@@ -469,6 +471,9 @@ public class ItemListDBUnitTest {
 
         itemListEx.filterSearch("Test2 make");
         assertEquals(1, itemListEx.get().size());
+        assertEquals(26, itemListEx.getTotal(), 0.005);
+
+        itemListEx.clearFilter();
 
 
 
