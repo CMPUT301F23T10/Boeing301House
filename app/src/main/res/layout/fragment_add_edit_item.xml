@@ -69,7 +69,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/makeText"
+                    android:id="@+id/makeEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences"
@@ -96,7 +96,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/makeModel"
+                    android:id="@+id/modelEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapSentences"
@@ -123,7 +123,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/makeValue"
+                    android:id="@+id/valueEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
@@ -148,7 +148,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/makeSN"
+                    android:id="@+id/snEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textCapCharacters"
@@ -173,7 +173,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/makeDesc"
+                    android:id="@+id/descEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textLongMessage|textCapSentences">
@@ -196,7 +196,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/makeComment"
+                    android:id="@+id/commentEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textLongMessage|textCapSentences">
@@ -221,7 +221,7 @@
 
                 <com.google.android.material.textfield.TextInputEditText
 
-                    android:id="@+id/makeDate"
+                    android:id="@+id/dateEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clickable="false"

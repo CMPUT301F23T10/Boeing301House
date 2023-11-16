@@ -1,4 +1,4 @@
-package com.example.boeing301house;
+package com.example.boeing301house.ItemList;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +24,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.boeing301house.AddEditItemFragment;
+import com.example.boeing301house.FilterFragment;
+import com.example.boeing301house.Item;
+import com.example.boeing301house.ItemBuilder;
+import com.example.boeing301house.ItemViewActivity;
+import com.example.boeing301house.R;
+import com.example.boeing301house.SortFragment;
+import com.example.boeing301house.UserProfileActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -40,7 +47,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 // TODO: SEPARATE CLASSES, MAKE ITEMLISTACTIVITY MORE FOCUSED
@@ -90,8 +96,6 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
 
     Button btnReset;
     AlertDialog.Builder builder;
-
-    public ArrayList<Item> originalItemList;
 
     // TODO: finish javadocs
     /**
@@ -689,6 +693,7 @@ public class ItemListActivity extends AppCompatActivity implements AddEditItemFr
             findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
             int n = selectedItems.size();
+
             if (n == 0) {
                 mode.setTitle("Select Items"); // tell user to select items (when none selected yet)
             } else {

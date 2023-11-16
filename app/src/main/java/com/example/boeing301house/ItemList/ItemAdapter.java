@@ -1,4 +1,4 @@
-package com.example.boeing301house;
+package com.example.boeing301house.ItemList;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.example.boeing301house.Item;
+import com.example.boeing301house.R;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -101,6 +104,12 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
 
         return view;
+    }
+
+
+    public void updateList(ArrayList<Item> items) {
+        this.items = items;
+        super.notifyDataSetChanged();
     }
     
 

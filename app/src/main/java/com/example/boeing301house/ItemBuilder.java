@@ -1,8 +1,5 @@
 package com.example.boeing301house;
 
-import java.util.Calendar;
-import java.util.Locale;
-
 /**
  * Builder pattern for {@link Item} object
  * Builder class for {@link Item}

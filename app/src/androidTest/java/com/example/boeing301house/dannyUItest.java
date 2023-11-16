@@ -8,8 +8,6 @@ import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.RootMatchers.isPlatformPopup;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -18,14 +16,10 @@ import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withTagValue;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
-
-import android.content.Context;
 
 import androidx.test.espresso.action.ViewActions;
 import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Rule;
@@ -36,7 +30,8 @@ import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
+
+import com.example.boeing301house.ItemList.ItemListActivity;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -57,26 +52,26 @@ public class dannyUItest {
     public void testsortByValue() {
         //this tests adds 2 sample objects, then sorts them by value
         onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.makeSN)).perform(typeText("Sample SN1"), closeSoftKeyboard());
-        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
-        onView(withId(R.id.makeDesc)).perform(typeText("Sample Description1"), closeSoftKeyboard());
-        onView(withId(R.id.makeDate)).perform(click());
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
         onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample Make2"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("1000"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make2"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("1000"), ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.makeSN)).perform(typeText("Sample SN2"), closeSoftKeyboard());
-        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment2"), closeSoftKeyboard());
-        onView(withId(R.id.makeDesc)).perform(typeText("Sample Description2"), closeSoftKeyboard());
-        onView(withId(R.id.makeDate)).perform(click());
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN2"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment2"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description2"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
 
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
@@ -130,26 +125,26 @@ public class dannyUItest {
     public void testsortByMake() {
         //this tests adds 2 sample objects, then sorts them by value
         onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.makeSN)).perform(typeText("Sample SN1"), closeSoftKeyboard());
-        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
-        onView(withId(R.id.makeDesc)).perform(typeText("Sample Description1"), closeSoftKeyboard());
-        onView(withId(R.id.makeDate)).perform(click());
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
         onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeText)).perform(ViewActions.typeText("AAA"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("1000"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("AAA"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("1000"), ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.makeSN)).perform(typeText("Sample SN2"), closeSoftKeyboard());
-        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment2"), closeSoftKeyboard());
-        onView(withId(R.id.makeDesc)).perform(typeText("AAA"), closeSoftKeyboard());
-        onView(withId(R.id.makeDate)).perform(click());
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN2"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment2"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("AAA"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
 
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
@@ -203,26 +198,26 @@ public class dannyUItest {
     public void testsortByDate() {
         //this tests adds 2 sample objects, then sorts them by value
         onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.makeSN)).perform(typeText("Sample SN1"), closeSoftKeyboard());
-        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
-        onView(withId(R.id.makeDesc)).perform(typeText("Sample Description1"), closeSoftKeyboard());
-        onView(withId(R.id.makeDate)).perform(click());
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
         onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeText)).perform(ViewActions.typeText("AAA"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeModel)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.makeValue)).perform(ViewActions.typeText("1000"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("AAA"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("1000"), ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.makeSN)).perform(typeText("Sample SN2"), closeSoftKeyboard());
-        onView(withId(R.id.makeComment)).perform(typeText("Sample Comment2"), closeSoftKeyboard());
-        onView(withId(R.id.makeDesc)).perform(typeText("AAA"), closeSoftKeyboard());
-        onView(withId(R.id.makeDate)).perform(click());
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN2"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment2"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("AAA"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
         //BELOW, JUST CLICK ON A DATE LESS THEN 10
         onView(allOf(isDescendantOfA(withTagValue(equalTo("MONTHS_VIEW_GROUP_TAG"))),
                 isCompletelyDisplayed(),
