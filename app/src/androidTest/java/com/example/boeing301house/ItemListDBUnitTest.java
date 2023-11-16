@@ -128,7 +128,7 @@ public class ItemListDBUnitTest {
 
         CountDownLatch latch = new CountDownLatch(1);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
-//        assertEquals(2, itemListEx.get().size());
+        assertEquals(2, itemListEx.get().size());
 //        assertEquals(testList, itemListDef.get());
         assertEquals(2, testList.size());
 
@@ -145,8 +145,10 @@ public class ItemListDBUnitTest {
         long item123Date = itemListEx.get().get(0).getDate();
         itemListEx.clearFilter();
         latch.await(TIMEOUT, TimeUnit.SECONDS);
+        Log.d("DBLISTENER", "FILTERING");
         itemListEx.filterDate(1,2);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
+        Log.d("DBLISTENER", "AFTER TO");
         itemListEx.getFiltered();
         latch.await(TIMEOUT, TimeUnit.SECONDS);
 //        assertEquals(0, itemListEx.get().size());
@@ -156,11 +158,14 @@ public class ItemListDBUnitTest {
 
         itemListEx.clearFilter();
         latch.await(TIMEOUT, TimeUnit.SECONDS);
+        Log.d("DBLISTENER", "FILTERING");
         itemListEx.filterDate(1, item123Date);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
+        Log.d("DBLISTENER", "AFTER TO");
+
         itemListEx.getFiltered();
         latch.await(TIMEOUT, TimeUnit.SECONDS);
-//        assertEquals(1, itemListEx.get().size());
+        assertEquals(1, itemListEx.get().size());
         assertEquals(1, testList.size());
 //        assertEquals("123", itemListEx.get().get(0).getItemID());
 //        assertEquals("123", testList.get(0).getItemID());
@@ -171,12 +176,14 @@ public class ItemListDBUnitTest {
         itemListEx.clearFilter();
 
         latch.await(TIMEOUT, TimeUnit.SECONDS);
-        itemListDef.filterDate(1,current);
+        Log.d("DBLISTENER", "FILTERING");
+        itemListDef.filterDate(1,current-2000);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
+        Log.d("DBLISTENER", "AFTER TO");
         itemListEx.getFiltered();
         latch.await(TIMEOUT, TimeUnit.SECONDS);
 //        test = itemListDef.get();
-//        assertEquals(2, itemListDef.get().size());
+        assertEquals(2, itemListEx.get().size());
         assertEquals(2, testList.size());
 //        assertEquals("123", itemListEx.get().get(0).getItemID());
 //        assertEquals("123", testList.get(0).getItemID());
@@ -186,7 +193,7 @@ public class ItemListDBUnitTest {
         Log.d("FILTER_TEST", testList.get(1).getItemID());
 //        assertEquals(testList, itemListDef.get());
 //
-//        assertEquals(item, itemListDef.get().get(0));
+//        assertEquals(item, itemListEx.get().get(0));
 //        assertEquals(item.getValue(), itemListDef.getTotal(), .005);
 //
 //        itemListDef.remove(item);

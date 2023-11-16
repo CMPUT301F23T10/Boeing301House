@@ -285,6 +285,7 @@ public class ItemList {
 
                 }
                 if (this.dblistener != null) {
+                    Log.d("DBLISTENER", "updateListener");
                     dblistener.onComplete(itemList, true);
                 }
             }
@@ -297,7 +298,7 @@ public class ItemList {
      * @param isFilter true if filter applied, false otherwise
      */
     public void updateListener(boolean isFilter) {
-
+        Log.d("DBLISTENER", "FILTERING LISTENER");
         if (!isFilter) {
             this.updateListener();
             return; // exit function
@@ -342,6 +343,7 @@ public class ItemList {
                 }
             }
             if (this.dblistener != null) {
+                Log.d("DBLISTENER", "updateListener filter");
                 dblistener.onComplete(itemList, true);
             }
         });
