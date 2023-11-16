@@ -29,13 +29,34 @@ import java.util.concurrent.TimeUnit;
 
 
 @RunWith(JUnit4.class)
+/**
+ * Test ItemList functions + interactions w/ firestore database
+ */
 public class ItemListDBUnitTest {
+    /**
+     * timeout used to manage async firestore calls
+     */
     private static final long TIMEOUT = 5;
 
+    /**
+     * {@link ItemList} object referencing collection w/ data already in it
+     * SHOULD **NOT** BE EDITED (NO ADD, NO DEL, NO EDIT)
+     */
     private ItemList itemListEx;
+    /**
+     * {@link ItemList} object referencing empty collection
+     * For adding, deleting, editing, etc.
+     */
     private ItemList itemListDef;
+
+    /**
+     * Firebase db
+     */
     private FirebaseFirestore db;
 
+    /**
+     * Initialize lists
+     */
     @Before
     public void before() {
         FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext());
@@ -49,6 +70,10 @@ public class ItemListDBUnitTest {
 
     }
 
+    /**
+     * Creates mock item for adding test
+     * @return new item
+     */
     private Item mockItem() {
         Item item = new ItemBuilder()
                 .addComment("tasd")
@@ -62,8 +87,11 @@ public class ItemListDBUnitTest {
 
         return item;
     }
-    private String test = "BYEEEEE";
-    private Query temp;
+
+    /**
+     * Test if list reads existing firestore data on first call
+     * @throws InterruptedException
+     */
     @Test
     public void testInitialized() throws InterruptedException {
 //        itemListEx.updateListener();
@@ -81,7 +109,15 @@ public class ItemListDBUnitTest {
 
     }
 
+    /**
+     * test list for listener callbacks
+     */
     private ArrayList<Item> testList = new ArrayList<>();
+
+    /**
+     * Test adding items
+     * @throws InterruptedException: wait for async operations to finish
+     */
     @Test
     public void testAdd() throws InterruptedException {
 //        assertEquals(0, itemListDef.get().size());
@@ -117,6 +153,10 @@ public class ItemListDBUnitTest {
 
     }
 
+    /**
+     * Test sorting items by date added (id)
+     * @throws InterruptedException: wait for async operations to finish
+     */
     @Test
     public void testSortDateAdded() throws InterruptedException {
         final String TAG = "TEST_SORT_DATE_ADDED";
@@ -161,6 +201,10 @@ public class ItemListDBUnitTest {
 
     }
 
+    /**
+     * Test sorting items by date
+     * @throws InterruptedException: wait for async operations to finish
+     */
     @Test
     public void testSortDate() throws InterruptedException {
         final String TAG = "TEST_SORT_DATE";
@@ -226,6 +270,10 @@ public class ItemListDBUnitTest {
 
     }
 
+    /**
+     * Test sorting items by estimated value
+     * @throws InterruptedException: wait for async operations to finish
+     */
     @Test
     public void testSortValue() throws InterruptedException {
         final String TAG = "TEST_SORT_VALUE";
@@ -291,6 +339,10 @@ public class ItemListDBUnitTest {
 
     }
 
+    /**
+     * Test sorting by description
+     * @throws InterruptedException: wait for async operations to finish
+     */
     @Test
     public void testSortDesc() throws InterruptedException {
         final String TAG = "TEST_SORT_DESC";
@@ -350,6 +402,10 @@ public class ItemListDBUnitTest {
                 itemListEx.get().get(2).getDescription()) < 0);
     }
 
+    /**
+     * Test sorting by make
+     * @throws InterruptedException: wait for async operations to finish
+     */
     @Test
     public void testSortMake() throws InterruptedException {
         final String TAG = "TEST_SORT_MAKE";
@@ -409,6 +465,10 @@ public class ItemListDBUnitTest {
                 itemListEx.get().get(2).getMake()) < 0);
     }
 
+    /**
+     * Test local filtering by date
+     * @throws InterruptedException: wait for async operations to finish
+     */
     @Test
     public void testFilterDate() throws InterruptedException {
 //        Item item = mockItem();
@@ -440,6 +500,10 @@ public class ItemListDBUnitTest {
 
     }
 
+    /**
+     * Test local filtering by search (desc keywords and make)
+     * @throws InterruptedException: wait for async operations to finish
+     */
     @Test
     public void testFilterSearch() throws InterruptedException {
 //        Item item = mockItem();
