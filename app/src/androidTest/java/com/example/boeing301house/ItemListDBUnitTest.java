@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import android.util.Log;
 
-import com.example.boeing301house.ItemList.ItemList;
-import com.example.boeing301house.ItemList.OnCompleteListener;
+import com.example.boeing301house.Itemlist.ItemList;
+import com.example.boeing301house.Itemlist.OnCompleteListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -85,17 +85,14 @@ public class ItemListDBUnitTest {
 
     /**
      * Test if list reads existing firestore data on first call
-     * @throws InterruptedException
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testInitialized() throws InterruptedException {
 //        itemListEx.updateListener();
-        itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
-            @Override
-            public void onComplete(ArrayList<Item> item, boolean success) {
-                String strSuccess = success ? "success" : "fail";
-                Log.d("itemListEX", String.format("%s : %s, %s", success, item.get(0).getItemID(), item.get(1).getItemID()));
-            }
+        itemListEx.setDBListener((item, success) -> {
+            String strSuccess = success ? "success" : "fail";
+            Log.d("itemListEX", String.format("%s : %s, %s", strSuccess, item.get(0).getItemID(), item.get(1).getItemID()));
         });
         CountDownLatch latch = new CountDownLatch(1);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
@@ -111,7 +108,7 @@ public class ItemListDBUnitTest {
 
     /**
      * Test adding items
-     * @throws InterruptedException: wait for async operations to finish
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testAdd() throws InterruptedException {
@@ -121,7 +118,7 @@ public class ItemListDBUnitTest {
         itemListDef.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
             @Override
             public void onComplete(ArrayList<Item> item, boolean success) {
-                String strSuccess = success ? "success" : "fail";
+//                String strSuccess = success ? "success" : "fail";
 //                Log.d("itemListDef", String.format("%s : %s", success, item.get(0).getItemID()));
                 testList = item;
             }
@@ -150,7 +147,7 @@ public class ItemListDBUnitTest {
 
     /**
      * Test sorting items by date added (id)
-     * @throws InterruptedException: wait for async operations to finish
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testSortDateAdded() throws InterruptedException {
@@ -159,7 +156,7 @@ public class ItemListDBUnitTest {
             @Override
             public void onComplete(ArrayList<Item> item, boolean success) {
                 String strSuccess = success ? "success" : "fail";
-                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                Log.d("itemListEx", String.format("%s : %d", strSuccess, item.size()));
                 testList = item;
             }
         });
@@ -198,7 +195,7 @@ public class ItemListDBUnitTest {
 
     /**
      * Test sorting items by date
-     * @throws InterruptedException: wait for async operations to finish
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testSortDate() throws InterruptedException {
@@ -267,7 +264,7 @@ public class ItemListDBUnitTest {
 
     /**
      * Test sorting items by estimated value
-     * @throws InterruptedException: wait for async operations to finish
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testSortValue() throws InterruptedException {
@@ -276,7 +273,7 @@ public class ItemListDBUnitTest {
             @Override
             public void onComplete(ArrayList<Item> item, boolean success) {
                 String strSuccess = success ? "success" : "fail";
-                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                Log.d("itemListEx", String.format("%s : %d", strSuccess, item.size()));
                 testList = item;
             }
         });
@@ -336,7 +333,7 @@ public class ItemListDBUnitTest {
 
     /**
      * Test sorting by description
-     * @throws InterruptedException: wait for async operations to finish
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testSortDesc() throws InterruptedException {
@@ -399,7 +396,7 @@ public class ItemListDBUnitTest {
 
     /**
      * Test sorting by make
-     * @throws InterruptedException: wait for async operations to finish
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testSortMake() throws InterruptedException {
@@ -408,7 +405,7 @@ public class ItemListDBUnitTest {
             @Override
             public void onComplete(ArrayList<Item> item, boolean success) {
                 String strSuccess = success ? "success" : "fail";
-                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                Log.d("itemListEx", String.format("%s : %d", strSuccess, item.size()));
                 testList = item;
             }
         });
@@ -462,7 +459,7 @@ public class ItemListDBUnitTest {
 
     /**
      * Test local filtering by date
-     * @throws InterruptedException: wait for async operations to finish
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testFilterDate() throws InterruptedException {
@@ -497,7 +494,7 @@ public class ItemListDBUnitTest {
 
     /**
      * Test local filtering by search (desc keywords and make)
-     * @throws InterruptedException: wait for async operations to finish
+     * @throws InterruptedException wait for async operations to finish
      */
     @Test
     public void testFilterSearch() throws InterruptedException {
@@ -508,7 +505,7 @@ public class ItemListDBUnitTest {
             @Override
             public void onComplete(ArrayList<Item> item, boolean success) {
                 String strSuccess = success ? "success" : "fail";
-                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                Log.d("itemListEx", String.format("%s : %d", strSuccess, item.size()));
                 testList = item;
             }
         });

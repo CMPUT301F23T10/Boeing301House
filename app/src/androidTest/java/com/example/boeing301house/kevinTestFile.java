@@ -25,7 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 
-import com.example.boeing301house.ItemList.ItemListActivity;
+import com.example.boeing301house.Itemlist.ItemListActivity;
 
 
 @RunWith(AndroidJUnit4.class)

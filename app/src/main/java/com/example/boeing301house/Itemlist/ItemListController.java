@@ -1,4 +1,4 @@
-package com.example.boeing301house.ItemList;
+package com.example.boeing301house.Itemlist;
 
 import android.app.Activity;
 

@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.boeing301house.ItemList.ItemListActivity;
+import com.example.boeing301house.Itemlist.ItemListActivity;
 
 import java.util.UUID;
 
