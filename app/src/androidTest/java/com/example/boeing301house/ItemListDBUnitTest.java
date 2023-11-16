@@ -50,9 +50,9 @@ public class ItemListDBUnitTest {
     private Item mockItem() {
         Item item = new ItemBuilder()
                 .addComment("tasd")
-                .addDate(123131)
+                .addDate(1231311)
                 .addDescription("asdads")
-                .addID("123242131")
+                .addID("1232421311")
                 .addMake("SAD")
                 .addModel("SADDSD")
                 .addValue(12)
@@ -74,7 +74,7 @@ public class ItemListDBUnitTest {
         });
         CountDownLatch latch = new CountDownLatch(1);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
-        assertEquals(2, itemListEx.get().size());
+        assertEquals(3, itemListEx.get().size());
 
     }
 
@@ -83,7 +83,7 @@ public class ItemListDBUnitTest {
     public void testAdd() throws InterruptedException {
 //        assertEquals(0, itemListDef.get().size());
         Item item = mockItem();
-
+        CountDownLatch latch = new CountDownLatch(1);
         itemListDef.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
             @Override
             public void onComplete(ArrayList<Item> item, boolean success) {
@@ -92,11 +92,12 @@ public class ItemListDBUnitTest {
                 testList = item;
             }
         });
-//        itemListDef.add(item);
+        itemListDef.add(item);
+
+        latch.await(5, TimeUnit.SECONDS);
 //
 //        test = itemListDef.get();
 
-        CountDownLatch latch = new CountDownLatch(1);
 //        long current = Calendar.getInstance().getTimeInMillis();
 //        itemListDef.filterDate(1,current);
         latch.await(5, TimeUnit.SECONDS);
@@ -104,18 +105,19 @@ public class ItemListDBUnitTest {
         assertEquals(1, itemListDef.get().size());
         assertEquals(testList, itemListDef.get());
 //
-//        assertEquals(item, itemListDef.get().get(0));
+        assertEquals(item, itemListDef.get().get(0));
 //        assertEquals(item.getValue(), itemListDef.getTotal(), .005);
 //
-//        itemListDef.remove(item);
-//        assertEquals(0, itemListDef.get().size());
+        itemListDef.remove(item);
+        latch.await(5, TimeUnit.SECONDS);
+        assertEquals(0, itemListDef.get().size());
 
     }
 
 
     @Test
     public void testFilterDate() throws InterruptedException {
-        Item item = mockItem();
+//        Item item = mockItem();
 
         itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
             @Override

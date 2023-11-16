@@ -17,14 +17,21 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Predicate;
 
 /**
  * Class dedicated for keeping track of list of {@link Item} objects and maintaining it
  */
 public class ItemList {
     private ArrayList<Item> itemList;
+    private ArrayList<Item> returnList;
+    private ArrayList<Predicate<Item>> searchFilters;
+    private ArrayList<Predicate<Item>> dateFilter;
+    private ArrayList<Predicate<Item>> tagFilter;
 
     //    private FirebaseFirestore db;
     private CollectionReference itemsRef;
@@ -34,12 +41,12 @@ public class ItemList {
     private OnCompleteListener<ArrayList<Item>> dblistener;
     boolean dateFiltered = false;
 
-    /**
-     * Default no arg constructor
-     */
-    public ItemList() {
-        itemList = new ArrayList<>();
-    }
+//    /**
+//     * Default no arg constructor
+//     */
+//    public ItemList() {
+//        itemList = new ArrayList<>();
+//    }
 
     /**
      * Constructor for passing through an item
@@ -49,6 +56,7 @@ public class ItemList {
         this.itemsRef = itemsRef;
         this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
         this.itemFilterQuery = itemQuery;
+        searchFilters = new ArrayList<>();
 
         this.itemList = new ArrayList<>();
         this.updateListener();
@@ -68,15 +76,6 @@ public class ItemList {
         this.updateListener();
 
         return itemList;
-    }
-
-
-    /**
-     * Constructor for passing through an existing list
-     * @param list of existing {@link ArrayList} of {@link Item}s
-     */
-    public ItemList(ArrayList<Item> list) {
-        this.itemList = list;
     }
 
 
@@ -341,6 +340,7 @@ public class ItemList {
                     itemList.add(item);
 
                 }
+                returnList = itemList;
             }
             if (this.dblistener != null) {
                 Log.d("DBLISTENER", "updateListener filter");
@@ -416,9 +416,34 @@ public class ItemList {
      *
      */
     public void filterSearch(String text) {
-        // TODO: implement w/ typesense
+        searchFilters.clear();
+        if (!text.isEmpty()) {
+            searchFilters.add(
+                    item -> item.getDescription().toLowerCase().contains(text.toLowerCase())
+            );
+
+            searchFilters.add(
+                    item -> item.getMake().toLowerCase().contains(text.toLowerCase())
+            );
+        }
 
         return;
+    }
+
+    /**
+     * Handle filtering
+     */
+    public void filter() {
+        returnList.clear();
+        returnList.addAll(itemList);
+        ArrayList<Predicate<Item>> filters = new ArrayList<>();
+        filters.addAll(searchFilters);
+        filters.addAll(tagFilter);
+        filters.addAll(dateFilter);
+
+        for (Predicate<Item> filter: filters) {
+            returnList.removeIf(filter);
+        }
     }
 
     /**
@@ -426,6 +451,8 @@ public class ItemList {
      *
      */
     public void clearFilter() {
+        searchFilters.clear();
+        returnList = itemList;
         itemFilterQuery = itemQuery;
         this.updateListener();
 
