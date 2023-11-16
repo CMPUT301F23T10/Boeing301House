@@ -69,15 +69,32 @@ public class ItemListDBUnitTest {
      * Creates mock item for adding test
      * @return new item
      */
-    private Item mockItem() {
+    private Item mockItem1() {
         Item item = new ItemBuilder()
                 .addComment("tasd")
                 .addDate(1231311)
                 .addDescription("asdads")
-                .addID("1232421311")
+                .addID("123")
                 .addMake("SAD")
                 .addModel("SADDSD")
                 .addValue(12)
+                .build();
+
+        return item;
+    }
+    /**
+     * Creates mock item for adding test
+     * @return new item
+     */
+    private Item mockItem2() {
+        Item item = new ItemBuilder()
+                .addComment("comment 2")
+                .addDate(1231311)
+                .addDescription("desc 2")
+                .addID("124")
+                .addMake("SAD")
+                .addModel("SADDSD")
+                .addValue(22)
                 .build();
 
         return item;
@@ -113,7 +130,7 @@ public class ItemListDBUnitTest {
     @Test
     public void testAdd() throws InterruptedException {
 //        assertEquals(0, itemListDef.get().size());
-        Item item = mockItem();
+        Item item = mockItem1();
         CountDownLatch latch = new CountDownLatch(1);
         itemListDef.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
             @Override
@@ -533,6 +550,51 @@ public class ItemListDBUnitTest {
 
 
 
+    }
+
+    /**
+     * Test remove selected items functionality
+     * @throws InterruptedException wait for async operations to finish
+     */
+    @Test
+    public void testRemoveSelected() throws InterruptedException {
+        Item item1 = mockItem1();
+        Item item2 = mockItem2();
+        double total = item1.getValue() + item2.getValue();
+
+        CountDownLatch latch = new CountDownLatch(1);
+        itemListDef.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
+            @Override
+            public void onComplete(ArrayList<Item> item, boolean success) {
+//                String strSuccess = success ? "success" : "fail";
+//                Log.d("itemListDef", String.format("%s : %s", success, item.get(0).getItemID()));
+                testList = item;
+            }
+        });
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(0, itemListDef.get().size());
+
+        itemListDef.add(item1, null);
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(1, testList.size());
+        assertEquals(1, itemListDef.get().size());
+        assertEquals(item1.getValue(), itemListDef.getTotal(), 0.05);
+
+        itemListDef.add(item2, null);
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(2, testList.size());
+        assertEquals(2, itemListDef.get().size());
+        assertEquals(total, itemListDef.getTotal(), 0.05);
+
+        ArrayList<Item> selected = new ArrayList<>();
+        item1.select();
+        selected.add(item1);
+        item2.select();
+        selected.add(item2);
+        itemListDef.removeSelected(selected);
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(0, testList.size(), 0.05);
+        assertEquals(0, itemListDef.getTotal(), 0.05);
     }
 
 }

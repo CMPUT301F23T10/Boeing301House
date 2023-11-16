@@ -78,7 +78,7 @@ public class ItemListController {
      */
     public void onMultiSelectStart(Item item) {
         item.select();
-        selectedItems.add(item); //TODO: maybe get rid of
+        selectedItems.add(item);
         isMultiSelect = true;
         return;
     }
@@ -190,9 +190,11 @@ public class ItemListController {
      * Delete selected items from list
      */
     public void removeSelectedItems() {
-        itemList.removeSelected((deleted, success) -> {
+        itemList.removeSelected(selectedItems, (deleted, success) -> {
             if (!success) {
                 activity.makeSnackbar("Failed to delete one or more items");
+            } else {
+                selectedItems.clear();
             }
         });
         // calls oncompletelistener
