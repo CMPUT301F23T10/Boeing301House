@@ -285,7 +285,7 @@ public class Item implements Parcelable {
 
     /**
      * Getter for tags
-     * @return: list of tags
+     * @return list of tags
      */
     public ArrayList<String> getTags() {
         return this.tags;

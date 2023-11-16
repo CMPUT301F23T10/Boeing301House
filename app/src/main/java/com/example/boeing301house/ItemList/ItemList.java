@@ -26,7 +26,8 @@ import java.util.HashMap;
 import java.util.function.Predicate;
 
 /**
- * Class dedicated for keeping track of list of {@link Item} objects and maintaining it
+ * Class dedicated for keeping track of list of {@link Item} objects and maintaining it.
+ * Model for item list
  */
 public class ItemList {
     private static final String TAG = "ITEM_LIST";
@@ -71,13 +72,12 @@ public class ItemList {
     }
     /**
      * Reset query
-     * @return: item list
+     *
      */
-    public ArrayList<Item> resetQuery() {
+    public void resetQuery() {
         this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
         this.updateListener();
 
-        return itemList;
     }
 
 
@@ -383,7 +383,7 @@ public class ItemList {
      * Filter list of items
      * @param start start date
      * @param end end date
-     * @return list of items
+     *
      */
     public void filterDate(long start, long end) {
 //        itemFilterQuery = itemsRef.orderBy("Date").whereGreaterThanOrEqualTo("Date", start).whereLessThanOrEqualTo("Date", end);
@@ -450,8 +450,8 @@ public class ItemList {
         for (Predicate<Item> filter: filters) {
             returnList.removeIf(filter);
         }
-        Log.d("TEST_FILTER_DATE", returnList.toString());
-        Log.d("TEST_FILTER_DATE", returnList.toString());
+//        Log.d("TEST_FILTER_DATE", returnList.toString());
+//        Log.d("TEST_FILTER_DATE", returnList.toString());
     }
 
     /**

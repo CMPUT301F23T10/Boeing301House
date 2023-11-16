@@ -38,23 +38,64 @@ import java.util.TimeZone;
  * Observer pattern used
  */
 public class AddEditItemFragment extends Fragment {
+    /**
+     * Current item being added/edited
+     */
     private Item currentItem;
-    public static String ITEM_KEY = "item_key"; // TODO: change (maybe)
+    /**
+     * Tag for getting item from bundle
+     */
+    public static String ITEM_KEY = "item_key";
+
+    /**
+     * Tag to determine if adding item
+     */
     public static String IS_ADD = "is_add";
+
+    /**
+     * Binding for fragment
+     */
     private FragmentAddEditItemBinding binding; //used to access the things in add_edit_item_fragment_view.xml
 
+    /**
+     * New make string
+     */
     private String newMake;
+
+    /**
+     * New model string
+     */
     private String newModel;
 
+    /**
+     * New value
+     */
     private double newValue;
 
+    /**
+     * New comment string
+     */
     private String newComment;
+
+    /**
+     * New description string
+     */
     private String newDescription;
 
+    /**
+     * New date
+     * Default null for editing functionality
+     */
     private Long newDate = null;
 
+    /**
+     * New SN
+     */
     private String newSN;
 
+    /**
+     * listener for addedit interaction (sends results back to caller)
+     */
     private OnAddEditFragmentInteractionListener listener;
     private boolean isAdd = true; // if adding item
 
@@ -91,8 +132,8 @@ public class AddEditItemFragment extends Fragment {
 
     // this is the code that will allow the transfer of the updated expense to the main listview
     /**
-     *
-     * @param context
+     * Called when fragment attached
+     * @param context: app context
      */
     @Override
     public void onAttach(Context context){
@@ -133,7 +174,7 @@ public class AddEditItemFragment extends Fragment {
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      * from a previous saved state as given here.
      *
-     * @return
+     * @return created view
      */
     @Nullable
     @Override

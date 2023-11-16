@@ -187,7 +187,7 @@ public class ItemListController {
     }
 
     /**
-     * Delete multiple items from list
+     * Delete selected items from list
      */
     public void removeSelectedItems() {
         itemList.removeSelected((deleted, success) -> {

@@ -4,7 +4,7 @@ import com.example.boeing301house.Item;
 
 /**
  * Listener interface for db operations (help handle asynchronousity)
- * @param <T>
+ * @param <T> object type
  */
 public interface OnCompleteListener<T> {
     /**
