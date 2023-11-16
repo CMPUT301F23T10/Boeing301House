@@ -1,5 +1,7 @@
 package com.example.boeing301house;
 
+import java.util.ArrayList;
+
 /**
  * Builder pattern for {@link Item} object
  * Builder class for {@link Item}
@@ -117,6 +119,26 @@ public class ItemBuilder {
     public ItemBuilder addValue(double value) {
 //        this.value = value;
         item.setValue(value);
+        return this;
+    }
+
+    /**
+     * Builder method for declaring tags of an {@link Item}
+     * @param tag: tag to be added
+     * @return this: ItemBuilder object
+     */
+    public ItemBuilder addTag(String tag) {
+        item.addTags(tag);
+        return this;
+    }
+
+    /**
+     * Builder method for declaring tags of an {@link Item}
+     * @param tag: list of tags to be added
+     * @return this: ItemBuilder object
+     */
+    public ItemBuilder addTag(ArrayList<String> tag) {
+        item.addTags(tag);
         return this;
     }
 

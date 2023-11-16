@@ -4,6 +4,7 @@ package com.example.boeing301house;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import android.util.Log;
 
@@ -114,6 +115,179 @@ public class ItemListDBUnitTest {
 
     }
 
+    @Test
+    public void testSortDateAdded() throws InterruptedException {
+        final String TAG = "TEST_SORT_DATE_ADDED";
+        itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
+            @Override
+            public void onComplete(ArrayList<Item> item, boolean success) {
+                String strSuccess = success ? "success" : "fail";
+                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                testList = item;
+            }
+        });
+        CountDownLatch latch = new CountDownLatch(1);
+
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        itemListEx.sort("Date added", "Desc");
+        Log.d(TAG, "SORTING..... (DATE ADDED DESC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+        assertTrue(
+                Long.parseLong(itemListEx.get().get(0).getItemID())
+                > Long.parseLong(itemListEx.get().get(1).getItemID())
+        );
+
+        assertTrue(
+                Long.parseLong(itemListEx.get().get(1).getItemID())
+                        > Long.parseLong(itemListEx.get().get(2).getItemID())
+        );
+        assertTrue(
+                Long.parseLong(itemListEx.get().get(0).getItemID())
+                        > Long.parseLong(itemListEx.get().get(2).getItemID())
+        );
+
+    }
+
+    @Test
+    public void testSortDate() throws InterruptedException {
+        final String TAG = "TEST_SORT_DATE";
+        itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
+            @Override
+            public void onComplete(ArrayList<Item> item, boolean success) {
+                String strSuccess = success ? "success" : "fail";
+                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                testList = item;
+            }
+        });
+        CountDownLatch latch = new CountDownLatch(1);
+
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        itemListEx.sort("Date", "DESC");
+        Log.d(TAG, "SORTING..... (DATE DESC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        assertTrue(
+                itemListEx.get().get(0).getDate() > itemListEx.get().get(1).getDate()
+        );
+
+        assertTrue(
+                itemListEx.get().get(1).getDate() > itemListEx.get().get(2).getDate()
+        );
+
+        assertTrue(
+                itemListEx.get().get(0).getDate() > itemListEx.get().get(2).getDate()
+        );
+
+
+        itemListEx.sort("Date", "ASC");
+        Log.d(TAG, "SORTING..... (DATE ASC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+        assertTrue(
+                itemListEx.get().get(0).getDate() < itemListEx.get().get(1).getDate()
+        );
+
+        assertTrue(
+                itemListEx.get().get(1).getDate() < itemListEx.get().get(2).getDate()
+        );
+
+        assertTrue(
+                itemListEx.get().get(0).getDate() < itemListEx.get().get(2).getDate()
+        );
+
+    }
+
+    @Test
+    public void testSortValue() throws InterruptedException {
+        final String TAG = "TEST_SORT_VALUE";
+        itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
+            @Override
+            public void onComplete(ArrayList<Item> item, boolean success) {
+                String strSuccess = success ? "success" : "fail";
+                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                testList = item;
+            }
+        });
+        CountDownLatch latch = new CountDownLatch(1);
+
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        itemListEx.sort("Value", "DESC");
+        Log.d(TAG, "SORTING..... (VALUE DESC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        assertTrue(
+                itemListEx.get().get(0).getValue() > itemListEx.get().get(1).getValue()
+        );
+
+        assertTrue(
+                itemListEx.get().get(1).getValue() > itemListEx.get().get(2).getValue()
+        );
+
+        assertTrue(
+                itemListEx.get().get(0).getValue() > itemListEx.get().get(2).getValue()
+        );
+
+
+        itemListEx.sort("Value", "ASC");
+        Log.d(TAG, "SORTING..... (VALUE ASC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+        assertTrue(
+                itemListEx.get().get(0).getValue() < itemListEx.get().get(1).getValue()
+        );
+
+        assertTrue(
+                itemListEx.get().get(1).getValue() < itemListEx.get().get(2).getValue()
+        );
+
+        assertTrue(
+                itemListEx.get().get(0).getValue() < itemListEx.get().get(2).getValue()
+        );
+
+    }
 
     @Test
     public void testFilterDate() throws InterruptedException {
@@ -134,16 +308,6 @@ public class ItemListDBUnitTest {
 //        assertEquals(testList, itemListDef.get());
         assertEquals(2, testList.size());
 
-        itemListEx.sort("Value", "ASC");
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-        itemListEx.getSorted();
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-        Log.d("SORT_TEST", testList.get(0).getItemID());
-        Log.d("SORT_TEST", testList.get(1).getItemID());
-
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-        Log.d("SORT_TEST2", testList.get(0).getItemID());
-        Log.d("SORT_TEST2", testList.get(1).getItemID());
         long item123Date = itemListEx.get().get(0).getDate();
         itemListEx.clearFilter();
         latch.await(TIMEOUT, TimeUnit.SECONDS);
@@ -151,8 +315,6 @@ public class ItemListDBUnitTest {
         itemListEx.filterDate(1,2);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
         Log.d("DBLISTENER", "AFTER TO");
-        itemListEx.getFiltered();
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
 //        assertEquals(0, itemListEx.get().size());
         assertEquals(0, testList.size());
 //        assertEquals(testList, itemListDef.get());
@@ -165,7 +327,6 @@ public class ItemListDBUnitTest {
         latch.await(TIMEOUT, TimeUnit.SECONDS);
         Log.d("DBLISTENER", "AFTER TO");
 
-        itemListEx.getFiltered();
         latch.await(TIMEOUT, TimeUnit.SECONDS);
         assertEquals(1, itemListEx.get().size());
         assertEquals(1, testList.size());
@@ -182,7 +343,6 @@ public class ItemListDBUnitTest {
         itemListDef.filterDate(1,current-2000);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
         Log.d("DBLISTENER", "AFTER TO");
-        itemListEx.getFiltered();
         latch.await(TIMEOUT, TimeUnit.SECONDS);
 //        test = itemListDef.get();
         assertEquals(2, itemListEx.get().size());
