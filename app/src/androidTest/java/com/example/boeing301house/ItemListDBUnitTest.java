@@ -2,8 +2,6 @@ package com.example.boeing301house;
 
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import android.util.Log;
@@ -12,7 +10,6 @@ import com.example.boeing301house.ItemList.ItemList;
 import com.example.boeing301house.ItemList.OnCompleteListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
@@ -23,15 +20,13 @@ import org.junit.runners.JUnit4;
 import androidx.test.core.app.ApplicationProvider;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-
-@RunWith(JUnit4.class)
 /**
  * Test ItemList functions + interactions w/ firestore database
  */
+@RunWith(JUnit4.class)
 public class ItemListDBUnitTest {
     /**
      * timeout used to manage async firestore calls
