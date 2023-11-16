@@ -91,7 +91,7 @@ public class ItemList {
     /**
      * Add {@link Item} object to {@link ItemList}
      * @param item item to be added
-     * @param completeListener: OnCompleteListener to notify failures (Nullable)
+     * @param completeListener OnCompleteListener to notify failures (Nullable)
      */
     public void add(@NonNull Item item, @Nullable OnCompleteListener<Item> completeListener) {
         HashMap<String, Object> itemData = new HashMap<>();
@@ -230,7 +230,7 @@ public class ItemList {
 
     /**
      * Remove selected items in list (w/ OnCompleteListener)
-     * @param completeListener: OnCompleteListener
+     * @param completeListener OnCompleteListener
      */
     public void removeSelected(@Nullable OnCompleteListener<Item> completeListener) {
         ArrayList<Item> list = new ArrayList<>(itemList);
@@ -421,7 +421,7 @@ public class ItemList {
 
     /**
      * Filter by selected tags
-     * @param tags: array of selected tags
+     * @param tags array of selected tags
      */
     public void filterTag(ArrayList<String> tags) {
         tagFilter.clear();

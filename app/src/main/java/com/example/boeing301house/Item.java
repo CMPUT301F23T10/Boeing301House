@@ -261,7 +261,7 @@ public class Item implements Parcelable {
 
     /**
      * Add tag to item
-     * @param tag: tag
+     * @param tag tag
      */
     public void addTags(String tag) {
         tags.add(tag);
@@ -269,7 +269,7 @@ public class Item implements Parcelable {
 
     /**
      * Add tags to item
-     * @param tag: list of tags
+     * @param tag list of tags
      */
     public void addTags(ArrayList<String> tag) {
         tags.addAll(tag);
@@ -277,7 +277,7 @@ public class Item implements Parcelable {
 
     /**
      * Remove tag from item
-     * @param tag: tag to be removed
+     * @param tag tag to be removed
      */
     public void removeTag(String tag) {
         tags.remove(tag);

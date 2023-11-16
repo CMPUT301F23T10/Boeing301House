@@ -49,8 +49,8 @@ public class ItemListController {
 
     /**
      * Sort list of items
-     * @param method: sort method/field
-     * @param order: sort order
+     * @param method sort method/field
+     * @param order sort order
      */
     public void sort(String method, String order) {
         itemList.sort(method, order);
@@ -74,7 +74,7 @@ public class ItemListController {
 
     /**
      * Item multiselect behavior startup
-     * @param item: selected item
+     * @param item selected item
      */
     public void onMultiSelectStart(Item item) {
         item.select();
@@ -85,7 +85,7 @@ public class ItemListController {
 
     /**
      * Item selection behavior
-     * @param item: selected item
+     * @param item selected item
      */
     public void onSelect(Item item) {
         // TODO: finish
@@ -104,8 +104,8 @@ public class ItemListController {
     /**
      * Overloaded function for general filtering
      * Filter by date
-     * @param start: start date
-     * @param end: end date
+     * @param start start date
+     * @param end end date
      */
     public void filter(long start, long end) {
         itemList.filterDate(start, end);
@@ -116,7 +116,7 @@ public class ItemListController {
     /**
      * Overloaded function for general filtering
      * Filter by search term (make/desc)
-     * @param search: search term(s)
+     * @param search search term(s)
      */
     public void filter(String search) {
         itemList.filterSearch(search);
@@ -127,7 +127,7 @@ public class ItemListController {
     /**
      * Overloaded function for general filtering
      * Filter by selected tags
-     * @param tags: list of selected tags
+     * @param tags list of selected tags
      */
     public void filter(ArrayList<String> tags) {
         itemList.filterTag(tags);
@@ -146,7 +146,7 @@ public class ItemListController {
 
     /**
      * Add item to list
-     * @param item: item to be added
+     * @param item item to be added
      */
     public void add(Item item) {
         itemList.add(item, (addedItem, success) -> {
@@ -160,8 +160,8 @@ public class ItemListController {
 
     /**
      * Edit item in list
-     * @param i: position of item to edit
-     * @param item: edited item
+     * @param i position of item to edit
+     * @param item edited item
      */
     public void editItem(int i, Item item) {
         itemList.set(i, item, (edited, success) -> {
@@ -175,7 +175,7 @@ public class ItemListController {
 
     /**
      * Delete item from list
-     * @param item: item to be deleted
+     * @param item item to be deleted
      */
     public void removeItem(Item item) {
         itemList.remove(item, (deleted, success) -> {

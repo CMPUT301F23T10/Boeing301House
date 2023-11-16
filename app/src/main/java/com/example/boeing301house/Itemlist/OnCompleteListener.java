@@ -10,8 +10,8 @@ public interface OnCompleteListener<T> {
     /**
      * Called when DB operation completed
      *
-     * @param item: {@link Item} or {@link ItemList} object
-     * @param success: if operation successful
+     * @param item {@link Item} or {@link ItemList} object
+     * @param success if operation successful
      */
     void onComplete(T item, boolean success);
 }
