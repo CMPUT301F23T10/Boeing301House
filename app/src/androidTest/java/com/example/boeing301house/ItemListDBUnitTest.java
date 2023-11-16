@@ -14,6 +14,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -290,8 +291,127 @@ public class ItemListDBUnitTest {
     }
 
     @Test
+    public void testSortDesc() throws InterruptedException {
+        final String TAG = "TEST_SORT_DESC";
+        itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
+            @Override
+            public void onComplete(ArrayList<Item> item, boolean success) {
+                String strSuccess = success ? "success" : "fail";
+                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                testList = item;
+            }
+        });
+        CountDownLatch latch = new CountDownLatch(1);
+
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        itemListEx.sort("Description", "DESC");
+        Log.d(TAG, "SORTING..... (DESCRIPTION DESC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(0).getDescription(),
+                itemListEx.get().get(1).getDescription()) > 0);
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(1).getDescription(),
+                itemListEx.get().get(2).getDescription()) > 0);
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(0).getDescription(),
+                itemListEx.get().get(2).getDescription()) > 0);
+
+        itemListEx.sort("Description", "ASC");
+        Log.d(TAG, "SORTING..... (DESCRIPTION ASC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(0).getDescription(),
+                itemListEx.get().get(1).getDescription()) < 0);
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(1).getDescription(),
+                itemListEx.get().get(2).getDescription()) < 0);
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(0).getDescription(),
+                itemListEx.get().get(2).getDescription()) < 0);
+    }
+
+    @Test
+    public void testSortMake() throws InterruptedException {
+        final String TAG = "TEST_SORT_MAKE";
+        itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
+            @Override
+            public void onComplete(ArrayList<Item> item, boolean success) {
+                String strSuccess = success ? "success" : "fail";
+                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                testList = item;
+            }
+        });
+        CountDownLatch latch = new CountDownLatch(1);
+
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        itemListEx.sort("Make", "DESC");
+        Log.d(TAG, "SORTING..... (DESCRIPTION DESC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(0).getMake(),
+                itemListEx.get().get(1).getMake()) > 0);
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(1).getMake(),
+                itemListEx.get().get(2).getMake()) > 0);
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(0).getMake(),
+                itemListEx.get().get(2).getMake()) > 0);
+
+        itemListEx.sort("Make", "ASC");
+        Log.d(TAG, "SORTING..... (DESCRIPTION ASC)");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertEquals(3, itemListEx.get().size());
+
+        Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
+        Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
+        Log.d(TAG, "ITEM 3: " + itemListEx.get().get(2).getItemID());
+
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(0).getMake(),
+                itemListEx.get().get(1).getMake()) < 0);
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(1).getMake(),
+                itemListEx.get().get(2).getMake()) < 0);
+        assertTrue(StringUtils.compare(
+                itemListEx.get().get(0).getMake(),
+                itemListEx.get().get(2).getMake()) < 0);
+    }
+
+    @Test
     public void testFilterDate() throws InterruptedException {
 //        Item item = mockItem();
+        final String TAG = "TEST_FILTER_DATE";
 
         itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
             @Override
@@ -304,62 +424,53 @@ public class ItemListDBUnitTest {
 
         CountDownLatch latch = new CountDownLatch(1);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
-        assertEquals(2, itemListEx.get().size());
-//        assertEquals(testList, itemListDef.get());
-        assertEquals(2, testList.size());
+        assertEquals(3, itemListEx.get().size());
+        assertEquals(3, testList.size());
 
-        long item123Date = itemListEx.get().get(0).getDate();
-        itemListEx.clearFilter();
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-        Log.d("DBLISTENER", "FILTERING");
-        itemListEx.filterDate(1,2);
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-        Log.d("DBLISTENER", "AFTER TO");
-//        assertEquals(0, itemListEx.get().size());
-        assertEquals(0, testList.size());
-//        assertEquals(testList, itemListDef.get());
+        long smallest = 1231311;
 
-
-        itemListEx.clearFilter();
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-        Log.d("DBLISTENER", "FILTERING");
-        itemListEx.filterDate(1, item123Date);
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-        Log.d("DBLISTENER", "AFTER TO");
-
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        itemListEx.filterDate(0, smallest);
         assertEquals(1, itemListEx.get().size());
-        assertEquals(1, testList.size());
-//        assertEquals("123", itemListEx.get().get(0).getItemID());
-//        assertEquals("123", testList.get(0).getItemID());
-//        assertEquals(testList, itemListDef.get());
-        Log.d("FILTER_TEST", testList.get(0).getItemID());
+        assertEquals("1232421311", itemListEx.get().get(0).getItemID());
 
-        long current = Calendar.getInstance().getTimeInMillis();
         itemListEx.clearFilter();
+        assertEquals(3, itemListEx.get().size());
 
+    }
+
+    @Test
+    public void testFilterSearch() throws InterruptedException {
+//        Item item = mockItem();
+        final String TAG = "TEST_FILTER_SEARCH";
+
+        itemListEx.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
+            @Override
+            public void onComplete(ArrayList<Item> item, boolean success) {
+                String strSuccess = success ? "success" : "fail";
+                Log.d("itemListEx", String.format("%s : %d", success, item.size()));
+                testList = item;
+            }
+        });
+
+        CountDownLatch latch = new CountDownLatch(1);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
-        Log.d("DBLISTENER", "FILTERING");
-        itemListDef.filterDate(1,current-2000);
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-        Log.d("DBLISTENER", "AFTER TO");
-        latch.await(TIMEOUT, TimeUnit.SECONDS);
-//        test = itemListDef.get();
+        assertEquals(3, itemListEx.get().size());
+        assertEquals(3, testList.size());
+
+        itemListEx.filterSearch("sad");
         assertEquals(2, itemListEx.get().size());
-        assertEquals(2, testList.size());
-//        assertEquals("123", itemListEx.get().get(0).getItemID());
-//        assertEquals("123", testList.get(0).getItemID());
-//        assertEquals("1699898344363", itemListEx.get().get(1).getItemID());
-//        assertEquals("1699898344363", testList.get(1).getItemID());
-        Log.d("FILTER_TEST", testList.get(0).getItemID());
-        Log.d("FILTER_TEST", testList.get(1).getItemID());
-//        assertEquals(testList, itemListDef.get());
-//
-//        assertEquals(item, itemListEx.get().get(0));
-//        assertEquals(item.getValue(), itemListDef.getTotal(), .005);
-//
-//        itemListDef.remove(item);
-//        assertEquals(0, itemListDef.get().size());
+
+
+        itemListEx.filterSearch("a");
+        assertEquals(3, itemListEx.get().size());
+
+        itemListEx.filterSearch("asdads");
+        assertEquals(1, itemListEx.get().size());
+
+        itemListEx.filterSearch("Test2 make");
+        assertEquals(1, itemListEx.get().size());
+
+
 
     }
 

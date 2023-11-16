@@ -355,10 +355,10 @@ public class ItemList {
 //        itemFilterQuery = itemsRef.orderBy("Date").whereGreaterThanOrEqualTo("Date", start).whereLessThanOrEqualTo("Date", end);
         dateFilter.clear();
         dateFilter.add(
-                item -> item.getDate() <= end
+                item -> !(item.getDate() <= end)
         );
         dateFilter.add(
-                item -> item.getDate() >= start
+                item -> !(item.getDate() >= start)
         );
 //        this.sort("Date Added", "Asc");
 //        this.updateListener(true);
@@ -377,12 +377,13 @@ public class ItemList {
         searchFilters.clear();
         if (!text.isEmpty()) {
             searchFilters.add(
-                    item -> item.getDescription().toLowerCase().contains(text.toLowerCase())
-            );
+                    item -> !(item.getDescription().toLowerCase().contains(text.toLowerCase()) ||
+                            (item.getMake().toLowerCase().contains(text.toLowerCase()))
+            ));
 
-            searchFilters.add(
-                    item -> item.getMake().toLowerCase().contains(text.toLowerCase())
-            );
+//            searchFilters.add(
+//                    item -> !(item.getMake().toLowerCase().contains(text.toLowerCase()))
+//            );
         }
         filter();
 
@@ -396,7 +397,7 @@ public class ItemList {
     public void filterTag(ArrayList<String> tags) {
         tagFilter.clear();
         tagFilter.add(
-                item -> item.getTags().containsAll(tags)
+                item -> !(item.getTags().containsAll(tags))
         );
         filter();
     }
@@ -415,6 +416,8 @@ public class ItemList {
         for (Predicate<Item> filter: filters) {
             returnList.removeIf(filter);
         }
+        Log.d("TEST_FILTER_DATE", returnList.toString());
+        Log.d("TEST_FILTER_DATE", returnList.toString());
     }
 
     /**
