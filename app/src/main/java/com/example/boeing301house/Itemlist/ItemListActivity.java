@@ -120,9 +120,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
         DBConnection dbConnection = new DBConnection(getApplicationContext());
 
-        // check if app has been launched for the first time
-        // after updating sharedpreferences it will not be triggered again
-
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
 
         itemAdapter = controller.getItemAdapter();
