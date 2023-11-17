@@ -46,6 +46,7 @@ public class FilterFragment extends DialogFragment {
      */
     public interface OnFilterFragmentInteractionListener {
         void onFilterOKPressed(long dateStart, long dateEnd);
+        void onFilterOKPressed(ArrayList<String> tags);
 
     }
     /**
@@ -144,6 +145,7 @@ public class FilterFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view)
                 .setTitle("Filter Items")
+                .setCancelable(true)
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
