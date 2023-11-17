@@ -22,9 +22,22 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * list of uri (links to resources)
      */
     private ArrayList<Uri> uriArrayList;
+    private ImageSelectListener listener;
 
+    /**
+     * Constructor
+     * @param uriArrayList list of uris
+     */
     public AddEditImageAdapter(ArrayList<Uri> uriArrayList) {
         this.uriArrayList = uriArrayList;
+    }
+
+    /**
+     * Set on click listener
+     * @param listener
+     */
+    public void setOnClickListener(ImageSelectListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -40,6 +53,14 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
         ((ViewHolder) holder).imageView.setImageURI(uriArrayList.get(position));
+        ((ViewHolder) holder).imageView.setContentDescription("image" + position); // for testing
+        ((ViewHolder) holder).imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClicked(holder.getAdapterPosition());
+            }
+        });
+
     }
 
     @Override
@@ -51,7 +72,7 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * Custom ViewHolder class
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
+        public ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

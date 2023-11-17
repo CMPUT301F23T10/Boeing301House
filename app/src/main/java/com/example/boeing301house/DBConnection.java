@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -123,6 +124,14 @@ public class DBConnection {
     public CollectionReference getItemsRef() {
         //TODO: implement
         return this.db.collection("items"); // PLACEHOLDER
+    }
+
+    /**
+     * Get reference to user document
+     * @return
+     */
+    public DocumentReference getUserRef() {
+        return this.db.collection("users").document(uuid);
     }
 
 }
