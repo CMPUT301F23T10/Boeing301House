@@ -340,15 +340,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     }
 
     /**
-     * Update the subtotal by calculating the total cost of all items in the list.
-     * This method iterates through the list of items and calculates the sum of their
-     * individual costs to determine the total cost. The result is then displayed to
-     * the user to provide an overview of the total estimated expenses.
-     *
-     * This method should be called when initializing the item list and whenever an item
-     * is added, edited, or deleted to ensure that the total cost is up-to-date.
-     *
-     * Listener object
+     * Displays the updated total estimated value via calls from a listener
      * @param total total value
      * @param calculated if calculation successful
      */
