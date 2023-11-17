@@ -118,8 +118,8 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
-    private static final int readPermissions = 101;
-    private static final int cameraPermissions = 102;
+    private static final int READ_PERMISSIONS = 101;
+    private static final int CAMERA_PERMISSIONS = 102;
     private static final int GALLERY_REQUEST = 1;
     private static final int CAMERA_REQUEST = 2;
 
@@ -515,7 +515,7 @@ public class AddEditItemFragment extends Fragment {
     private boolean askGalleryPerms() {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, readPermissions);
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, READ_PERMISSIONS);
             return false;
         } else {
             openGallery();
@@ -542,7 +542,7 @@ public class AddEditItemFragment extends Fragment {
     private boolean askCameraPerms() {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, cameraPermissions);
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
             return false;
         } else {
             openCamera();
