@@ -114,6 +114,14 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         this.items = items;
         super.notifyDataSetChanged();
     }
+
+    /**
+     * Get referenced list
+     * @return list of items
+     */
+    public ArrayList<Item> getList() {
+        return items;
+    }
     
 
 }

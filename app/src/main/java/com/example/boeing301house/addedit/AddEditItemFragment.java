@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -118,8 +119,10 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
-    private static final int readPermissions = 101;
-    private static final int cameraPermissions = 102;
+    private static final int READ_PERMISSIONS = 101;
+    private static final int CAMERA_PERMISSIONS = 102;
+    private static final int GALLERY_REQUEST = 10;
+    private static final int CAMERA_REQUEST = 11;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -218,16 +221,7 @@ public class AddEditItemFragment extends Fragment {
         imgRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
         imgRecyclerView.setAdapter(imgAdapter);
 
-        // GET PERMS
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, readPermissions);
-        }
 
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, cameraPermissions);
-        }
 
 //        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_IMAGES)) {
 //
@@ -268,20 +262,10 @@ public class AddEditItemFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.camera) {
-                                Intent intent = new Intent();
-                                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                                // TODO handle photo using startActivityForResult i think..
-                                startActivity(intent);
-                                return true;
+                                return askCameraPerms();
                             }
                             else if (item.getItemId() == R.id.gallery) {
-                                Intent intent = new Intent();
-                                intent.setType("image/*");
-                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // allow user to select + return multiple item
-                                intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, "Select Image(s)"), 1);
-                                // open gallery
-                                return true;
+                                return askGalleryPerms();
                             }
                             return false;
                         }
@@ -503,8 +487,8 @@ public class AddEditItemFragment extends Fragment {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
 
@@ -518,6 +502,67 @@ public class AddEditItemFragment extends Fragment {
                 uri.add(Uri.parse(imgURL));
 
             }
+        } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data.getData() != null) {
+                Uri imgURI = data.getData();
+                uri.add(imgURI);
+            }
+//            String imgURL = data.getData().getPath();
+//            uri.add(Uri.parse(imgURL));
         }
+    }
+
+
+    /**
+     * Get permission to use gallery and open gallery
+     * @return true if gallery opened, false otherwise
+     */
+    private boolean askGalleryPerms() {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, READ_PERMISSIONS);
+            return false;
+        } else {
+            openGallery();
+            return true;
+        }
+    }
+
+    /**
+     * Open photo gallery, let user select multiple images to bring back
+     */
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // allow user to select + return multiple item
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Image(s)"), GALLERY_REQUEST);
+        // open gallery
+    }
+
+    /**
+     * Get permission to use camera and open camera
+     * @return true if camera opened, false otherwise
+     */
+    private boolean askCameraPerms() {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
+            return false;
+        } else {
+            openCamera();
+            return true;
+        }
+    }
+
+    /**
+     * Open camera
+     */
+    private void openCamera() {
+        Intent intent = new Intent();
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        // TODO handle photo using startActivityForResult i think..
+        startActivityForResult(intent, CAMERA_REQUEST);
+        // startActivityForResult(intent, CAMERA_REQUEST);
     }
 }

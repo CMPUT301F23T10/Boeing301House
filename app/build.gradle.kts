@@ -41,12 +41,12 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // navgraph stuff
-    implementation("androidx.navigation:navigation-fragment:2.7.4")
-    implementation("androidx.navigation:navigation-ui:2.7.4")
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.4")
-    implementation("com.google.firebase:firebase-auth:22.2.0")
-    androidTestImplementation("androidx.navigation:navigation-testing:2.7.4")
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-fragment:2.7.5")
+    implementation("androidx.navigation:navigation-ui:2.7.5")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.5")
+    implementation("com.google.firebase:firebase-auth:22.3.0")
+    androidTestImplementation("androidx.navigation:navigation-testing:2.7.5")
+    implementation("androidx.navigation:navigation-compose:2.7.5")
 
     // ML stuff for scanning
 //    implementation("com.google.firebase:firebase-ml-vision:24.0.3")
@@ -64,7 +64,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("com.google.firebase:testlab-instr-lib:0.2")
     implementation("org.apache.commons:commons-lang3:3.9")
-    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-firestore")
     compileOnly(files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"))
 }

@@ -1,5 +1,6 @@
 package com.example.boeing301house;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -35,7 +36,7 @@ public class Item implements Parcelable {
     /**
      * list of paths to image
      */
-    private ArrayList<String> photos; // TODO: implement
+    private ArrayList<Uri> photos; // TODO: implement
 
 
     // TODO: add tag array and image array (?)
@@ -54,6 +55,7 @@ public class Item implements Parcelable {
         this.comment = "";
         this.id = String.format(Locale.CANADA,"%d",Calendar.getInstance(Locale.CANADA).getTimeInMillis());
         this.tags = new ArrayList<>();
+        this.photos = new ArrayList<>();
 //        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
     }
 
@@ -71,6 +73,7 @@ public class Item implements Parcelable {
         isSelected = in.readByte() != 0;
         id = in.readString();
         tags = in.createStringArrayList();
+        photos = in.createTypedArrayList(Uri.CREATOR);
     }
 
     public static final Creator<Item> CREATOR = new Creator<Item>() {
@@ -314,6 +317,7 @@ public class Item implements Parcelable {
         dest.writeByte((byte) (isSelected ? 1 : 0));
         dest.writeString(id);
         dest.writeStringList(tags);
+        dest.writeTypedList(photos);
     }
 }
 

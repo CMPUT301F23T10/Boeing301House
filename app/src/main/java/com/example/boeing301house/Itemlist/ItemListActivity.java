@@ -32,7 +32,6 @@ import com.example.boeing301house.SortFragment;
 import com.example.boeing301house.UserProfileActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -46,16 +45,12 @@ import java.util.Locale;
  */
 public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
 
-    private FirebaseFirestore db;
 
     private ListView itemListView;
     //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
 
     private TextView subTotalText;
-    public ArrayList<Item> itemList;
-
-    private ArrayList<Item> selectedItems;
 
     private Button itemListFilterButton;
     private Button itemListSortButton;
@@ -66,11 +61,14 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     private FloatingActionButton addButton;
 
     // intent return codes
-    private static final int select = 1;
+    private static final int SELECT = 1;
 
     // action codes
     private static final String DELETE_ITEM = "DELETE_ITEM";
     private static final String EDIT_ITEM = "EDIT_ITEM";
+
+    private static final int GALLERY_REQUEST = 10;
+    private static final int CAMERA_REQUEST = 11;
 
 
     // for contextual appbar
@@ -102,7 +100,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         controller.setTotalListener(this::calculateTotalPrice);
 
         //sets up item list
-        db = FirebaseFirestore.getInstance(); // get instance for firestore db
         DBConnection dbConnection = new DBConnection(getApplicationContext());
 
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
@@ -186,7 +183,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     pos = i;
                     intent.putExtra("pos", pos);
 
-                    startActivityForResult(intent, select);
+                    startActivityForResult(intent, SELECT);
 
                 } else { // select multiple + delete multiple functionality
                     if (controller.onMultiSelect(itemRef)) {
@@ -333,8 +330,12 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // https://stackoverflow.com/a/22685084
+        for (Fragment fragment: getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
         // if we returned RESULT_OK that means we want to delete an item
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode == SELECT) {
             String action = data.getStringExtra("action");
             assert action != null;
 
@@ -344,8 +345,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             if (action.contentEquals(DELETE_ITEM)) {
 
                 if (itemIndex != -1) {
-                    Item itemToDelete = itemList.get(itemIndex);
-                    controller.removeItem(itemToDelete);
+                    // Bundle bundle = data.getExtras();
+                    controller.removeItem(itemIndex);
                 }
             } else if (action.contentEquals(EDIT_ITEM)) {
                 if (itemIndex != -1) {

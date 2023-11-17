@@ -65,7 +65,7 @@ public class DBConnection {
             userData.put("UUID", (pref.getString("userID","Error")));
             userData.put("password", "To be implemented");
             userData.put("Tags", new ArrayList<>());
-            userData.put("Ref", "items" + (pref.getString("userID","Error")));
+            userData.put("Ref", "items" + uuid);
 
             usersRef.document(pref.getString("userID","Error"))
                     .set(userData)
