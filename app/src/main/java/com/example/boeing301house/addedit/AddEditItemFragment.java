@@ -1,7 +1,12 @@
 package com.example.boeing301house.addedit;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,7 +18,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
@@ -27,6 +36,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.Objects;
@@ -91,6 +101,23 @@ public class AddEditItemFragment extends Fragment {
      * New SN
      */
     private String newSN;
+
+    /**
+     * RecyclerView for images
+     */
+    private RecyclerView imgRecyclerView;
+
+    /**
+     * Adapter for RecyclerView
+     */
+    private AddEditImageAdapter imgAdapter;
+
+    /**
+     * ArrayList of uris
+     */
+    private ArrayList<Uri> uri;
+
+    private static final int Read_Permission = 101;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -181,6 +208,25 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
 
+        uri = new ArrayList<>();
+
+        imgRecyclerView = binding.addEditImageRecycler;
+        imgAdapter = new AddEditImageAdapter(uri);
+
+        imgRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
+        imgRecyclerView.setAdapter(imgAdapter);
+
+        // GET PERMS
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, Read_Permission);
+        }
+
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_IMAGES)) {
+//
+//        }
+
+
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,6 +265,11 @@ public class AddEditItemFragment extends Fragment {
                                 return true;
                             }
                             else if (item.getItemId() == R.id.gallery) {
+                                Intent intent = new Intent();
+                                intent.setType("image/*");
+                                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // allow user to select + return multiple item
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Image(s)"), 1);
                                 // open gallery
                                 return true;
                             }
@@ -427,5 +478,36 @@ public class AddEditItemFragment extends Fragment {
 
         return isError;
     }
-    
+
+
+    /**
+     * ActivityResult for img from gallery
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+            if (data.getClipData() != null) {
+                int x = data.getClipData().getItemCount();
+
+                for (int i = 0; i < x; i++) {
+                    uri.add(data.getClipData().getItemAt(i).getUri());
+
+                }
+                imgAdapter.notifyDataSetChanged();
+            } else if (data.getData() != null) {
+                String imgURL = data.getData().getPath();
+                uri.add(Uri.parse(imgURL));
+
+            }
+        }
+    }
 }
