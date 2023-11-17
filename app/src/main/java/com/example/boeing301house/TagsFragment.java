@@ -88,11 +88,9 @@ public class TagsFragment extends Fragment {
         TextView chipTextView = binding.chipsTextView;
         ChipGroup chipGroup = binding.chipsGroup;
         // TODO: remove testing chips
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("Tag1");
-        arrayList.add("Tag2");
-        arrayList.add("Tag3");
-        arrayList.add("Tag4");
+
+        Tag tag = new Tag(new DBConnection(getActivity().getApplicationContext()));
+        ArrayList<String> arrayList = tag.getTags();
 
         Random random = new Random();
         for (String s: arrayList) {
@@ -122,8 +120,7 @@ public class TagsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO: add functionality and check over
-                listener.onCancel();
-                // deleteFrag();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
@@ -132,6 +129,13 @@ public class TagsFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        binding.updateItemConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
         return view;
