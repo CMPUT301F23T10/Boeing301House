@@ -131,10 +131,13 @@ public class SortFragment extends DialogFragment {
         buttonGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-                Button selectedButton = view.findViewById(checkedId);
-                order = (String) selectedButton.getText();
-                sortOptions.setOrder(order);
-
+                if (isChecked)
+                {
+                    Button selectedButton = view.findViewById(checkedId);
+                    order = (String) selectedButton.getText();
+                    sortOptions.setOrder(order);
+                    sortOptions.getOrder();
+                }
             }
         });
 

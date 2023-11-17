@@ -12,6 +12,7 @@ import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -110,6 +111,15 @@ public class DBConnection {
      */
     public FirebaseFirestore getDB() {
         return this.db;
+    }
+
+    /**
+     * Gets item reference associated with user
+     * @return reference to items collection
+     */
+    public CollectionReference getItemsRef() {
+        //TODO: implement
+        return this.db.collection("items"); // PLACEHOLDER
     }
 
 }
