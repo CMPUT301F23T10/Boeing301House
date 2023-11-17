@@ -124,6 +124,7 @@ public class ItemList {
         itemData.put("Est Value", item.getValue());
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
+        itemData.put("Tags",item.getTags());
 
 
         ArrayList<String> tags = new ArrayList<>(); // placeholder
@@ -218,6 +219,7 @@ public class ItemList {
         itemData.put("Est Value", item.getValue());
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
+        itemData.put("Tags",item.getTags());
 
         // TODO: implement
         ArrayList<String> tags = new ArrayList<>(); // placeholder
