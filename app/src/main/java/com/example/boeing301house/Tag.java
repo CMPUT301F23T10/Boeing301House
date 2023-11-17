@@ -1,10 +1,13 @@
 package com.example.boeing301house;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -18,6 +21,10 @@ import java.util.ArrayList;
  * Contains all current tags associated with user + tag control b/w app and db
  */
 public class Tag {
+    /**
+     * tag for logs
+     */
+    private static final String TAG = "TAGS";
 
     /**
      * DB reference to user
@@ -47,6 +54,12 @@ public class Tag {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 tags = (ArrayList<String>) task.getResult().get("Tags");
             }
+        })
+        .addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "FAILED TO GET FROM FIRESTORE");
+            }
         });
     }
 
@@ -70,7 +83,12 @@ public class Tag {
         }
         // add tags
         tags.add(tag);
-        user.update("Tags", tags);
+        user.update("Tags", tags).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "FAILED TO UPDATE FIRESTORE : " + e);
+            }
+        });
     }
 
     /**
@@ -93,7 +111,12 @@ public class Tag {
         }
         // remove tag
         tags.remove(tag);
-        user.update("Tags", tags);
+        user.update("Tags", tags).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "FAILED TO UPDATE FIRESTORE : " + e);
+            }
+        });
 
     }
 
