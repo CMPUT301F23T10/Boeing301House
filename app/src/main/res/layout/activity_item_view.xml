@@ -142,6 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/itemViewHorizontalScrollView"
+                android:visibility="visible"
                 >
                 <com.google.android.material.chip.ChipGroup
                     android:id="@+id/itemViewChipGroup"
@@ -162,6 +163,7 @@
                 android:layout_marginTop="15dp"
                 app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
                 android:orientation="horizontal"
+                android:visibility="visible"
                 >
 
             </androidx.recyclerview.widget.RecyclerView>

@@ -32,6 +32,11 @@ public class Item implements Parcelable {
 
     private ArrayList<String> tags; // TODO: implement
 
+    /**
+     * list of paths to image
+     */
+    private ArrayList<String> photos; // TODO: implement
+
 
     // TODO: add tag array and image array (?)
 
