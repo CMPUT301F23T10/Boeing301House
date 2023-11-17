@@ -322,6 +322,7 @@ public class ItemList {
                     Double value = doc.getDouble("Est Value");
                     String desc = doc.getString("Desc");
                     String comment = doc.getString("Comment");
+                    ArrayList<String> tags = (ArrayList<String>)doc.get("Tags");
                     String id = doc.getId();
                     // TODO: tags and images
 
@@ -336,6 +337,7 @@ public class ItemList {
                             .addValue(value)
                             .addDescription(desc)
                             .addComment(comment)
+                            .addTag(tags)
                             .build();
 
                     itemList.add(item);
