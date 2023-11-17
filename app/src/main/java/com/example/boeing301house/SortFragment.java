@@ -136,7 +136,6 @@ public class SortFragment extends DialogFragment {
                     Button selectedButton = view.findViewById(checkedId);
                     order = (String) selectedButton.getText();
                     sortOptions.setOrder(order);
-                    sortOptions.getOrder();
                 }
             }
         });
