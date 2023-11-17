@@ -267,7 +267,9 @@ public class AddEditItemFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.camera) {
-                                
+                                Intent intent = new Intent();
+                                intent.setAction(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivity(intent); // TODO: result activity
 
                                 return true;
                             }
