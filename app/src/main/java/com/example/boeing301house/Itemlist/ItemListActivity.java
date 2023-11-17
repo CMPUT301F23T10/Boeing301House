@@ -2,9 +2,7 @@ package com.example.boeing301house.Itemlist;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,16 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.boeing301house.ActivityBase;
-import com.example.boeing301house.AddEditItemFragment;
+import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.FilterFragment;
 import com.example.boeing301house.Item;
@@ -34,22 +30,11 @@ import com.example.boeing301house.ItemViewActivity;
 import com.example.boeing301house.R;
 import com.example.boeing301house.SortFragment;
 import com.example.boeing301house.UserProfileActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Locale;
 // TODO: SEPARATE CLASSES, MAKE ITEMLISTACTIVITY MORE FOCUSED
 // TODO: finish javadocs
