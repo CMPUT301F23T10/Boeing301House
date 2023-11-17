@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -120,8 +121,8 @@ public class AddEditItemFragment extends Fragment {
 
     private static final int READ_PERMISSIONS = 101;
     private static final int CAMERA_PERMISSIONS = 102;
-    private static final int GALLERY_REQUEST = 1;
-    private static final int CAMERA_REQUEST = 2;
+    private static final int GALLERY_REQUEST = 10;
+    private static final int CAMERA_REQUEST = 11;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -486,7 +487,7 @@ public class AddEditItemFragment extends Fragment {
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+//        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
@@ -502,8 +503,12 @@ public class AddEditItemFragment extends Fragment {
 
             }
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            String imgURL = data.getData().getPath();
-            uri.add(Uri.parse(imgURL));
+//            if (data.getData() != null) {
+//                Uri imgURI = data.getData();
+//                uri.add(imgURI);
+//            }
+//            String imgURL = data.getData().getPath();
+//            uri.add(Uri.parse(imgURL));
         }
     }
 
@@ -557,7 +562,7 @@ public class AddEditItemFragment extends Fragment {
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         // TODO handle photo using startActivityForResult i think..
-        startActivity(intent);
+        startActivityForResult(intent, CAMERA_REQUEST);
         // startActivityForResult(intent, CAMERA_REQUEST);
     }
 }

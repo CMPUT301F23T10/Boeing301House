@@ -46,16 +46,12 @@ import java.util.Locale;
  */
 public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
 
-    private FirebaseFirestore db;
 
     private ListView itemListView;
     //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
 
     private TextView subTotalText;
-    public ArrayList<Item> itemList;
-
-    private ArrayList<Item> selectedItems;
 
     private Button itemListFilterButton;
     private Button itemListSortButton;
@@ -102,7 +98,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         controller.setTotalListener(this::calculateTotalPrice);
 
         //sets up item list
-        db = FirebaseFirestore.getInstance(); // get instance for firestore db
         DBConnection dbConnection = new DBConnection(getApplicationContext());
 
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
@@ -333,6 +328,10 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // https://stackoverflow.com/a/22685084
+        for (Fragment fragment: getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
         // if we returned RESULT_OK that means we want to delete an item
         if (resultCode == RESULT_OK) {
             String action = data.getStringExtra("action");
@@ -344,8 +343,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             if (action.contentEquals(DELETE_ITEM)) {
 
                 if (itemIndex != -1) {
-                    Item itemToDelete = itemList.get(itemIndex);
-                    controller.removeItem(itemToDelete);
+                    // Bundle bundle = data.getExtras();
+                    controller.removeItem(itemIndex);
                 }
             } else if (action.contentEquals(EDIT_ITEM)) {
                 if (itemIndex != -1) {

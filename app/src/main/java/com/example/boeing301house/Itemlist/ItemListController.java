@@ -230,6 +230,16 @@ public class ItemListController {
     }
 
     /**
+     * Delete item from list
+     * @param item position item to be deleted
+     */
+    public void removeItem(int i) {
+        Item item = itemAdapter.getList().get(i);
+        removeItem(item);
+        // calls oncompletelistener when done
+    }
+
+    /**
      * Delete selected items from list
      */
     public void removeSelectedItems() {
