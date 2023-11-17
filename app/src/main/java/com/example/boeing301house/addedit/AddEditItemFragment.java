@@ -2,7 +2,10 @@ package com.example.boeing301house.addedit;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -162,6 +165,7 @@ public class AddEditItemFragment extends Fragment {
         }
     }
 
+
     // TODO: finish javadoc
     /**
      *
@@ -216,7 +220,15 @@ public class AddEditItemFragment extends Fragment {
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.camera) {
                                 // open camera
-                                return true;
+                                try {
+                                    Intent intent = new Intent();
+                                    intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                                    startActivity(intent);
+                                    return true;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    return false;
+                                }
                             }
                             else if (item.getItemId() == R.id.gallery) {
                                 // open gallery
@@ -246,6 +258,7 @@ public class AddEditItemFragment extends Fragment {
                 return false;
             }
         });
+
 
         //this sets the current text of the edit expense fragment to the current expense name, cost, date and summary
 //        View view = inflater.inflate(R.layout.add_edit_item_fragment, container, false);
