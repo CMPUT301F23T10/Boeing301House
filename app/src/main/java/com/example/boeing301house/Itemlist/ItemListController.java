@@ -231,7 +231,7 @@ public class ItemListController {
 
     /**
      * Delete item from list
-     * @param item position item to be deleted
+     * @param i position item to be deleted
      */
     public void removeItem(int i) {
         Item item = itemAdapter.getList().get(i);
