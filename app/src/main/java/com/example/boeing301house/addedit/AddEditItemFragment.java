@@ -271,7 +271,7 @@ public class AddEditItemFragment extends Fragment {
                                 Intent intent = new Intent();
                                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                                 // TODO handle photo using startActivityForResult i think..
-                                startActivity(intent);
+                                startActivityForResult(intent, 2);
                                 return true;
                             }
                             else if (item.getItemId() == R.id.gallery) {
@@ -518,6 +518,9 @@ public class AddEditItemFragment extends Fragment {
                 uri.add(Uri.parse(imgURL));
 
             }
+        } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+            String imgURL = data.getData().getPath();
+            uri.add(Uri.parse(imgURL));
         }
     }
 }
