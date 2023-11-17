@@ -427,38 +427,5 @@ public class AddEditItemFragment extends Fragment {
 
         return isError;
     }
-
-    /**
-     * show pop up menu
-     * @param view
-     * @param menuRes
-     */
-    private void showMenu(View view, int menuRes) {
-        PopupMenu popup = new PopupMenu(getContext(), view);
-
-        popup.getMenuInflater().inflate(R.menu.image_popup_menu, popup.getMenu());
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.camera) {
-                    // open camera
-                    return true;
-                }
-                else if (item.getItemId() == R.id.gallery) {
-                    // open gallery
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
-            @Override
-            public void onDismiss(PopupMenu menu) {
-                return;
-            }
-        });
-
-        popup.show();
-    }
+    
 }
