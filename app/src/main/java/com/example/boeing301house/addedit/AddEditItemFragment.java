@@ -592,7 +592,12 @@ public class AddEditItemFragment extends Fragment {
         // startActivityForResult(intent, CAMERA_REQUEST);
     }
 
-
+    /**
+     * Convert bitmap to uri
+     * @param context app context
+     * @param mBitmap image bitmap
+     * @return uri
+     */
     public Uri bitmapToUriConverter(Context context, Bitmap mBitmap) {
         Uri uri = null;
         try {
