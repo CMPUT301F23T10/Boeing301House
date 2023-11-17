@@ -18,10 +18,14 @@ import java.util.ArrayList;
  * Contains all current tags associated with user + tag control b/w app and db
  */
 public class Tag {
+
+    /**
+     * DB reference to user
+     */
+    private DocumentReference user;
     /**
      * Tags belonging to current user
      */
-    private DocumentReference user;
     private ArrayList<String> tags;
     public Tag(DBConnection connection) {
         tags = new ArrayList<>();
