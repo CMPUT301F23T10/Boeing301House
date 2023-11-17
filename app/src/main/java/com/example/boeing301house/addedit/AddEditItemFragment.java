@@ -219,7 +219,17 @@ public class AddEditItemFragment extends Fragment {
         imgRecyclerView = binding.addEditImageRecycler;
         imgAdapter = new AddEditImageAdapter(uri);
 
-        imgRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        imgAdapter.setOnClickListener(new ImageSelectListener() {
+            @Override
+            public void onItemClicked(int position) {
+                uri.remove(position);
+                imgAdapter.notifyDataSetChanged();
+            }
+        });
+
+        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
+        // layoutManager.setOrientation(RecyclerView.HORIZONTAL);
+        imgRecyclerView.setLayoutManager(layoutManager);
         imgRecyclerView.setAdapter(imgAdapter);
 
 
