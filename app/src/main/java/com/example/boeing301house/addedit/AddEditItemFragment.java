@@ -267,7 +267,7 @@ public class AddEditItemFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.camera) {
-                                
+
 
                                 return true;
                             }
