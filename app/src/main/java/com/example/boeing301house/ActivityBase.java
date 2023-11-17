@@ -19,7 +19,7 @@ public abstract class ActivityBase extends AppCompatActivity {
      * @param text: string that snackbar displays
      */
     public void makeSnackbar(String text) {
-        Snackbar snackbar = Snackbar.make(findViewById(R.id.itemList), text, Snackbar.LENGTH_SHORT);
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.itemListContent), text, Snackbar.LENGTH_SHORT);
         snackbar.setAction("DISMISS", v -> {
             snackbar.dismiss();
         });

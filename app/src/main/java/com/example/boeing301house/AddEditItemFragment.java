@@ -205,11 +205,13 @@ public class AddEditItemFragment extends Fragment {
                             .addToBackStack(null)
                             .commit();
                     return true;
+
                 } else if (item.getItemId() == R.id.itemAddEditPhotoButton) {
                     // add camera functionality
                     Toast.makeText(getActivity(), String.format(Locale.CANADA,"Available on next version"),
                             Toast.LENGTH_SHORT).show(); // for testing
                     return true;
+
                 } else if (item.getItemId() == R.id.itemAddEditScanButton) {
                     // add scanning functionality
                     Toast.makeText(getActivity(), String.format(Locale.CANADA,"Available on next version"),
