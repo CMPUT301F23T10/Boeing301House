@@ -45,6 +45,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui:2.7.5")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.5")
     implementation("com.google.firebase:firebase-auth:22.3.0")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
     androidTestImplementation("androidx.navigation:navigation-testing:2.7.5")
     implementation("androidx.navigation:navigation-compose:2.7.5")
 
