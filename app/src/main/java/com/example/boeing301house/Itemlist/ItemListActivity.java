@@ -32,7 +32,6 @@ import com.example.boeing301house.SortFragment;
 import com.example.boeing301house.UserProfileActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -62,11 +61,14 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     private FloatingActionButton addButton;
 
     // intent return codes
-    private static final int select = 1;
+    private static final int SELECT = 1;
 
     // action codes
     private static final String DELETE_ITEM = "DELETE_ITEM";
     private static final String EDIT_ITEM = "EDIT_ITEM";
+
+    private static final int GALLERY_REQUEST = 10;
+    private static final int CAMERA_REQUEST = 11;
 
 
     // for contextual appbar
@@ -181,7 +183,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     pos = i;
                     intent.putExtra("pos", pos);
 
-                    startActivityForResult(intent, select);
+                    startActivityForResult(intent, SELECT);
 
                 } else { // select multiple + delete multiple functionality
                     if (controller.onMultiSelect(itemRef)) {
@@ -333,7 +335,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             fragment.onActivityResult(requestCode, resultCode, data);
         }
         // if we returned RESULT_OK that means we want to delete an item
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode == SELECT) {
             String action = data.getStringExtra("action");
             assert action != null;
 

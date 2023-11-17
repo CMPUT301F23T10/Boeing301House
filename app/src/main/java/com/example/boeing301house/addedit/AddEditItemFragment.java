@@ -503,10 +503,10 @@ public class AddEditItemFragment extends Fragment {
 
             }
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-//            if (data.getData() != null) {
-//                Uri imgURI = data.getData();
-//                uri.add(imgURI);
-//            }
+            if (data.getData() != null) {
+                Uri imgURI = data.getData();
+                uri.add(imgURI);
+            }
 //            String imgURL = data.getData().getPath();
 //            uri.add(Uri.parse(imgURL));
         }
