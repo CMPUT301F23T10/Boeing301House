@@ -1,5 +1,7 @@
 package com.example.boeing301house;
 
+import android.util.Log;
+
 import androidx.test.core.app.ApplicationProvider;
 
 import com.example.boeing301house.Itemlist.OnCompleteListener;
@@ -38,15 +40,18 @@ public class TagsUnitTest {
         tags = new Tag(db);
     }
 
+    private OnCompleteListener<String> listener = new OnCompleteListener() {
+        @Override
+        public void onComplete(String tag, boolean success) {
+            if (tag == null) {
+                Log.d("TEST", "FAIL");
+            }
+        }
+    };
 
     @Test
     public void testGetTags() {
-        OnCompleteListener listener = new OnCompleteListener() {
-            @Override
-            public void onComplete(String tag, boolean success) {
 
-            }
-        };
     }
 
 
