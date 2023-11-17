@@ -4,9 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Firebase;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 /**
@@ -18,7 +24,7 @@ public class DBConnection {
 
     private FirebaseFirestore db;
 
-
+    protected String firstStart;
     protected String uuid;
 
     /**
@@ -28,10 +34,51 @@ public class DBConnection {
     public DBConnection(Context context) {
         this.db = FirebaseFirestore.getInstance();
         setUUID(context);
+        storeUUID(context);
         Log.d(TAG, "UUID: " + this.uuid);
 
     }
 
+    /**
+     * Sets the firstStart of device to identify firstStart Procedure.
+     * Stores UUID in Firebase
+     * @param context: context of application.
+     */
+    private void storeUUID(Context context) {
+        SharedPreferences pref;
+        pref = context.getApplicationContext().getSharedPreferences("mypref", Context.MODE_PRIVATE);
+
+        // check if app has been launched for the first time
+        if (firstStart == null) {
+
+            // Update firstStart
+            firstStart = "false";
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean("firststart", false);
+            editor.commit();
+
+            // add user info to firebase
+            CollectionReference usersRef = db.collection("users"); // switch to items_test to test adding
+            HashMap<String, Object> userData = new HashMap<>();
+            userData.put("UUID", (pref.getString("userID","Error")));
+            userData.put("password", "To be implemented");
+
+            usersRef.document(pref.getString("userID","Error"))
+                    .set(userData)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.i("Firestore", "DocumentSnapshot successfully written");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("Firestore", "db write failed");
+                        }
+                    });
+        }
+    }
 
     /**
      * Sets the UUID of device to identify user.

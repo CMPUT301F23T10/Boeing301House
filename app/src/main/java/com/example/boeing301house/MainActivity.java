@@ -33,15 +33,8 @@ public class MainActivity extends AppCompatActivity {
             final Button signInButton = findViewById(R.id.sign_in_button);
             signInButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    // after updating sharedpreferences it will not be triggered again (now updating in ItemListActivity
-                    SharedPreferences.Editor editor = pref.edit();
-//                    editor.putBoolean("firststart", false);
-
                     // generate uniqueId and store in editor
-                    final String userId = getUniqueId();
-                    editor.putString("userID", userId);
-                    editor.commit(); // apply changes
-                    startActivity(intent);
+                    DBConnection dbConnection = new DBConnection(getApplicationContext());
                 }
             });
         }
@@ -49,7 +42,3 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-    private String getUniqueId(){
-        return UUID.randomUUID().toString();
-    }
-}
