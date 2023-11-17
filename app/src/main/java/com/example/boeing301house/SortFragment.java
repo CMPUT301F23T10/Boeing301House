@@ -24,6 +24,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Allows user to choose sort behavior for {@link Item}s.
@@ -31,21 +32,28 @@ import java.util.ArrayList;
  */
 public class SortFragment extends DialogFragment {
 
-    String[] sortTypes = {"Description ", "Date", "Value", "Make"};
+//    private String[] sortTypes = {"Date Added" , "Description ", "Date", "Value", "Make"};
 
 
-    String type;
-    String order;
+    private String type;
+    private String order;
     private FragmentSortBinding binding;
-    ArrayAdapter<String> adapterItems;
+    private ArrayAdapter<String> adapterItems;
 
     private ArrayList<Item> items;
 
-    Button ascendingButton;
-    Button descendingButton;
-    Button confirmButton;
+    private Button ascendingButton;
+    private Button descendingButton;
+    private Button confirmButton;
 
-    AutoCompleteTextView autoCompleteTextView;
+    private SortOptions sortOptions;
+
+    /**
+     * Hashmap for converting sort order button name to the id of the button
+     */
+    private HashMap<String, Integer> orderToID;
+
+    private AutoCompleteTextView autoCompleteTextView;
 
     private OnSortFragmentInteractionListener listener;
     public interface OnSortFragmentInteractionListener {
@@ -60,7 +68,7 @@ public class SortFragment extends DialogFragment {
 
     /**
      * No arg constructor
-     * @return
+     * @return fragment instance
      */
     public static SortFragment newInstance() {
         SortFragment fragment = new SortFragment();
@@ -75,6 +83,8 @@ public class SortFragment extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
+        sortOptions = SortOptions.getInstance();
+
         if(context instanceof OnSortFragmentInteractionListener){
             listener = (OnSortFragmentInteractionListener) context;
 
@@ -88,15 +98,24 @@ public class SortFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.fragment_sort, null);
+        orderToID = new HashMap<>();
+        orderToID.put("ASC", R.id.Asc);
+        orderToID.put("DESC", R.id.Desc);
+
+        order = sortOptions.getOrder();
+        type = sortOptions.getType();
 
         autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView);
-        adapterItems = new ArrayAdapter<String>(this.getContext(), R.layout.drop_down_item, sortTypes);
+        adapterItems = new ArrayAdapter<String>(this.requireContext(), R.layout.drop_down_item, SortOptions.types);
 
         autoCompleteTextView.setAdapter(adapterItems);
+
+//        autoCompleteTextView.setSelection(sortOptions.getTypePosition());
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                  type = adapterItems.getItem(position).toString();
+                 sortOptions.setType(type);
             }
         });
 
@@ -105,14 +124,16 @@ public class SortFragment extends DialogFragment {
 
         descendingButton = view.findViewById(R.id.Desc);
         ascendingButton = view.findViewById(R.id.Asc);
-        order = "ASC"; // TODO: change default
-        type = "Date Added"; // TODO: change default
+
+
         MaterialButtonToggleGroup buttonGroup = view.findViewById(R.id.sortButtonGroup);
+        buttonGroup.check(orderToID.get(order));
         buttonGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
             @Override
             public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
                 Button selectedButton = view.findViewById(checkedId);
                 order = (String) selectedButton.getText();
+                sortOptions.setOrder(order);
 
             }
         });
