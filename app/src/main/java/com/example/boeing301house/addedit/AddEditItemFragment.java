@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -267,8 +268,10 @@ public class AddEditItemFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.camera) {
-                                
-
+                                Intent intent = new Intent();
+                                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                                // TODO handle photo using startActivityForResult i think..
+                                startActivity(intent);
                                 return true;
                             }
                             else if (item.getItemId() == R.id.gallery) {
