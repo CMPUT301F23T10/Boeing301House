@@ -35,10 +35,11 @@ public class MainActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     // generate uniqueId and store in editor
                     DBConnection dbConnection = new DBConnection(getApplicationContext());
+                    startActivity(intent);
                 }
             });
         }
         else {
             startActivity(intent);
         }
-    }
+    }}
