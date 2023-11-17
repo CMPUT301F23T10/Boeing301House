@@ -28,12 +28,20 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
+import androidx.test.uiautomator.Until;
 
 import com.example.boeing301house.Itemlist.ItemListActivity;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.regex.Pattern;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -147,9 +155,7 @@ public class andrews_tests {
         onView(withText("Confirm")).inRoot(isDialog()).perform(click());
 
 
-
     }
-
 
 
     // from https://github.com/material-components/material-components-android/blob/master/tests/javatests/com/google/android/material/datepicker/MaterialDatePickerTestUtils.java
@@ -163,5 +169,34 @@ public class andrews_tests {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
 
+    @Test
+    public void camera() throws UiObjectNotFoundException {
+        onView(withId(R.id.addButton)).perform(click());
+//        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
+//        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+//        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+//
+//        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+//        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+//        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+//        onView(withId(R.id.dateEditText)).perform(click());
+//        clickDialogVisibleDay(4);
+//        onView(withText("OK")).perform(click());
+        onView(withId(R.id.itemAddEditPhotoButton)).perform((click()));
+        onView(withText("Add From Camera")).perform(click());
+        onView(withText("While using the app")).perform(click());
+        onView(withText("Add From Camera")).perform(click());
+//        onView(withId(R.id.camera)).perform(click());
 
+        UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        uiDevice.findObject(By.res("com.android.camera2:id/shutter_button").desc("Shutter").clazz("android.widget.ImageView").text(Pattern.compile("")).pkg("com.android.camera2")).clickAndWait(Until.newWindow(), 5);
+//        UiObject shutterButton = uiDevice.findObject(new UiSelector().resourceId("your.camera.app:id/shutterButton"));
+//
+//        if (shutterButton.exists() && shutterButton.isClickable()) {
+//            shutterButton.click();
+//        } else {
+//            // Handle the case where the shutter button is not found or not clickable
+//        }
+
+    }
 }
