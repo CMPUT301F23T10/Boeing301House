@@ -37,6 +37,7 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -218,7 +219,7 @@ public class AddEditItemFragment extends Fragment {
         imgRecyclerView = binding.addEditImageRecycler;
         imgAdapter = new AddEditImageAdapter(uri);
 
-        imgRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
+        imgRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         imgRecyclerView.setAdapter(imgAdapter);
 
 
@@ -502,11 +503,14 @@ public class AddEditItemFragment extends Fragment {
                 uri.add(Uri.parse(imgURL));
 
             }
+            imgAdapter.notifyDataSetChanged();
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data.getData() != null) {
-                Uri imgURI = data.getData();
+            if (data.getExtras() != null) {
+                Bitmap img = (Bitmap) data.getExtras().get("data");
+                Uri imgURI = getImageUri(getContext(), img);
                 uri.add(imgURI);
             }
+            imgAdapter.notifyDataSetChanged();
 //            String imgURL = data.getData().getPath();
 //            uri.add(Uri.parse(imgURL));
         }
@@ -565,4 +569,19 @@ public class AddEditItemFragment extends Fragment {
         startActivityForResult(intent, CAMERA_REQUEST);
         // startActivityForResult(intent, CAMERA_REQUEST);
     }
+
+    /**
+     * From Colin's blog (<a href="https://colinyeoh.wordpress.com/2012/05/18/android-getting-image-uri-from-bitmap/">...</a>)
+     * Gets img uri from bitmap
+     * @param inContext app context
+     * @param inImage bitmap
+     * @return uri of bitmap/img
+     */
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
 }
