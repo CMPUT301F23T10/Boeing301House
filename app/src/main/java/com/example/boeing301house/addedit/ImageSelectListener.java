@@ -1,6 +1,5 @@
 package com.example.boeing301house.addedit;
 
-import android.net.Uri;
 
 /**
  * interface for selecting img

@@ -19,6 +19,6 @@ public class MockDBConnection extends DBConnection{
 
     @Override
     protected void setUUID(Context context) {
-        this.uuid = UUID.randomUUID().toString();
+        this.uuid = "test";
     }
 }
