@@ -14,7 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 
 /**
- * Model class for tag
+ * Model class for tag.
+ * Contains all current tags associated with user + tag control b/w app and db
  */
 public class Tag {
     /**
