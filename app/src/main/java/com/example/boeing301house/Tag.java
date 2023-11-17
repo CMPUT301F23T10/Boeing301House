@@ -27,6 +27,11 @@ public class Tag {
      * Tags belonging to current user
      */
     private ArrayList<String> tags;
+
+    /**
+     * Constructor for tags
+     * @param connection connection to db
+     */
     public Tag(DBConnection connection) {
         tags = new ArrayList<>();
         user = connection.getUserRef();
