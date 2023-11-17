@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.boeing301house"},{"l":"com.example.boeing301house.Itemlist"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.boeing301house"},{"l":"com.example.boeing301house.addedit"},{"l":"com.example.boeing301house.Itemlist"}];updateSearchResults();
