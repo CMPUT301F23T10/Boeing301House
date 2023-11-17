@@ -122,36 +122,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
         DBConnection dbConnection = new DBConnection(getApplicationContext());
 
-        // check if app has been launched for the first time
-        // after updating sharedpreferences it will not be triggered again
-        SharedPreferences pref = getSharedPreferences("mypref", MODE_PRIVATE);
-        if(pref.getBoolean("firststart",true)) {
-            SharedPreferences.Editor editor = pref.edit();
-            editor.putBoolean("firststart", false);
-            editor.commit(); // apply changes
-
-            // add user info to firebase
-            usersRef = db.collection("users"); // switch to items_test to test adding
-            HashMap<String, Object> userData = new HashMap<>();
-            userData.put("UUID", (pref.getString("userID","Error")));
-            userData.put("password", "To be implemented");
-
-            usersRef.document(pref.getString("userID","Error"))
-                    .set(userData)
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            Log.i("Firestore", "DocumentSnapshot successfully written");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("Firestore", "db write failed");
-                        }
-                    });
-        }
-
         itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
 
         itemAdapter = controller.getItemAdapter();
