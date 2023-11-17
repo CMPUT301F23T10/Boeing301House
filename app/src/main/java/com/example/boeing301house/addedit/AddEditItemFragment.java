@@ -120,6 +120,8 @@ public class AddEditItemFragment extends Fragment {
 
     private static final int readPermissions = 101;
     private static final int cameraPermissions = 102;
+    private static final int GALLERY_REQUEST = 1;
+    private static final int CAMERA_REQUEST = 2;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -271,7 +273,7 @@ public class AddEditItemFragment extends Fragment {
                                 Intent intent = new Intent();
                                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                                 // TODO handle photo using startActivityForResult i think..
-                                startActivityForResult(intent, 2);
+                                startActivityForResult(intent, CAMERA_REQUEST);
                                 return true;
                             }
                             else if (item.getItemId() == R.id.gallery) {
@@ -279,7 +281,7 @@ public class AddEditItemFragment extends Fragment {
                                 intent.setType("image/*");
                                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // allow user to select + return multiple item
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                                startActivityForResult(Intent.createChooser(intent, "Select Image(s)"), 1);
+                                startActivityForResult(Intent.createChooser(intent, "Select Image(s)"), GALLERY_REQUEST);
                                 // open gallery
                                 return true;
                             }
@@ -504,7 +506,7 @@ public class AddEditItemFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+        if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
 
@@ -518,7 +520,7 @@ public class AddEditItemFragment extends Fragment {
                 uri.add(Uri.parse(imgURL));
 
             }
-        } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             String imgURL = data.getData().getPath();
             uri.add(Uri.parse(imgURL));
         }
