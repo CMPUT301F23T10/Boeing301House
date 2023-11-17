@@ -593,6 +593,7 @@ public class AddEditItemFragment extends Fragment {
     }
 
     /**
+     * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
      * Convert bitmap to uri
      * @param context app context
      * @param mBitmap image bitmap
