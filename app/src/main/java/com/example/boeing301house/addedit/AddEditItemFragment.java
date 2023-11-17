@@ -7,9 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +25,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,9 +42,12 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -232,6 +239,10 @@ public class AddEditItemFragment extends Fragment {
         imgRecyclerView.setLayoutManager(layoutManager);
         imgRecyclerView.setAdapter(imgAdapter);
 
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 104);
+        }
 
 
 //        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_IMAGES)) {
@@ -517,7 +528,8 @@ public class AddEditItemFragment extends Fragment {
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getExtras() != null) {
                 Bitmap img = (Bitmap) data.getExtras().get("data");
-                Uri imgURI = getImageUri(getContext(), img);
+                assert img != null;
+                Uri imgURI = bitmapToUriConverter(requireContext(), img);
                 uri.add(imgURI);
             }
             imgAdapter.notifyDataSetChanged();
@@ -581,17 +593,33 @@ public class AddEditItemFragment extends Fragment {
     }
 
     /**
-     * From Colin's blog (<a href="https://colinyeoh.wordpress.com/2012/05/18/android-getting-image-uri-from-bitmap/">...</a>)
-     * Gets img uri from bitmap
-     * @param inContext app context
-     * @param inImage bitmap
-     * @return uri of bitmap/img
+     * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
+     * Convert bitmap to uri
+     * @param context app context
+     * @param mBitmap image bitmap
+     * @return uri
      */
-    public Uri getImageUri(Context inContext, Bitmap inImage) {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-        return Uri.parse(path);
+    public Uri bitmapToUriConverter(Context context, Bitmap mBitmap) {
+        Uri uri = null;
+        try {
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            // Decrease the size of the image to reduce memory consumption
+            options.inSampleSize = 2;
+
+            File file = new File(context.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
+            FileOutputStream out = context.openFileOutput(file.getName(), Context.MODE_PRIVATE);
+            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.close();
+
+            // Get the content URI for the image file
+            uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
+
+        } catch (Exception e) {
+            Log.e("Your_Tag", "Error in saving image");
+        }
+        return uri;
     }
+
+
 
 }

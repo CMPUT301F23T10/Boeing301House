@@ -12,6 +12,8 @@ import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,6 +28,7 @@ public class DBConnection {
     private static final String TAG = "DBConnection";
 
     private FirebaseFirestore db;
+    private StorageReference storage;
 
     protected String firstStart;
     protected String uuid;
@@ -38,6 +41,7 @@ public class DBConnection {
         this.db = FirebaseFirestore.getInstance();
         setUUID(context);
         storeUUID(context);
+        setStorage();
         Log.d(TAG, "UUID: " + this.uuid);
 
     }
@@ -128,10 +132,21 @@ public class DBConnection {
 
     /**
      * Get reference to user document
-     * @return
+     * @return reference to user doc
      */
     public DocumentReference getUserRef() {
         return this.db.collection("users").document(uuid);
+    }
+
+    /**
+     * Set reference to storage
+     */
+    private void setStorage() {
+        storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com")
+                .getReference("images")
+                .child(uuid);
+
+
     }
 
 }
