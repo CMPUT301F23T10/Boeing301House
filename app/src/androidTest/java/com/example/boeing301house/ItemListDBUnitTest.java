@@ -24,7 +24,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Test ItemList functions + interactions w/ firestore database
+ * Instrumented unit test
+ * Test ItemList functions + interactions w/ firestore database.
  */
 @RunWith(JUnit4.class)
 public class ItemListDBUnitTest {

@@ -62,7 +62,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
 
-                ></TextView>
+                >
+
+            </TextView>
 
             <TextView
                 android:id="@+id/itemViewModel"
@@ -124,14 +126,45 @@
                 android:id="@+id/itemViewComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="15dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="Comment"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 app:layout_constraintTop_toBottomOf="@id/itemViewDesc">
 
             </TextView>
+            <HorizontalScrollView
+                app:layout_constraintTop_toBottomOf="@id/itemViewComment"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/itemViewHorizontalScrollView"
+                >
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/itemViewChipGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    app:chipSpacingHorizontal="42dp"
+                    >
+
+                </com.google.android.material.chip.ChipGroup>
+
+            </HorizontalScrollView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/itemViewRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="200sp"
+                app:layout_constraintTop_toBottomOf="@id/itemViewHorizontalScrollView"
+                android:layout_marginTop="15dp"
+                app:layoutManager="com.google.android.material.carousel.CarouselLayoutManager"
+                android:orientation="horizontal"
+                >
+
+            </androidx.recyclerview.widget.RecyclerView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -48,6 +48,12 @@ dependencies {
     androidTestImplementation("androidx.navigation:navigation-testing:2.7.4")
     implementation("androidx.navigation:navigation-compose:2.7.4")
 
+    // ML stuff for scanning
+    implementation("com.google.firebase:firebase-ml-vision:24.0.3")
+    implementation("com.google.firebase:firebase-ml-vision-barcode-model:16.0.1")
+
+
+
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.mockito:mockito-core:3.+")

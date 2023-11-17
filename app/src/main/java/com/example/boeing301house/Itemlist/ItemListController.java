@@ -87,7 +87,7 @@ public class ItemListController {
 
     /**
      * Calculates total estimated value of all items (including those filtered out)
-     * @return total estimated value of items
+     * Uses listener callback to update in view
      */
     public void calculateTotal(OnCompleteListener<Double> listener) {
         double total = itemList.getTotal();
