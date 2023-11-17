@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.boeing301house.ActivityBase;
 import com.example.boeing301house.AddEditItemFragment;
+import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.FilterFragment;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
@@ -62,7 +63,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
     private FirebaseFirestore db;
 
-    private CollectionReference usersRef;
     private ListView itemListView;
     //    private FloatingActionButton addButton;
     private ItemAdapter itemAdapter;
@@ -120,6 +120,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
+        DBConnection dbConnection = new DBConnection(getApplicationContext());
 
         // check if app has been launched for the first time
         // after updating sharedpreferences it will not be triggered again
