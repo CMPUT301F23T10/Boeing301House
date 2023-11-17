@@ -62,7 +62,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
     private FirebaseFirestore db;
 
-    private CollectionReference itemsRef;
     private CollectionReference usersRef;
     private ListView itemListView;
     //    private FloatingActionButton addButton;
@@ -71,7 +70,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     private TextView subTotalText;
     public ArrayList<Item> itemList;
 
-    //    private ArrayList<View> selectedItemViews = new ArrayList<>();
     private ArrayList<Item> selectedItems;
 
     private Button itemListFilterButton;
@@ -122,7 +120,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db
-        itemsRef = db.collection("items"); // switch to items_test to test adding
 
         // check if app has been launched for the first time
         // after updating sharedpreferences it will not be triggered again
@@ -158,9 +155,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
         itemAdapter = controller.getItemAdapter();
         itemListView.setAdapter(itemAdapter);
-//        calculateTotalPrice();
 
-//        updateSubtotal(); //sets the subtotal to 0 at the start of the program
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
         setSupportActionBar(topbar);
 
@@ -168,10 +163,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         itemListSortButton = findViewById(R.id.sortButton);
         itemListFilterButton = findViewById(R.id.filterButton);
 
-//        /**
-//         * update items (list) in real time
-//         */
-//        updateItemListView();
 
 
         //used to swap the fragment in to edit/add fragments
@@ -318,7 +309,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
             }
         });
-//        calculateTotalPrice();
 
         btnReset = findViewById(R.id.resetButton);
         builder = new AlertDialog.Builder(this);
@@ -363,7 +353,11 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
      * @param calculated if calculation successful
      */
     private void calculateTotalPrice(Double total, boolean calculated){
-        subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
+        if (calculated) {
+            subTotalText.setText(String.format(Locale.CANADA,"Total: $%.2f" , total));
+        } else {
+            makeSnackbar("Error calculating total");
+        }
     }
 
     /**
@@ -375,7 +369,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         exitAddEditFragment();
         addButton.show();
         controller.add(updatedItem);
-//        calculateTotalPrice();
 
     }
     // TODO: finish javadocs
@@ -415,7 +408,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     controller.editItem(itemIndex, editedItem);
                 }
             }
-//            calculateTotalPrice();
         }
     }
 
@@ -516,9 +508,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     private boolean deleteConfirmationDialog(ActionMode mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Delete");
-        builder.setMessage(String.format(Locale.CANADA, "Are you sure you want to delete %d items?", selectedItems.size()));
+        builder.setMessage(String.format(Locale.CANADA, "Are you sure you want to delete %d items?", controller.itemsSelectedSize()));
         final boolean[] isDelete = new boolean[1];
-        // isDelete[0] = false;
         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
 
             @Override
@@ -526,7 +517,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                 controller.removeSelectedItems();
                 mode.finish();
                 isDelete[0] = true;
-//                calculateTotalPrice();
             }
         });
 
@@ -611,7 +601,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
      */
     @Override
     public void onFilterOKPressed(ArrayList<String> tags) {
-        return;
+        controller.filter(tags);
     }
 
     /**

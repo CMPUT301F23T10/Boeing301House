@@ -121,6 +121,7 @@ public class SortFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view)
                 .setTitle("Sort")
+                .setCancelable(true)
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
