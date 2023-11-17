@@ -12,6 +12,7 @@ import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
@@ -63,6 +64,8 @@ public class DBConnection {
             HashMap<String, Object> userData = new HashMap<>();
             userData.put("UUID", (pref.getString("userID","Error")));
             userData.put("password", "To be implemented");
+            userData.put("Tags", new ArrayList<>());
+            userData.put("Ref", "items" + (pref.getString("userID","Error")));
 
             usersRef.document(pref.getString("userID","Error"))
                     .set(userData)
