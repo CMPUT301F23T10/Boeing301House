@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -12,6 +13,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -31,6 +33,7 @@ public class ItemList {
     private ArrayList<Predicate<Item>> searchFilters;
     private ArrayList<Predicate<Item>> dateFilter;
     private ArrayList<Predicate<Item>> tagFilter;
+    private FirebaseFirestore db;
 
     //    private FirebaseFirestore db;
     private CollectionReference itemsRef;
@@ -46,11 +49,30 @@ public class ItemList {
 //    }
 
     /**
-     * Constructor for passing through an item
-     * @param itemsRef: reference to db collection
+     * Constructor for collection references
+     * @param itemsRef reference to db collection
      */
     public ItemList(CollectionReference itemsRef) {
         this.itemsRef = itemsRef;
+        this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
+        searchFilters = new ArrayList<>();
+        tagFilter = new ArrayList<>();
+        dateFilter = new ArrayList<>();
+
+        this.itemList = new ArrayList<>();
+        this.returnList = new ArrayList<>();
+        this.updateListener();
+
+    }
+
+
+    /**
+     * Constructor for db connections
+     * @param connection connection to databse
+     */
+    public ItemList(DBConnection connection) { // TODO: finish implementation
+        this.db = connection.getDB();
+        this.itemsRef = this.db.collection("items");
         this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
         searchFilters = new ArrayList<>();
         tagFilter = new ArrayList<>();

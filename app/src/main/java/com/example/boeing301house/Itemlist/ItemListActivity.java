@@ -114,9 +114,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
         // create controller
         controller = new ItemListController(this);
-        controller.setTotalListener((total, success) -> {
-            calculateTotalPrice(total, success);
-        });
+        controller.setTotalListener(this::calculateTotalPrice);
 
         //sets up item list
         db = FirebaseFirestore.getInstance(); // get instance for firestore db

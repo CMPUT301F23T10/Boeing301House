@@ -49,8 +49,11 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.7.4")
 
     // ML stuff for scanning
-    implementation("com.google.firebase:firebase-ml-vision:24.0.3")
-    implementation("com.google.firebase:firebase-ml-vision-barcode-model:16.0.1")
+//    implementation("com.google.firebase:firebase-ml-vision:24.0.3")
+//    implementation("com.google.firebase:firebase-ml-vision-barcode-model:16.0.1")
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation("com.google.mlkit:text-recognition:16.0.0")
+
 
 
 
