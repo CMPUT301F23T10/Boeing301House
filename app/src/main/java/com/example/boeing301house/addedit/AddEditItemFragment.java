@@ -37,6 +37,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
+import com.example.boeing301house.Scraping.GoogleCSTask;
+import com.example.boeing301house.Scraping.OnSearchResultListener;
 import com.example.boeing301house.Tags;
 import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
@@ -794,11 +796,14 @@ public class AddEditItemFragment extends Fragment {
                 Log.d(TAG, "Successfully processed barcode. # " + barcodes.size());
                 for (Barcode barcode: barcodes) {
                     String barcodeData = barcode.getRawValue();
+
+                    getBarcodeData(barcodeData);
+
                     productInfo.add(barcodeData);
                     Log.d(TAG, barcode.getRawValue());
                 }
 
-                binding.updateDesc.getEditText().setText(StringUtils.join(productInfo, ". "));
+                // binding.updateDesc.getEditText().setText(StringUtils.join(productInfo, ". "));
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -806,6 +811,18 @@ public class AddEditItemFragment extends Fragment {
                 Log.d(TAG, "Failed to process barcode");
             }
         });
+    }
+
+
+    public void getBarcodeData(String barcode) {
+        GoogleCSTask search = new GoogleCSTask(title -> {
+            if (title != null) {
+                binding.updateDesc.getEditText().setText(title);
+            } else
+                Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
+        });
+
+        search.execute(barcode);
     }
 
 }
