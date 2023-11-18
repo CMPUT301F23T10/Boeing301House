@@ -48,6 +48,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
 
+    implementation("com.squareup.picasso:picasso:2.8")
+
 
     // ML stuff for scanning
 //    implementation("com.google.firebase:firebase-ml-vision:24.0.3")

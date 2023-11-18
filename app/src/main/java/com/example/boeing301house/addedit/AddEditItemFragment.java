@@ -2,6 +2,7 @@ package com.example.boeing301house.addedit;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.MimeTypeMap;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +42,8 @@ import com.example.boeing301house.R;
 import com.example.boeing301house.Tags;
 import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -47,6 +51,14 @@ import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.Firebase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,6 +79,10 @@ import java.util.TimeZone;
  * Observer pattern used
  */
 public class AddEditItemFragment extends Fragment {
+    /**
+     * Tag for logging
+     */
+    public static final String TAG = "ADD_EDIT_FRAG";
     /**
      * Current item being added/edited
      */
@@ -139,7 +155,15 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
+    /**
+     * Firestore storage ref
+     */
+    private StorageReference storageRef;
 
+    /**
+     * Firestore db ref
+     */
+    private CollectionReference collectionRef;
 
 
     private static final int READ_PERMISSIONS = 101;
@@ -242,6 +266,10 @@ public class AddEditItemFragment extends Fragment {
         imgRecyclerView = binding.addEditImageRecycler;
         imgAdapter = new AddEditImageAdapter(uri);
 
+        // TODO: TEMPORARY
+        storageRef = FirebaseStorage.getInstance().getReference("temp_images");
+        collectionRef = FirebaseFirestore.getInstance().collection("temp_images");
+
         imgAdapter.setOnClickListener(new ImageSelectListener() {
             @Override
             public void onItemClicked(int position) {
@@ -261,9 +289,7 @@ public class AddEditItemFragment extends Fragment {
         }
 
 
-//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_IMAGES)) {
-//
-//        }
+
 
 
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -575,8 +601,10 @@ public class AddEditItemFragment extends Fragment {
                 }
                 imgAdapter.notifyDataSetChanged();
             } else if (data.getData() != null) {
-                String imgURL = data.getData().getPath();
-                uri.add(Uri.parse(imgURL));
+                String imgURI = data.getData().getPath();
+                uri.add(Uri.parse(imgURI));
+                uploadFile();
+
 
             }
             imgAdapter.notifyDataSetChanged();
@@ -586,11 +614,13 @@ public class AddEditItemFragment extends Fragment {
                 assert img != null;
                 Uri imgURI = bitmapToUriConverter(requireContext(), img);
                 uri.add(imgURI);
+//                uploadFile();
             }
             imgAdapter.notifyDataSetChanged();
 //            String imgURL = data.getData().getPath();
 //            uri.add(Uri.parse(imgURL));
         }
+//        imgAdapter.notifyDataSetChanged();
     }
 
 
@@ -642,7 +672,6 @@ public class AddEditItemFragment extends Fragment {
     private void openCamera() {
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        // TODO handle photo using startActivityForResult i think..
         startActivityForResult(intent, CAMERA_REQUEST);
         // startActivityForResult(intent, CAMERA_REQUEST);
     }
@@ -670,7 +699,7 @@ public class AddEditItemFragment extends Fragment {
             uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
 
         } catch (Exception e) {
-            Log.e("Your_Tag", "Error in saving image");
+            Log.e(TAG, "Error in saving image");
         }
         return uri;
     }
@@ -722,4 +751,49 @@ public class AddEditItemFragment extends Fragment {
 
     }
 
+
+
+    // TODO: TEMPORARY
+    /**
+     * returns file extension
+     * @param uri uri of img
+     * @return file extension
+     */
+    private String getFileExtension(Uri uri) {
+        ContentResolver cr = getActivity().getContentResolver();
+        MimeTypeMap mime = MimeTypeMap.getSingleton();
+        return mime.getExtensionFromMimeType(cr.getType(uri));
+    }
+
+
+    /**
+     * Upload to firestore
+     */
+    private void uploadFile() {
+        if (uri.get(0) != null) {
+            StorageReference fileRef = storageRef.child(System.currentTimeMillis()
+            + "." + getFileExtension(uri.get(0)));
+            fileRef.putFile(uri.get(0))
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.d(TAG, "Uploaded Successfully");
+                            Upload upload =
+                                    new Upload(uri.get(0).toString().trim(),
+                                            taskSnapshot.getMetadata().getReference().getDownloadUrl().toString());
+
+                            collectionRef.add(upload);
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "Failed to Upload");
+                        }
+                    });
+        } else {
+            return;
+        }
+    }
 }
