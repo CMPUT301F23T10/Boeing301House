@@ -30,14 +30,14 @@ public class TagsUnitTest {
     /**
      * Tag obj
      */
-    private Tag tags;
+    private Tags tags;
 
 
     @Before
     public void before(){
         FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext());
         db = new MockDBConnection();
-        tags = new Tag(db);
+        tags = new Tags(db);
     }
 
     private OnCompleteListener<String> listener = new OnCompleteListener() {

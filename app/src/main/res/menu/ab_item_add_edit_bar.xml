@@ -4,7 +4,7 @@
 <!--    <item-->
 <!--        android:id="@+id/itemAddEditTag"-->
 <!--        android:title="Tag"-->
-<!--        android:contentDescription="Add tag"-->
+<!--        android:contentDescription="Add tags"-->
 <!--        android:icon="@drawable/ic_tag_button_24dp"-->
 <!--        app:showAsAction="always"-->
 <!--        />-->

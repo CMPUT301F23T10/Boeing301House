@@ -37,6 +37,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
+import com.example.boeing301house.Tags;
 import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 import com.google.android.material.chip.Chip;
@@ -137,6 +138,7 @@ public class AddEditItemFragment extends Fragment {
      * ArrayList of uris
      */
     private ArrayList<Uri> uri;
+
 
 
 
