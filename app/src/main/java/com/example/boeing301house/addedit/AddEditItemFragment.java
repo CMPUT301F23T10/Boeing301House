@@ -820,6 +820,7 @@ public class AddEditItemFragment extends Fragment {
                 binding.updateDesc.getEditText().setText(title);
             } else
                 Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
+            binding.updateDesc.getEditText().setText(barcode);
         });
 
         search.execute(barcode);

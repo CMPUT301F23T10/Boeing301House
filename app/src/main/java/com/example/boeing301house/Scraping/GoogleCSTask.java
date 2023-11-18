@@ -80,7 +80,8 @@ public class GoogleCSTask extends AsyncTask<String, Void, String> {
 
             } catch (IOException e) {
                 Log.e(TAG, "ERROR FETCHING DATA: " + e);
-                throw new RuntimeException(e); // TODO: maybe just return null
+//                throw new RuntimeException(e); // TODO: maybe just return null
+                return null;
             } finally {
                 Log.d(TAG, "DISCONNECTING");
                 connection.disconnect();
@@ -88,7 +89,8 @@ public class GoogleCSTask extends AsyncTask<String, Void, String> {
         }
         catch (IOException e) {
             Log.e(TAG, "ERROR FETCHING DATA: " + e);
-            throw new RuntimeException(e); // TODO: maybe just return null
+//            throw new RuntimeException(e); // TODO: maybe just return null
+            return null;
         }
 
 
@@ -131,7 +133,8 @@ public class GoogleCSTask extends AsyncTask<String, Void, String> {
 
         } catch (JSONException e) {
             Log.e(TAG, "ERROR PARSING JSON DATA: " + e);
-            throw new RuntimeException(e);
+//            throw new RuntimeException(e);
+            return null;
         }
         return null;
     }
