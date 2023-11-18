@@ -83,7 +83,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         if (selectedItem == null) {
             throw new IllegalArgumentException();
         }
-
+        clearChipGroup();
         updateTexts();
         fillChipGroup();
 

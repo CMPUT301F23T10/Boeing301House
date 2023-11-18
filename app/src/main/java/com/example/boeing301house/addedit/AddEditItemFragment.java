@@ -237,7 +237,7 @@ public class AddEditItemFragment extends Fragment {
         View view = binding.getRoot();
 
         uri = new ArrayList<>();
-        newTags = currentItem.getTags();
+        newTags = new ArrayList<>(currentItem.getTags());
 
         imgRecyclerView = binding.addEditImageRecycler;
         imgAdapter = new AddEditImageAdapter(uri);
