@@ -619,10 +619,10 @@ public class AddEditItemFragment extends Fragment {
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getData() != null) {
                 Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
-//                Bitmap img = (Bitmap) data.getExtras().get("data");
-//                assert img != null;
-//                Uri imgURI = bitmapToUriConverter(requireContext(), img);
-                Uri imgURI = data.getData();
+                Bitmap img = (Bitmap) data.getExtras().get("data");
+                assert img != null;
+                Uri imgURI = bitmapToUriConverter(requireContext(), img);
+//                Uri imgURI = data.getData();
                 uri.add(imgURI);
             }
             imgAdapter.notifyDataSetChanged();
@@ -777,6 +777,7 @@ public class AddEditItemFragment extends Fragment {
      * <a href="https://developers.google.com/ml-kit/vision/barcode-scanning/android">...</a>
      */
     public void scanBarcode(Bitmap image) {
+        Log.d("SEARCH", "BARCODE FUNC CALLED");
         final ArrayList<String> productInfo = new ArrayList<>();
         Log.d(TAG, "Image: " + image.toString());
         InputImage inputImage = InputImage.fromBitmap(image, 0);
@@ -785,6 +786,8 @@ public class AddEditItemFragment extends Fragment {
         barcodeScanner.process(inputImage).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
             @Override
             public void onSuccess(List<Barcode> barcodes) {
+                Log.d("SEARCH", "BARCODE FUNC CALLED");
+                Log.d("SEARCH", "Successfully processed barcode. # " + barcodes.size());
                 Log.d(TAG, "Successfully processed barcode. # " + barcodes.size());
                 for (Barcode barcode: barcodes) {
                     String barcodeData = barcode.getRawValue();
