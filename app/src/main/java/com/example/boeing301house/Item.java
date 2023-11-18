@@ -303,6 +303,15 @@ public class Item implements Parcelable {
     }
 
     /**
+     * Replace tags with contents of new list of tags
+     * @param newTags new list of tags
+     */
+    public void setTags(ArrayList<String> newTags) {
+        this.tags.clear();
+        addTags(newTags);
+    }
+
+    /**
      * Getter for tags
      * @return list of tags
      */

@@ -39,6 +39,7 @@ import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
@@ -666,6 +667,18 @@ public class AddEditItemFragment extends Fragment {
         return uri;
     }
 
-
+    /**
+     * Fill chip group w/ item tags
+     */
+    public void fillChipGroup() {
+        for (int i = 0; i < newTags.size(); i++) {
+            final String name = newTags.get(i);
+            final Chip newChip = new Chip(requireContext());
+            newChip.setText(name);
+            newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+            newChip.setCloseIconEnabled(true);
+            newChip.setOnCloseIconClickListener();
+        }
+    }
 
 }
