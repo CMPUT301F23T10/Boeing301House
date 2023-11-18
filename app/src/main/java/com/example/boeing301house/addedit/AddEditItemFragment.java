@@ -676,7 +676,7 @@ public class AddEditItemFragment extends Fragment {
             return false;
         } else {
             if (requestCode == CAMERA_REQUEST) {
-                openCamera();
+                openCamera(CAMERA_REQUEST);
             } else if (requestCode == SCAN_BARCODE_REQUEST) {
                 openCamera(SCAN_BARCODE_REQUEST);
             }
@@ -684,16 +684,7 @@ public class AddEditItemFragment extends Fragment {
         }
     }
 
-    /**
-     * Open camera
-     */
-    private void openCamera() {
-        Intent intent = new Intent();
-        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        startActivityForResult(intent, CAMERA_REQUEST);
-        // startActivityForResult(intent, CAMERA_REQUEST);
-    }
 
     // TODO: BROKEN
     /**
@@ -774,7 +765,7 @@ public class AddEditItemFragment extends Fragment {
     /**
      * Open camera (overloaded function for use w/ scanning)
      */
-    public void openCamera(int requestCode) {
+    public void openCamera(Integer requestCode) {
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 
