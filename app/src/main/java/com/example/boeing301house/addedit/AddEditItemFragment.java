@@ -234,7 +234,7 @@ public class AddEditItemFragment extends Fragment {
         View view = binding.getRoot();
 
         uri = new ArrayList<>();
-        newTags = new ArrayList<>();
+        newTags = currentItem.getTags();
 
         imgRecyclerView = binding.addEditImageRecycler;
         imgAdapter = new AddEditImageAdapter(uri);
@@ -277,18 +277,21 @@ public class AddEditItemFragment extends Fragment {
             // TODO: allow backing from fragment to fragment
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-//                if (item.getItemId() == R.id.itemAddEditTag) {
-//                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
-//                            Toast.LENGTH_SHORT).show(); // for testing
-//                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
-//                    getActivity().getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.itemAddEditContent, tagsFragment, "UPDATE_TO_TAG")
-//                            .addToBackStack(null)
-//                            .commit();
-//
-//                    return true;
-//
-//                } else
+                /*
+                if (item.getItemId() == R.id.itemAddEditTag) {
+                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
+                            Toast.LENGTH_SHORT).show(); // for testing
+                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.itemAddEditContent, tagsFragment, "UPDATE_TO_TAG")
+                            .addToBackStack(null)
+                            .commit();
+
+                    return true;
+
+                } else
+
+                 */
                 if (item.getItemId() == R.id.itemAddEditPhotoButton) {
                     // add camera functionality
                     View menuItemView = view.findViewById(item.getItemId());
@@ -348,7 +351,6 @@ public class AddEditItemFragment extends Fragment {
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
 
         // TODO: FINISH
-        // newTags.clear();
         binding.updateTags.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -364,7 +366,7 @@ public class AddEditItemFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
                     if (s.charAt(s.length() - 1) == ' ' || s.charAt(s.length() - 1) == '\n') {
-                        if (s.length() > 1) {
+                        if (s.length() > 1 && (!newTags.contains(s.toString().trim()))) {
                             newTags.add(s.toString().trim());
                             // TODO: update chip group
                         }

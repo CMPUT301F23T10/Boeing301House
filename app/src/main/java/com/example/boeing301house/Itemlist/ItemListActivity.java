@@ -254,7 +254,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 //                        .add(R.id.content_frame, detailFrag, null)
                         .add(R.id.itemListContent, addFrag, null)
                         .replace(R.id.itemListContent, addFrag, "LIST_TO_ADD")
-                        // .addToBackStack("Add Item")
+                        .addToBackStack("Add Item")
                         .commit();
 
 
