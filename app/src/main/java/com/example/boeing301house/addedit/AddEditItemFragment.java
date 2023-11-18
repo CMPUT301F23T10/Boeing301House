@@ -154,10 +154,10 @@ public class AddEditItemFragment extends Fragment {
 
     private static final int READ_PERMISSIONS = 101;
     private static final int CAMERA_PERMISSIONS = 102;
-    private static final int GALLERY_REQUEST = 10;
-    private static final int CAMERA_REQUEST = 11;
-    private static final int SCAN_BARCODE_REQUEST = 12;
-    private static final int SCAN_SN_REQUEST = 13;
+    private static final int GALLERY_REQUEST = 110;
+    private static final int CAMERA_REQUEST = 111;
+    private static final int SCAN_BARCODE_REQUEST = 112;
+    private static final int SCAN_SN_REQUEST = 113;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -792,6 +792,7 @@ public class AddEditItemFragment extends Fragment {
                     getBarcodeData(barcodeData);
 
                     productInfo.add(barcodeData);
+                    Log.d("SEARCH", "BARCODE SCANNED IN ADD EDIT");
                     Log.d(TAG, barcode.getRawValue());
                 }
 
@@ -827,20 +828,6 @@ public class AddEditItemFragment extends Fragment {
         });
 
         thread.start();
-
-
-
-//        GoogleCSTask search = new GoogleCSTask(title -> {
-//            if (title != null) {
-//                binding.updateDesc.getEditText().setText(title);
-//            } else {
-//                Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
-//                binding.updateDesc.getEditText().setText(barcode);
-//            }
-//        });
-//
-//        search.execute(barcode);
-
 
     }
 
