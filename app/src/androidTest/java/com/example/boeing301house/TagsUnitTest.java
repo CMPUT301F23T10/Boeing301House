@@ -37,16 +37,16 @@ public class TagsUnitTest {
     public void before(){
         FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext());
         db = new MockDBConnection();
-        tags = new Tags(db);
+        // tags = new Tags(db);
     }
 
-    private OnCompleteListener<String> listener = new OnCompleteListener() {
-        public void onComplete(String tag, boolean success) {
-            if (tag == null) {
-                Log.d("TEST", "FAIL");
-            }
-        }
-    };
+//    private OnCompleteListener<String> listener = new OnCompleteListener() {
+//        public void onComplete(String tag, boolean success) {
+//            if (tag == null) {
+//                Log.d("TEST", "FAIL");
+//            }
+//        }
+//    };
 
     @Test
     public void testGetTags() {

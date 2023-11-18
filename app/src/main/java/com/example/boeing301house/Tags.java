@@ -44,11 +44,32 @@ public class Tags {
 
     /**
      * Constructor for tags
+     *
+     */
+    private Tags() {
+        tags = new HashMap<>();
+
+    }
+
+    /**
+     * Public getter for instance of object. Checks for other instances of
+     * object to guarantee singleton status.
+     * @return Singleton Tags model
+     */
+    public static synchronized Tags getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Tags();
+        }
+        return INSTANCE;
+    }
+
+    /**
+     * Setup db connection for tags (gets tags associated w/ user)
      * @param connection connection to db
      */
-    public Tags(DBConnection connection) {
-        tags = new HashMap<>();
-        user = connection.getUserRef();
+    public void setConnection(DBConnection connection) {
+//        user = connection.getUserRef(); // TODO: SWITCH TO THIS ONCE SEPARATE USERS ADDED
+        user = connection.getDB().collection("users").document("global");
         initTag();
     }
 
@@ -145,4 +166,20 @@ public class Tags {
         return new ArrayList<String>(tags.keySet());
 
     }
+
+//    /**
+//     * Remove multiple tags
+//     * @param tags
+//     */
+//    public void removeTags(ArrayList<String> tags) {
+//        for (String tag: tags) {
+//            removeTag(tag, null);
+//        }
+//    }
+//
+//    public void tagMultiDelete(ArrayList<Item> items) {
+//        for (Item item: items) {
+//            removeTags(item.getTags());
+//        }
+//    }
 }

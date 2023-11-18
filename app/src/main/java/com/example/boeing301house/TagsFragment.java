@@ -89,7 +89,7 @@ public class TagsFragment extends Fragment {
         EditText editText = binding.addTagEditText;
         // TODO: remove testing chips
 
-        Tags tags = new Tags(new DBConnection(getActivity().getApplicationContext()));
+        Tags tags = Tags.getInstance();
         ArrayList<String> arrayList = tags.getTags();
         ArrayList<String> selectedTags = currentItem.getTags();
 
