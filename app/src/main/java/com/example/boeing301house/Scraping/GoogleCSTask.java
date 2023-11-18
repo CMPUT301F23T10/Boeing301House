@@ -29,12 +29,12 @@ public class GoogleCSTask extends AsyncTask<String, Void, String> {
     /**
      * GCSE API key (dont steal pls)
      */
-    private static final String API_KEY = "AIzaSyBIH5TqrugXdb2Z3fKJ1KN8FyUI5YIBnjM";
+    private static final String API_KEY = "AIzaSyAau6Ay5GxfMQOxKIFaGr_XHp2sptelQ48";
 
     /**
      * GCSE search engine id (dont steal pls)
      */
-    private static final String CSID = "b6a8cbdc2bb414271";
+    private static final String CSID = "d1cfe1fb5bb524ddd";
 
 
     private OnSearchResultListener listener;
