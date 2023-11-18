@@ -3,8 +3,6 @@ package com.example.boeing301house;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -13,12 +11,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.boeing301house.Itemlist.OnCompleteListener;
 import com.example.boeing301house.databinding.FragmentTagsBinding;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -94,8 +89,8 @@ public class TagsFragment extends Fragment {
         EditText editText = binding.addTagEditText;
         // TODO: remove testing chips
 
-        Tag tag = new Tag(new DBConnection(getActivity().getApplicationContext()));
-        ArrayList<String> arrayList = tag.getTags();
+        Tags tags = new Tags(new DBConnection(getActivity().getApplicationContext()));
+        ArrayList<String> arrayList = tags.getTags();
         ArrayList<String> selectedTags = currentItem.getTags();
 
         Random random = new Random();

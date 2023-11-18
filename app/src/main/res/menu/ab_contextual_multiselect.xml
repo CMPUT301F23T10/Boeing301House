@@ -4,7 +4,7 @@
     <item
         android:id="@+id/itemMultiselectTag"
         android:title="ADD TAGS"
-        android:contentDescription="Add a tag to all selected items"
+        android:contentDescription="Add a tags to all selected items"
         android:icon="@drawable/ic_tag_button_36dp"
         app:showAsAction="always"
         />

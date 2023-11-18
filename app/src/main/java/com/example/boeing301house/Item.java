@@ -3,14 +3,17 @@ package com.example.boeing301house;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -272,15 +275,25 @@ public class Item implements Parcelable {
      * @param tag tag
      */
     public void addTags(String tag) {
-        tags.add(tag);
+        if (!this.tags.contains(tag)) {
+            this.tags.add(tag);
+        }
+        this.tags.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.compareToIgnoreCase(s2);
+            }
+        });
     }
 
     /**
      * Add tags to item
-     * @param tag list of tags
+     * @param tags list of tags
      */
-    public void addTags(ArrayList<String> tag) {
-        tags.addAll(tag);
+    public void addTags(ArrayList<String> tags) {
+        for (String tag: tags) {
+            addTags(tag);
+        }
     }
 
     /**
@@ -289,6 +302,16 @@ public class Item implements Parcelable {
      */
     public void removeTag(String tag) {
         tags.remove(tag);
+    }
+
+    /**
+     * Replace tags with contents of new list of tags. (Glorified resorting method if newTags referring to same list)
+     * @param newTags new list of tags
+     */
+    public void setTags(ArrayList<String> newTags) {
+        ArrayList<String> temp = new ArrayList<>(newTags); // to compensate for pass by ref when dealing with arrays
+        this.tags.clear();
+        addTags(temp);
     }
 
     /**

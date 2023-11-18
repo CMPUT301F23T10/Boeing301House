@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="text"
-            android:hint="Enter new tag"
+            android:hint="Enter new tags"
             app:layout_constraintBottom_toTopOf="@+id/updateItemConfirm"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -149,7 +149,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:singleLine="true"
-                    app:chipSpacingHorizontal="42dp"
+                    app:selectionRequired="false"
+                    app:chipSpacingHorizontal="10dp"
                     >
 
                 </com.google.android.material.chip.ChipGroup>

@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -83,6 +85,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         }
 
         updateTexts();
+        fillChipGroup();
 
 
 
@@ -320,7 +323,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         selectedItem.setDescription(updatedItem.getDescription());
         selectedItem.setComment(updatedItem.getComment());
         selectedItem.setValue(updatedItem.getValue());
+        selectedItem.setTags(updatedItem.getTags());
         updateTexts(); // updates the text values
+        clearChipGroup();
+        fillChipGroup();
+
         exitAddEditFragment(); // closing the fragment
 
     }
@@ -332,6 +339,38 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("VIEW_TO_EDIT");
         if (fragment != null) {
             getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
+    }
+
+
+    /**
+     * Fill chip group w/ item tags
+     */
+    public void fillChipGroup() {
+        ChipGroup chipGroup = findViewById(R.id.itemViewChipGroup);
+        for (String tag: selectedItem.getTags()) {
+            final String name = tag;
+            final Chip newChip = new Chip(this);
+            newChip.setText(name);
+            newChip.setSelected(true);
+            newChip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    return;
+                }
+            });
+            chipGroup.addView(newChip);
+        }
+
+    }
+
+    /**
+     * Clear chip group
+     */
+    public void clearChipGroup() {
+        ChipGroup chipGroup = findViewById(R.id.itemViewChipGroup);
+        for (int i = 0; i < chipGroup.getChildCount(); i++) {
+            chipGroup.removeView(chipGroup.getChildAt(i));
         }
     }
 }

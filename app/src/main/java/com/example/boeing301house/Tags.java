@@ -15,32 +15,39 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
- * Model class for tag.
+ * Singleton model class for tag.
  * Contains all current tags associated with user + tag control b/w app and db
  */
-public class Tag {
+public class Tags {
     /**
      * tag for logs
      */
     private static final String TAG = "TAGS";
 
     /**
+     * Singleton instance of tag
+     */
+    private static Tags INSTANCE;
+    /**
      * DB reference to user
      */
     private DocumentReference user;
+
     /**
      * Tags belonging to current user
+     * Tag : # of items with it
      */
-    private ArrayList<String> tags;
+    private HashMap<String, Integer> tags;
 
     /**
      * Constructor for tags
      * @param connection connection to db
      */
-    public Tag(DBConnection connection) {
-        tags = new ArrayList<>();
+    public Tags(DBConnection connection) {
+        tags = new HashMap<>();
         user = connection.getUserRef();
         initTag();
     }
@@ -52,7 +59,7 @@ public class Tag {
         user.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                tags = (ArrayList<String>) task.getResult().get("Tags");
+                tags = (HashMap<String, Integer>) task.getResult().get("Tags");
             }
         })
         .addOnFailureListener(new OnFailureListener() {
@@ -69,20 +76,22 @@ public class Tag {
      * @param listener optional {@link com.example.boeing301house.Itemlist.OnCompleteListener} for error handling
      */
     public void addTag(String tag, @Nullable com.example.boeing301house.Itemlist.OnCompleteListener<String> listener) {
-        if (tag == null) {
-            listener.onComplete(null, false); // TODO: snackbar "No tag"
-            return;
-        }
-        if (StringUtils.isBlank(tag)) {
-            listener.onComplete(null, false); // TODO: snackbar "No tag"
-            return;
-        }
-        if (tags.contains(tag)) {
-            listener.onComplete(tag, false); // TODO: snackbar "Tag already exists"
-            return;
+        if (listener != null) {
+            if (tag == null) {
+                listener.onComplete(null, false); // TODO: snackbar "No tag"
+                return;
+            }
+            if (StringUtils.isBlank(tag)) {
+                listener.onComplete(null, false); // TODO: snackbar "No tag"
+                return;
+            }
         }
         // add tags
-        tags.add(tag);
+        if (tags.containsKey(tag)) {
+            tags.put(tag, tags.get(tag) + 1);
+        } else {
+            tags.put(tag, 1);
+        }
         user.update("Tags", tags).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -97,20 +106,28 @@ public class Tag {
      * @param listener optional {@link com.example.boeing301house.Itemlist.OnCompleteListener} for error handling
      */
     public void removeTag(String tag, @Nullable com.example.boeing301house.Itemlist.OnCompleteListener<String> listener) {
-        if (tag == null) {
-            listener.onComplete(null, false); // TODO: snackbar "No tag"
-            return;
+        if (listener != null) {
+            if (tag == null) {
+                listener.onComplete(null, false); // TODO: snackbar "No tag"
+                return;
+            }
+            if (StringUtils.isBlank(tag)) {
+                listener.onComplete(null, false); // TODO: snackbar "No tag"
+                return;
+            }
+            if (!tags.containsKey(tag)) {
+                listener.onComplete(tag, false); // TODO: snackbar "Tag does not exist"
+                return;
+            }
         }
-        if (StringUtils.isBlank(tag)) {
-            listener.onComplete(null, false); // TODO: snackbar "No tag"
-            return;
-        }
-        if (!tags.contains(tag)) {
-            listener.onComplete(tag, false); // TODO: snackbar "Tag does not exist"
-            return;
-        }
+        assert tags.get(tag) != null;
         // remove tag
-        tags.remove(tag);
+        if (tags.get(tag) > 1) {
+            tags.put(tag, tags.get(tag) - 1);
+        } else {
+            tags.remove(tag);
+        }
+
         user.update("Tags", tags).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
@@ -125,6 +142,7 @@ public class Tag {
      * @return list of tags
      */
     public ArrayList<String> getTags() {
-        return tags;
+        return new ArrayList<String>(tags.keySet());
+
     }
 }
