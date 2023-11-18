@@ -3,6 +3,7 @@ package com.example.boeing301house.Itemlist;
 import android.app.Activity;
 
 import com.example.boeing301house.ActivityBase;
+import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,8 +21,9 @@ public class ItemListController {
 
     private ItemList itemList; // model
     FirebaseFirestore db;
+    private DBConnection connection;
     CollectionReference itemsRef;
-    ItemAdapter itemAdapter;
+    ItemRecyclerAdapter itemAdapter;
 
     private OnCompleteListener<Double> totalListener = null;
 
@@ -34,8 +36,13 @@ public class ItemListController {
         this.activity = (ActivityBase) activity; // downcast
         db = FirebaseFirestore.getInstance();
         itemsRef = db.collection("items");
-        itemList = new ItemList(itemsRef); // maybe use db object
-        itemAdapter = new ItemAdapter(activity.getApplicationContext(), 0, itemList.get());
+        itemList = new ItemList(itemsRef); // TODO: SWITCH TO DBCONN ONCE USER
+
+//        // USING USER SPECIFIC ITEM LIST
+//        connection = new DBConnection(activity.getApplicationContext());
+//        itemList = new ItemList(connection);
+
+        itemAdapter = new ItemRecyclerAdapter(itemList.get());
         selectedItems = new ArrayList<>();
         itemList.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
             @Override
@@ -279,7 +286,7 @@ public class ItemListController {
      * Gets Item Adapter
      * @return
      */
-    public ItemAdapter getItemAdapter() {
+    public ItemRecyclerAdapter getItemAdapter() {
         return itemAdapter;
     }
 

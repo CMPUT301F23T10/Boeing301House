@@ -128,6 +128,7 @@ public class DBConnection {
     public CollectionReference getItemsRef() {
         //TODO: implement
         return this.db.collection("items"); // PLACEHOLDER
+//        return this.db.collection("items" + uuid); //TODO: SWITCH ONCE UUID FIXED
     }
 
     /**

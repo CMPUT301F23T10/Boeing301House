@@ -51,6 +51,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     private static String DELETE_ITEM = "DELETE_ITEM";
     private static String EDIT_ITEM = "EDIT_ITEM";
 
+    private ChipGroup chipGroup;
+
     // TODO: finish javadocs
     /**
      *
@@ -65,6 +67,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_view);
+
+        chipGroup = findViewById(R.id.itemViewChipGroup);
 
 
 
@@ -83,7 +87,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         if (selectedItem == null) {
             throw new IllegalArgumentException();
         }
-
+        clearChipGroup();
         updateTexts();
         fillChipGroup();
 
@@ -347,12 +351,12 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      * Fill chip group w/ item tags
      */
     public void fillChipGroup() {
-        ChipGroup chipGroup = findViewById(R.id.itemViewChipGroup);
         for (String tag: selectedItem.getTags()) {
             final String name = tag;
             final Chip newChip = new Chip(this);
             newChip.setText(name);
             newChip.setSelected(true);
+            newChip.setChecked(true);
             newChip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -368,8 +372,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      * Clear chip group
      */
     public void clearChipGroup() {
-        ChipGroup chipGroup = findViewById(R.id.itemViewChipGroup);
-        for (int i = 0; i < chipGroup.getChildCount(); i++) {
+        for (int i = chipGroup.getChildCount() - 1; i >= 0; i--) {
             chipGroup.removeView(chipGroup.getChildAt(i));
         }
     }

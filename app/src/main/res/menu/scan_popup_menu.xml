@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/scanBarcode"
+        android:title="Scan Barcode">
+
+    </item>
+
+    <item android:id="@+id/scanSN"
+        android:title="Scan SN"
+        >
+
+    </item>
+</menu>

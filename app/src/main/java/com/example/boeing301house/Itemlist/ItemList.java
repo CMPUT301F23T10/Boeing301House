@@ -72,7 +72,9 @@ public class ItemList {
      */
     public ItemList(DBConnection connection) { // TODO: finish implementation
         this.db = connection.getDB();
-        this.itemsRef = this.db.collection("items");
+//        this.itemsRef = this.db.collection("items");
+
+        this.itemsRef = connection.getItemsRef();
         this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
         searchFilters = new ArrayList<>();
         tagFilter = new ArrayList<>();
