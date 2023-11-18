@@ -783,6 +783,7 @@ public class AddEditItemFragment extends Fragment {
 
     /**
      * Scan barcode via img from camera
+     * <a href="https://developers.google.com/ml-kit/vision/barcode-scanning/android">...</a>
      */
     public void scanBarcode(Bitmap image) {
         final ArrayList<String> productInfo = new ArrayList<>();
@@ -813,7 +814,10 @@ public class AddEditItemFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Run web search for product info
+     * @param barcode item barcode
+     */
     public void getBarcodeData(String barcode) {
         GoogleCSTask search = new GoogleCSTask(title -> {
             if (title != null) {

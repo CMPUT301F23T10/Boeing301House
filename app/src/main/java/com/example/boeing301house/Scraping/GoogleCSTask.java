@@ -20,6 +20,7 @@ import java.net.URL;
 /**
  * Google custom search engine model class.
  * Used for webscraping.
+ * <a href="https://developers.google.com/custom-search/v1/using_rest">...</a>
  */
 public class GoogleCSTask extends AsyncTask<String, Void, String> {
     /**
@@ -61,6 +62,7 @@ public class GoogleCSTask extends AsyncTask<String, Void, String> {
             // construct url
             URL url = new URL("https://www.googleapis.com/customsearch/v1?q=" + barcode + "&key=" + API_KEY + "&cx=" + CSID);
             // open connection
+            // https://developer.android.com/reference/java/net/HttpURLConnection
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             try {
                 InputStream in = connection.getInputStream(); // get data from http response
