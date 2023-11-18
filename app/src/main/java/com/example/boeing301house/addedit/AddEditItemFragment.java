@@ -37,8 +37,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
-import com.example.boeing301house.Scraping.GoogleCSTask;
-import com.example.boeing301house.Scraping.OnSearchResultListener;
+import com.example.boeing301house.Scraping.GoogleSearchThread;
+import com.example.boeing301house.Scraping.SearchUIRunnable;
 import com.example.boeing301house.Tags;
 import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
@@ -819,16 +819,38 @@ public class AddEditItemFragment extends Fragment {
      * @param barcode item barcode
      */
     public void getBarcodeData(String barcode) {
-        GoogleCSTask search = new GoogleCSTask(title -> {
-            if (title != null) {
-                binding.updateDesc.getEditText().setText(title);
-            } else {
-                Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
-                binding.updateDesc.getEditText().setText(barcode);
+
+        GoogleSearchThread thread = new GoogleSearchThread(barcode, result -> {
+            if (result != null) {
+                SearchUIRunnable searchRunnable = new SearchUIRunnable(result, title -> {
+                    if (title != null) {
+                        binding.updateDesc.getEditText().setText(title);
+                    } else {
+                        Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
+                        binding.updateDesc.getEditText().setText(barcode);
+                    }
+                });
+
+                getActivity().runOnUiThread(searchRunnable);
             }
         });
 
-        search.execute(barcode);
+        thread.start();
+
+
+
+//        GoogleCSTask search = new GoogleCSTask(title -> {
+//            if (title != null) {
+//                binding.updateDesc.getEditText().setText(title);
+//            } else {
+//                Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
+//                binding.updateDesc.getEditText().setText(barcode);
+//            }
+//        });
+//
+//        search.execute(barcode);
+
+
     }
 
 }
