@@ -3,7 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"
+    >
 
     <TextView
         android:id="@+id/itemMake"

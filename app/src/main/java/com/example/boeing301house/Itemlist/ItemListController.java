@@ -23,7 +23,7 @@ public class ItemListController {
     FirebaseFirestore db;
     private DBConnection connection;
     CollectionReference itemsRef;
-    ItemAdapter itemAdapter;
+    ItemRecyclerAdapter itemAdapter;
 
     private OnCompleteListener<Double> totalListener = null;
 
@@ -42,7 +42,7 @@ public class ItemListController {
 //        connection = new DBConnection(activity.getApplicationContext());
 //        itemList = new ItemList(connection);
 
-        itemAdapter = new ItemAdapter(activity.getApplicationContext(), 0, itemList.get());
+        itemAdapter = new ItemRecyclerAdapter(itemList.get());
         selectedItems = new ArrayList<>();
         itemList.setDBListener(new OnCompleteListener<ArrayList<Item>>() {
             @Override
@@ -286,7 +286,7 @@ public class ItemListController {
      * Gets Item Adapter
      * @return
      */
-    public ItemAdapter getItemAdapter() {
+    public ItemRecyclerAdapter getItemAdapter() {
         return itemAdapter;
     }
 

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +18,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.ActivityBase;
 import com.example.boeing301house.addedit.AddEditItemFragment;
@@ -46,9 +46,9 @@ import java.util.Locale;
 public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
 
 
-    private ListView itemListView;
+    private RecyclerView itemListRecyclerView;
     //    private FloatingActionButton addButton;
-    private ItemAdapter itemAdapter;
+    private ItemRecyclerAdapter itemAdapter;
 
     private TextView subTotalText;
 
@@ -102,39 +102,16 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         //sets up item list
         DBConnection dbConnection = new DBConnection(getApplicationContext());
 
-        itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
+        itemListRecyclerView = findViewById(R.id.itemList); // binds the city list to the xml file
 
         itemAdapter = controller.getItemAdapter();
-        itemListView.setAdapter(itemAdapter);
-
-        MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
-        setSupportActionBar(topbar);
-
-
-        itemListSortButton = findViewById(R.id.sortButton);
-        itemListFilterButton = findViewById(R.id.filterButton);
-
-
-
-        //used to swap the fragment in to edit/add fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-
-        //simple method below just sets the bool toggleRemove to true/false depending on the switch
-        addButton = (FloatingActionButton) findViewById(R.id.addButton);
-
 
         // Handle multiselect first step
-        itemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        itemAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
-            /**
-             * When an item is long pressed
-             */
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // begin select multiple
-
+            public boolean onItemLongClick(View view, int position) {
                 if (!isSelectMultiple) {
-                    Item current = (Item) itemListView.getItemAtPosition(position);
+                    Item current = (Item) itemAdapter.getItemAtPosition(position);
                     controller.onMultiSelectStart(current);
 
                     isSelectMultiple = true;
@@ -146,33 +123,15 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     }
 
                     itemMultiSelectMode = startActionMode(itemMultiSelectModeCallback); // TODO: convert to startSupportActionBar
-
-                    // for testing
-//                    CharSequence text = "Selecting multiple";
-//                    int duration = Toast.LENGTH_SHORT;
-//                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
-//                    toast.show();
-
                 }
                 return true;
             }
         });
 
-
-        // handle item selection during multiselect and regular selection
-        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            // TODO: finish javadocs
-            /**
-             * When an item is clicked from the list
-             * @param adapterView The AdapterView where the click happened.
-             * @param view The view within the AdapterView that was clicked (this
-             *            will be a view provided by the adapter)
-             * @param i The position of the view in the adapter.
-             * @param l The row id of the item that was clicked.
-             */
+        itemAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Item item = (Item) itemListView.getItemAtPosition(i);
+            public void onItemClick(View view, int i) {
+                Item item = (Item) itemAdapter.getItemAtPosition(i);
                 ArrayList<Item> itemRef = new ArrayList<>();
                 itemRef.add(item);
 
@@ -205,10 +164,27 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     }
 
                 }
-
             }
-
         });
+
+        itemListRecyclerView.setAdapter(itemAdapter);
+
+        MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
+        setSupportActionBar(topbar);
+
+
+        itemListSortButton = findViewById(R.id.sortButton);
+        itemListFilterButton = findViewById(R.id.filterButton);
+
+
+
+        //used to swap the fragment in to edit/add fragments
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+
+        //simple method below just sets the bool toggleRemove to true/false depending on the switch
+        addButton = (FloatingActionButton) findViewById(R.id.addButton);
+
 
         //for launching the sort fragment
         itemListFilterButton.setOnClickListener(new View.OnClickListener() {
