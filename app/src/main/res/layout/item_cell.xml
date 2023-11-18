@@ -92,6 +92,19 @@
 
         />
 
+    <TextView
+        android:id="@+id/itemTags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/itemSN"
+        app:layout_constraintTop_toBottomOf="@id/itemDescription"
+        android:layout_marginTop="2dp"
+        android:text="tag1, tag2, ..."
+        style="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="@color/itemCellTextColor"
+        android:visibility="gone"
+        />
+
 
 
 <!--    <LinearLayout-->
