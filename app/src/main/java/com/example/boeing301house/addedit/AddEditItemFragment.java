@@ -40,6 +40,8 @@ import com.example.boeing301house.R;
 import com.example.boeing301house.Tags;
 import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -47,6 +49,10 @@ import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.common.InputImage;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,6 +64,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -67,6 +74,7 @@ import java.util.TimeZone;
  * Observer pattern used
  */
 public class AddEditItemFragment extends Fragment {
+    private static final String TAG = "ADD_EDIT_FRAG";
     /**
      * Current item being added/edited
      */
@@ -146,6 +154,8 @@ public class AddEditItemFragment extends Fragment {
     private static final int CAMERA_PERMISSIONS = 102;
     private static final int GALLERY_REQUEST = 10;
     private static final int CAMERA_REQUEST = 11;
+    private static final int SCAN_BARCODE_REQUEST = 12;
+    private static final int SCAN_SN_REQUEST = 13;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -305,7 +315,7 @@ public class AddEditItemFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.camera) {
-                                return askCameraPerms();
+                                return askCameraPerms(CAMERA_REQUEST);
                             }
                             else if (item.getItemId() == R.id.gallery) {
                                 return askGalleryPerms();
@@ -328,9 +338,33 @@ public class AddEditItemFragment extends Fragment {
 
                 } else if (item.getItemId() == R.id.itemAddEditScanButton) {
                     // add scanning functionality
-                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"Available on next version"),
-                            Toast.LENGTH_SHORT).show(); // for testing
-                    return true;
+                    View menuItemView = view.findViewById(item.getItemId());
+                    PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
+
+                    popup.getMenuInflater().inflate(R.menu.scan_popup_menu, popup.getMenu());
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.scanBarcode) {
+                                return askCameraPerms(SCAN_BARCODE_REQUEST);
+                            }
+                            else if (item.getItemId() == R.id.scanSN) {
+                                return askCameraPerms(SCAN_SN_REQUEST);
+                            }
+                            return false;
+                        }
+                    });
+
+                    popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                        @Override
+                        public void onDismiss(PopupMenu menu) {
+                            return;
+                        }
+                    });
+
+                    popup.show();
+
                 }
                 return false;
             }
@@ -581,15 +615,23 @@ public class AddEditItemFragment extends Fragment {
             }
             imgAdapter.notifyDataSetChanged();
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data.getExtras() != null) {
-                Bitmap img = (Bitmap) data.getExtras().get("data");
-                assert img != null;
-                Uri imgURI = bitmapToUriConverter(requireContext(), img);
+            if (data.getData() != null) {
+                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
+//                Bitmap img = (Bitmap) data.getExtras().get("data");
+//                assert img != null;
+//                Uri imgURI = bitmapToUriConverter(requireContext(), img);
+                Uri imgURI = data.getData();
                 uri.add(imgURI);
             }
             imgAdapter.notifyDataSetChanged();
 //            String imgURL = data.getData().getPath();
 //            uri.add(Uri.parse(imgURL));
+        } else if (requestCode == SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data.getExtras() != null) {
+                Bitmap image = (Bitmap) data.getExtras().get("data");
+                assert image != null;
+                scanBarcode(image);
+            }
         }
     }
 
@@ -625,13 +667,17 @@ public class AddEditItemFragment extends Fragment {
      * Get permission to use camera and open camera
      * @return true if camera opened, false otherwise
      */
-    private boolean askCameraPerms() {
+    private boolean askCameraPerms(int requestCode) {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
             return false;
         } else {
-            openCamera();
+            if (requestCode == CAMERA_REQUEST) {
+                openCamera();
+            } else if (requestCode == SCAN_BARCODE_REQUEST) {
+                openCamera(SCAN_BARCODE_REQUEST);
+            }
             return true;
         }
     }
@@ -642,11 +688,12 @@ public class AddEditItemFragment extends Fragment {
     private void openCamera() {
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        // TODO handle photo using startActivityForResult i think..
+
         startActivityForResult(intent, CAMERA_REQUEST);
         // startActivityForResult(intent, CAMERA_REQUEST);
     }
 
+    // TODO: BROKEN
     /**
      * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
      * Convert bitmap to uri
@@ -720,6 +767,45 @@ public class AddEditItemFragment extends Fragment {
 
         binding.itemAddEditChipGroup.addView(newChip);
 
+    }
+
+    /**
+     * Open camera (overloaded function for use w/ scanning)
+     */
+    public void openCamera(int requestCode) {
+        Intent intent = new Intent();
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * Scan barcode via img from camera
+     */
+    public void scanBarcode(Bitmap image) {
+        final ArrayList<String> productInfo = new ArrayList<>();
+        Log.d(TAG, "Image: " + image.toString());
+        InputImage inputImage = InputImage.fromBitmap(image, 0);
+
+        BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
+        barcodeScanner.process(inputImage).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+            @Override
+            public void onSuccess(List<Barcode> barcodes) {
+                Log.d(TAG, "Successfully processed barcode. # " + barcodes.size());
+                for (Barcode barcode: barcodes) {
+                    String barcodeData = barcode.getRawValue();
+                    productInfo.add(barcodeData);
+                    Log.d(TAG, barcode.getRawValue());
+                }
+
+                binding.updateDesc.getEditText().setText(StringUtils.join(productInfo, ". "));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to process barcode");
+            }
+        });
     }
 
 }
