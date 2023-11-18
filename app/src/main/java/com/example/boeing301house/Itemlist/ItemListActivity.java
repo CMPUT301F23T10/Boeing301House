@@ -167,7 +167,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 //                    selectedItemViews.size();
                     itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", controller.itemsSelectedSize()));
 
-
                     // deselect all items -> no longer selecting multiple
                     if (controller.itemsSelectedSize() == 0) {
                         isSelectMultiple = false;
