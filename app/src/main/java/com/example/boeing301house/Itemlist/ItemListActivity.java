@@ -19,6 +19,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.ActivityBase;
@@ -104,7 +106,10 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         DBConnection dbConnection = new DBConnection(getApplicationContext());
 
         itemListRecyclerView = findViewById(R.id.itemList); // binds the city list to the xml file
-
+        // add divider lines
+        itemListRecyclerView.addItemDecoration(
+                new DividerItemDecoration(getBaseContext(), LinearLayoutManager.VERTICAL)
+        );
         itemAdapter = controller.getItemAdapter();
 
         // Handle multiselect first step
