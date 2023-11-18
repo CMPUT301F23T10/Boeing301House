@@ -352,7 +352,7 @@ public class AddEditItemFragment extends Fragment {
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
 
         fillChipGroup();
-        // TODO: FINISH
+
         binding.updateTags.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -675,7 +675,7 @@ public class AddEditItemFragment extends Fragment {
 
 
     /**
-     * Fill chip group w/ item tags
+     * Fill chip group w/ item tags (for initializing)
      */
     public void fillChipGroup() {
         for (int i = 0; i < newTags.size(); i++) {
@@ -684,6 +684,8 @@ public class AddEditItemFragment extends Fragment {
             newChip.setText(name);
             newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
             newChip.setCloseIconEnabled(true);
+            newChip.setContentDescription("chip"+name);
+            newChip.setCloseIconContentDescription("close"+name); // for ui testing
             newChip.setOnCloseIconClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
