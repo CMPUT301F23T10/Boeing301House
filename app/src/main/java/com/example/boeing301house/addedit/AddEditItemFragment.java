@@ -351,6 +351,7 @@ public class AddEditItemFragment extends Fragment {
         binding.updateComment.setHint(String.format("Comment: %s", currentItem.getComment()));
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
 
+        fillChipGroup();
         // TODO: FINISH
         binding.updateTags.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -360,7 +361,7 @@ public class AddEditItemFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.d("TEST", "len: " + newTags.size());
+                return;
             }
 
             @Override
@@ -369,7 +370,9 @@ public class AddEditItemFragment extends Fragment {
                     if (s.charAt(s.length() - 1) == ' ' || s.charAt(s.length() - 1) == '\n') {
                         if (s.length() > 1 && (!newTags.contains(s.toString().trim()))) {
                             newTags.add(s.toString().trim());
+                            Log.d("TAG TEST", "Size: " + newTags.size());
                             // TODO: update chip group
+                            addChip(s.toString().trim());
                         }
                         s.clear();
                     }
@@ -447,7 +450,9 @@ public class AddEditItemFragment extends Fragment {
                         currentItem.setDate(newDate);
                         currentItem.setValue(newValue);
                         currentItem.setSN(newSN);
+                        Log.d("TAG TEST", "Size: " + newTags.size());
                         currentItem.setDescription(newDescription);
+                        currentItem.setTags(newTags);
 
                         listener.onConfirmPressed(currentItem); // transfers the new data to main
                     }
@@ -485,6 +490,7 @@ public class AddEditItemFragment extends Fragment {
                     currentItem.setValue(newValue);
                     currentItem.setSN(newSN);
                     currentItem.setDescription(newDescription);
+                    currentItem.setTags(newTags);
                     listener.onConfirmPressed(currentItem);
 
                 }
@@ -667,6 +673,7 @@ public class AddEditItemFragment extends Fragment {
         return uri;
     }
 
+
     /**
      * Fill chip group w/ item tags
      */
@@ -677,8 +684,38 @@ public class AddEditItemFragment extends Fragment {
             newChip.setText(name);
             newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
             newChip.setCloseIconEnabled(true);
-            newChip.setOnCloseIconClickListener();
+            newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    newTags.remove(name);
+                    binding.itemAddEditChipGroup.removeView(newChip);
+                }
+            });
+
+            binding.itemAddEditChipGroup.addView(newChip);
         }
+    }
+
+
+    /**
+     * Add chip to chip group
+     */
+    public void addChip(String tag) {
+        final String name = tag;
+        final Chip newChip = new Chip(requireContext());
+        newChip.setText(name);
+        newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+        newChip.setCloseIconEnabled(true);
+        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTags.remove(name);
+                binding.itemAddEditChipGroup.removeView(newChip);
+            }
+        });
+
+        binding.itemAddEditChipGroup.addView(newChip);
+
     }
 
 }

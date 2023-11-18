@@ -320,6 +320,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         selectedItem.setDescription(updatedItem.getDescription());
         selectedItem.setComment(updatedItem.getComment());
         selectedItem.setValue(updatedItem.getValue());
+        selectedItem.setTags(updatedItem.getTags());
         updateTexts(); // updates the text values
         exitAddEditFragment(); // closing the fragment
 

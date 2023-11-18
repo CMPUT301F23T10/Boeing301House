@@ -127,8 +127,6 @@ public class ItemList {
         itemData.put("Tags",item.getTags());
 
 
-        ArrayList<String> tags = new ArrayList<>(); // placeholder
-        itemData.put("Tags", tags); // placeholder
 //        updateItemListView();
         itemsRef.document(item.getItemID())
                 .set(itemData)
@@ -219,11 +217,8 @@ public class ItemList {
         itemData.put("Est Value", item.getValue());
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
-        itemData.put("Tags",item.getTags());
+        itemData.put("Tags", item.getTags());
 
-        // TODO: implement
-        ArrayList<String> tags = new ArrayList<>(); // placeholder
-        itemData.put("Tags", tags); // placeholder for tags since we haven't done it yet
 
         // Get the document reference for the item
         DocumentReference itemRef = itemsRef.document(item.getItemID());
