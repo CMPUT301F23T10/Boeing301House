@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -115,7 +116,9 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     controller.onMultiSelectStart(current);
 
                     isSelectMultiple = true;
-                    view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+//                    view.setBackgroundResource(R.color.colorHighlight); // visually select
+                    view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.colorHighlight));
+//                    view.setBackgroundResource(R.drawable.bg_ripple_selected);
 
                     // contextual app bar
                     if (itemMultiSelectMode != null) {
@@ -145,11 +148,14 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     startActivityForResult(intent, SELECT);
 
                 } else { // select multiple + delete multiple functionality
-                    if (controller.onMultiSelect(itemRef)) {
-                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
+                    if (controller.onMultiSelect(itemRef)) { // if selecting
+//                        view.setBackgroundResource(R.color.colorHighlight); // visually select
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.colorHighlight));
                     }
-                    else {
-                        view.setBackgroundColor(0); // visually deselect
+                    else { // deselecting
+                        // view.setBackgroundResource(R.drawable.bg_ripple_default); // visually deselect
+//                        view.setBackgroundColor(0);
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.white));
                     }
 
 

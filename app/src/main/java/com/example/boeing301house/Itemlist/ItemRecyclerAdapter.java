@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
@@ -54,9 +56,11 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
         // render items outside screen correctly
         if (item.isSelected()) {
-            holder.view.setBackgroundResource(R.color.colorHighlight);
+            holder.view.setBackgroundTintList(ContextCompat.getColorStateList(holder.view.getContext(), R.color.colorHighlight));
         } else {
-            holder.view.setBackgroundColor(0);
+//            holder.view.setBackgroundResource(R.drawable.bg_ripple_default);
+//            holder.view.setBackgroundColor(0);
+            holder.view.setBackgroundTintList(ContextCompat.getColorStateList(holder.view.getContext(), R.color.white));
         }
 
         //updates all the information from given item to the item cell, to be displayed in the main listView
