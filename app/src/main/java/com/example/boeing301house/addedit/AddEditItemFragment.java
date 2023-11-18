@@ -818,9 +818,10 @@ public class AddEditItemFragment extends Fragment {
         GoogleCSTask search = new GoogleCSTask(title -> {
             if (title != null) {
                 binding.updateDesc.getEditText().setText(title);
-            } else
+            } else {
                 Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
-            binding.updateDesc.getEditText().setText(barcode);
+                binding.updateDesc.getEditText().setText(barcode);
+            }
         });
 
         search.execute(barcode);
