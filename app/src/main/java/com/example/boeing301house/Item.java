@@ -272,15 +272,19 @@ public class Item implements Parcelable {
      * @param tag tag
      */
     public void addTags(String tag) {
-        tags.add(tag);
+        if (!tags.contains(tag)) {
+            tags.add(tag);
+        }
     }
 
     /**
      * Add tags to item
-     * @param tag list of tags
+     * @param tags list of tags
      */
-    public void addTags(ArrayList<String> tag) {
-        tags.addAll(tag);
+    public void addTags(ArrayList<String> tags) {
+        for (String tag: tags) {
+            addTags(tag);
+        }
     }
 
     /**

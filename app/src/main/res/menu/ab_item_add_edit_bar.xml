@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/itemAddEditTag"
-        android:title="Tag"
-        android:contentDescription="Add tag"
-        android:icon="@drawable/ic_tag_button_24dp"
-        app:showAsAction="always"
-        />
+<!--    <item-->
+<!--        android:id="@+id/itemAddEditTag"-->
+<!--        android:title="Tag"-->
+<!--        android:contentDescription="Add tag"-->
+<!--        android:icon="@drawable/ic_tag_button_24dp"-->
+<!--        app:showAsAction="always"-->
+<!--        />-->
 
     <item
         android:id="@+id/itemAddEditPhotoButton"

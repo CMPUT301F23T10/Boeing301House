@@ -64,8 +64,6 @@
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
                 app:boxBackgroundColor="@color/textBoxColor"
-
-
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -233,13 +231,39 @@
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                app:layout_constraintTop_toBottomOf="@id/updateDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateTags"
+                app:helperTextTextColor="@color/required"
+                style="?attr/textInputFilledStyle"
+                app:boxBackgroundColor="@color/textBoxColor"
+                android:hint="Add Tag"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/tagEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    >
+
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
             <HorizontalScrollView
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/itemAddEditTagScrollView"
-                app:layout_constraintTop_toBottomOf="@id/updateDate"
+                app:layout_constraintTop_toBottomOf="@id/updateTags"
                 android:visibility="visible"
                 >
                 <com.google.android.material.chip.ChipGroup
@@ -261,6 +285,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:visibility="visible"
+
                 >
 
             </androidx.recyclerview.widget.RecyclerView>

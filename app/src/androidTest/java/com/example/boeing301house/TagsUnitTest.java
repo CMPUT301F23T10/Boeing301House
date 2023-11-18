@@ -41,7 +41,6 @@ public class TagsUnitTest {
     }
 
     private OnCompleteListener<String> listener = new OnCompleteListener() {
-        @Override
         public void onComplete(String tag, boolean success) {
             if (tag == null) {
                 Log.d("TEST", "FAIL");

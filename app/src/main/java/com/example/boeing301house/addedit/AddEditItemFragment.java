@@ -12,12 +12,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,16 +39,19 @@ import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,6 +115,8 @@ public class AddEditItemFragment extends Fragment {
      */
     private Long newDate = null;
 
+    private ArrayList<String> newTags;
+
     /**
      * New SN
      */
@@ -126,6 +136,8 @@ public class AddEditItemFragment extends Fragment {
      * ArrayList of uris
      */
     private ArrayList<Uri> uri;
+
+
 
     private static final int READ_PERMISSIONS = 101;
     private static final int CAMERA_PERMISSIONS = 102;
@@ -222,6 +234,7 @@ public class AddEditItemFragment extends Fragment {
         View view = binding.getRoot();
 
         uri = new ArrayList<>();
+        newTags = new ArrayList<>();
 
         imgRecyclerView = binding.addEditImageRecycler;
         imgAdapter = new AddEditImageAdapter(uri);
@@ -264,17 +277,19 @@ public class AddEditItemFragment extends Fragment {
             // TODO: allow backing from fragment to fragment
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (item.getItemId() == R.id.itemAddEditTag) {
-                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
-                            Toast.LENGTH_SHORT).show(); // for testing
-                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.itemAddEditContent, tagsFragment, "tagsFragment")
-                            .addToBackStack(null)
-                            .commit();
-                    return true;
-
-                } else if (item.getItemId() == R.id.itemAddEditPhotoButton) {
+//                if (item.getItemId() == R.id.itemAddEditTag) {
+//                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
+//                            Toast.LENGTH_SHORT).show(); // for testing
+//                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
+//                    getActivity().getSupportFragmentManager().beginTransaction()
+//                            .replace(R.id.itemAddEditContent, tagsFragment, "UPDATE_TO_TAG")
+//                            .addToBackStack(null)
+//                            .commit();
+//
+//                    return true;
+//
+//                } else
+                if (item.getItemId() == R.id.itemAddEditPhotoButton) {
                     // add camera functionality
                     View menuItemView = view.findViewById(item.getItemId());
                     PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
@@ -304,6 +319,7 @@ public class AddEditItemFragment extends Fragment {
 
                     return true;
 
+
                 } else if (item.getItemId() == R.id.itemAddEditScanButton) {
                     // add scanning functionality
                     Toast.makeText(getActivity(), String.format(Locale.CANADA,"Available on next version"),
@@ -330,6 +346,34 @@ public class AddEditItemFragment extends Fragment {
         binding.updateSN.setHint(String.format("SN: %s", currentItem.getSN()));
         binding.updateComment.setHint(String.format("Comment: %s", currentItem.getComment()));
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
+
+        // TODO: FINISH
+        // newTags.clear();
+        binding.updateTags.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                return;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d("TEST", "len: " + newTags.size());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    if (s.charAt(s.length() - 1) == ' ' || s.charAt(s.length() - 1) == '\n') {
+                        if (s.length() > 1) {
+                            newTags.add(s.toString().trim());
+                            // TODO: update chip group
+                        }
+                        s.clear();
+                    }
+                }
+
+            }
+        });
 
         // create instance of material date picker builder
         //  creating datepicker
