@@ -389,6 +389,11 @@ public class ItemList {
         } else if (method.matches("Make")) { //if the sort type is description
             itemQuery = itemsRef.orderBy("Make", direction);
 
+        } else if (method.matches("Tags")) { //if sort type is by tag
+            // TODO: finish, might be wrong
+            itemQuery = itemsRef.orderBy("Tags", direction);
+
+
         } else{ //by default, sort by date added!
             itemQuery = itemsRef.orderBy(FieldPath.documentId(), direction);
 

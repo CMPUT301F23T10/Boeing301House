@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Locale;
 
@@ -275,6 +276,12 @@ public class Item implements Parcelable {
         if (!tags.contains(tag)) {
             tags.add(tag);
         }
+        tags.sort(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s1.compareToIgnoreCase(s2);
+            }
+        });
     }
 
     /**
