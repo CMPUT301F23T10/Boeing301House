@@ -7,23 +7,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,25 +27,21 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.Scraping.GoogleSearchThread;
 import com.example.boeing301house.Scraping.SearchUIRunnable;
-import com.example.boeing301house.Tags;
-import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
-import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
@@ -58,14 +49,10 @@ import com.google.mlkit.vision.common.InputImage;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -149,11 +136,16 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
+    private boolean isAwaiting = false;
+
+    private Uri newURI;
+
 
 
 
     private static final int READ_PERMISSIONS = 101;
     private static final int CAMERA_PERMISSIONS = 102;
+    private static final int WRITE_PERMISSIONS = 103; // FOR API < 32
     private static final int GALLERY_REQUEST = 110;
     private static final int CAMERA_REQUEST = 111;
     private static final int SCAN_BARCODE_REQUEST = 112;
@@ -248,6 +240,7 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
 
+
         uri = new ArrayList<>();
         newTags = new ArrayList<>(currentItem.getTags());
 
@@ -262,9 +255,10 @@ public class AddEditItemFragment extends Fragment {
             }
         });
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
+        // GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
+        // LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        imgRecyclerView.setLayoutManager(layoutManager);
+        // imgRecyclerView.setLayoutManager(layoutManager);
         imgRecyclerView.setAdapter(imgAdapter);
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -408,8 +402,6 @@ public class AddEditItemFragment extends Fragment {
                     if (s.charAt(s.length() - 1) == ' ' || s.charAt(s.length() - 1) == '\n') {
                         if (s.length() > 1 && (!newTags.contains(s.toString().trim()))) {
                             newTags.add(s.toString().trim());
-                            Log.d("TAG TEST", "Size: " + newTags.size());
-                            // TODO: update chip group
                             addChip(s.toString().trim());
                         }
                         s.clear();
@@ -475,6 +467,11 @@ public class AddEditItemFragment extends Fragment {
                 newComment = binding.updateComment.getEditText().getText().toString();
                 newSN = binding.updateSN.getEditText().getText().toString();
                 newDescription = binding.updateDesc.getEditText().getText().toString();
+
+                String inputString = binding.updateTags.getEditText().getText().toString();
+                if (!inputString.isEmpty()) {
+                    newTags.add(inputString.trim());
+                }
 
                 if (isAdd)
                 {
@@ -601,93 +598,51 @@ public class AddEditItemFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("CAMERA_TEST", "rqC: " + requestCode + " | rC: " + resultCode);
         if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
 
                 for (int i = 0; i < x; i++) {
                     uri.add(data.getClipData().getItemAt(i).getUri());
+                    String imgURI = data.getClipData().getItemAt(i).getUri().toString();
+//                    Log.d("CAMERA_TEST", imgURI);
 
                 }
                 imgAdapter.notifyDataSetChanged();
             } else if (data.getData() != null) {
-                String imgURL = data.getData().getPath();
-                uri.add(Uri.parse(imgURL));
+                Uri imgURI = data.getData();
+//                Log.d("CAMERA_TEST", imgURI);
+                uri.add(imgURI);
 
             }
             imgAdapter.notifyDataSetChanged();
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data != null && data.getExtras() != null) {
-                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
-                Bitmap img = (Bitmap) data.getExtras().get("data");
-                if (img != null) {
-                    Uri imgURI = bitmapToUriConverter(requireContext(), img);
-                    uri.add(imgURI);
-                    imgAdapter.notifyDataSetChanged();
-                }
-            }
-//            if (data.getData() != null) {
-//                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
-//                Bitmap img = (Bitmap) data.getExtras().get("data");
-//                assert img != null;
-//                Uri imgURI = bitmapToUriConverter(requireContext(), img);
-////                Uri imgURI = data.getData();
-//                uri.add(imgURI);
-//            }
-//            imgAdapter.notifyDataSetChanged();
+            Log.d("CAMERA_TEST", newURI.toString());
 
-//            String imgURL = data.getData().getPath();
-//            uri.add(Uri.parse(imgURL));
+            uri.add(newURI);
+            imgAdapter.notifyDataSetChanged();
+
         } else if (requestCode == SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getExtras() != null) {
                 Bitmap image = (Bitmap) data.getExtras().get("data");
                 assert image != null;
                 scanBarcode(image);
             }
+        } else if (requestCode == SCAN_SN_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data.getExtras() != null) {
+                String SN = data.getStringExtra(ScannerActivity.RETURN_SN);
+                if (SN == null) {
+                    return;
+                }
+                if (SN.isEmpty()) {
+                    Snackbar.make(binding.itemAddEditContent, "FAILED TO READ SN", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    binding.updateSN.getEditText().setText(SN);
+                }
+            }
         }
-    }
 
-//     TODO: BROKEN
-    /**
-     * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
-     * Convert bitmap to uri
-     * @param requireContext app context
-     * @param img image bitmap
-     * @return uri of the image -> convert later to URL to save on firestore
-     */
-    private Uri bitmapToUriConverter(Context requireContext, Bitmap img) {
-        Uri uri = null;
-        try {
-            File file = new File(requireContext.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
-            FileOutputStream out = new FileOutputStream(file);
-            img.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.close();
-
-            // Get the content URI for the image file
-            uri = Uri.fromFile(file);
-
-        } catch (Exception e) {
-            Log.e("ERROR_CONVERTING_IMAGE", "Error in saving image");
-        }
-        return uri;
-//        Uri uri = null;
-//        try {
-//            final BitmapFactory.Options options = new BitmapFactory.Options();
-//            // Decrease the size of the image to reduce memory consumption
-//            options.inSampleSize = 2;
-//
-//            File file = new File(requireContext.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
-//            FileOutputStream out = requireContext.openFileOutput(file.getName(), Context.MODE_PRIVATE);
-//            img.compress(Bitmap.CompressFormat.PNG, 100, out);
-//            out.close();
-//
-//            // Get the content URI for the image file
-//            uri = FileProvider.getUriForFile(requireContext, requireContext.getApplicationContext().getPackageName() + ".provider", file);
-//
-//        } catch (Exception e) {
-//            Log.e("ERROR_CONVERTING_IMAGE", "Error in saving image");
-//        }
-//        return uri;
     }
 
 
@@ -697,13 +652,25 @@ public class AddEditItemFragment extends Fragment {
      */
     private boolean askGalleryPerms() {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, READ_PERMISSIONS);
             return false;
-        } else {
+        } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
+            return false;
+        }
+//        else {
+//            openGallery();
+//            return true;
+//        }
+        if ((ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
+                == PackageManager.PERMISSION_GRANTED) || (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED)) {
             openGallery();
             return true;
         }
+        return false;
     }
 
     /**
@@ -720,21 +687,37 @@ public class AddEditItemFragment extends Fragment {
 
     /**
      * Get permission to use camera and open camera
-     * @return true if camera opened, false otherwise
+     * @return true if camera/scanner opened, false otherwise
      */
     private boolean askCameraPerms(int requestCode) {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSIONS);
+        }
+
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
             return false;
-        } else {
-            if (requestCode == CAMERA_REQUEST) {
-                openCamera(CAMERA_REQUEST);
-            } else if (requestCode == SCAN_BARCODE_REQUEST) {
-                openCamera(SCAN_BARCODE_REQUEST);
-            }
-            return true;
+
         }
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            if (requestCode == SCAN_SN_REQUEST) {
+                openSNCamera();
+                return true;
+            }
+            else {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+                    openCamera(requestCode);
+                    return true;
+                } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    openCamera(requestCode);
+                    return true;
+                } else { return false; }
+            }
+        } else { return false; }
     }
 
 
@@ -765,8 +748,9 @@ public class AddEditItemFragment extends Fragment {
 
     /**
      * Add chip to chip group
+     * @param tag tag to add
      */
-    public void addChip(String tag) {
+    private void addChip(String tag) {
         final String name = tag;
         final Chip newChip = new Chip(requireContext());
         newChip.setText(name);
@@ -790,8 +774,32 @@ public class AddEditItemFragment extends Fragment {
     public void openCamera(Integer requestCode) {
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (requestCode == CAMERA_REQUEST) {
+            // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
+            // store img at new path and remember URI
+            File imgPath = new File(requireContext().getFilesDir(), "images");
+            if (!imgPath.exists()) {
+                imgPath.mkdirs();
+            }
+            File newFile = new File(imgPath, System.currentTimeMillis() + ".jpg");
+            newURI = FileProvider.getUriForFile(requireContext(), "com.example.boeing301house", newFile);
+
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, newURI);
+            Log.d("CAMERA_TEST", "PATH CREATED");
+        }
 
         startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * Open custom camera for SN
+     */
+    public void openSNCamera() {
+        Intent intent = new Intent(getActivity(), ScannerActivity.class);
+        startActivityForResult(intent, SCAN_SN_REQUEST); // result -> String if SN found, null otherwise
+
+
     }
 
     /**
@@ -799,6 +807,12 @@ public class AddEditItemFragment extends Fragment {
      * <a href="https://developers.google.com/ml-kit/vision/barcode-scanning/android">...</a>
      */
     public void scanBarcode(Bitmap image) {
+        Snackbar snackbar = Snackbar.make(binding.itemAddEditContent, "PROCESSING BARCODE...", Snackbar.LENGTH_LONG);
+        snackbar.setAction("DISMISS", v -> {
+            snackbar.dismiss();
+        });
+        snackbar.show();
+
         Log.d("SEARCH", "BARCODE FUNC CALLED");
         final ArrayList<String> productInfo = new ArrayList<>();
         Log.d(TAG, "Image: " + image.toString());
@@ -811,6 +825,9 @@ public class AddEditItemFragment extends Fragment {
                 Log.d("SEARCH", "BARCODE FUNC CALLED");
                 Log.d("SEARCH", "Successfully processed barcode. # " + barcodes.size());
                 Log.d(TAG, "Successfully processed barcode. # " + barcodes.size());
+                if (barcodes.size() == 0) {
+                    snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("NO BARCODE DETECTED").show();
+                }
                 for (Barcode barcode: barcodes) {
                     String barcodeData = barcode.getRawValue();
 
@@ -827,6 +844,7 @@ public class AddEditItemFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "Failed to process barcode");
+                snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("FAILED TO PROCESS").show();
             }
         });
     }
@@ -836,24 +854,35 @@ public class AddEditItemFragment extends Fragment {
      * @param barcode item barcode
      */
     public void getBarcodeData(String barcode) {
+        Snackbar snackbar = Snackbar.make(binding.itemAddEditContent, "PROCESSING BARCODE...", Snackbar.LENGTH_LONG);
+        snackbar.setAction("DISMISS", v -> {
+            snackbar.dismiss();
+        });
 
         GoogleSearchThread thread = new GoogleSearchThread(barcode, result -> {
             if (result != null) {
                 SearchUIRunnable searchRunnable = new SearchUIRunnable(result, title -> {
-                    if (title != null) {
-                        binding.updateDesc.getEditText().setText(title);
-                    } else {
-                        Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
-                        binding.updateDesc.getEditText().setText(barcode);
-                    }
+                    if (binding != null)
+                        if (title != null) {
+                            snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("PROCESSED").show();
+                            binding.updateDesc.getEditText().setText(title);
+                        } else {
+                            snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("NO INFO FOUND").show();
+                            binding.updateDesc.getEditText().setText(barcode);
+                        }
                 });
 
-                getActivity().runOnUiThread(searchRunnable);
+                if (binding != null) {
+                    getActivity().runOnUiThread(searchRunnable);
+                }
             }
         });
+
 
         thread.start();
 
     }
+
+
 
 }
