@@ -3,4 +3,8 @@
     <files-path
         name="images"
         path="images/"/>
+
+    <files-path
+        name="fsimages"
+        path="fsimages/"/>
 </paths>
