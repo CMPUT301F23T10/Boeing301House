@@ -624,11 +624,7 @@ public class AddEditItemFragment extends Fragment {
                     Uri imgURI = bitmapToUriConverter(requireContext(), img);
                     uri.add(imgURI);
                     imgAdapter.notifyDataSetChanged();
-                } else {
-                    // when null do nothing...
                 }
-            } else {
-                // TODO: Handle the case where data or data.getExtras() is null
             }
 //            if (data.getData() != null) {
 //                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
@@ -662,22 +658,36 @@ public class AddEditItemFragment extends Fragment {
     private Uri bitmapToUriConverter(Context requireContext, Bitmap img) {
         Uri uri = null;
         try {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            // Decrease the size of the image to reduce memory consumption
-            options.inSampleSize = 2;
-
             File file = new File(requireContext.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
-            FileOutputStream out = requireContext.openFileOutput(file.getName(), Context.MODE_PRIVATE);
+            FileOutputStream out = new FileOutputStream(file);
             img.compress(Bitmap.CompressFormat.PNG, 100, out);
             out.close();
 
             // Get the content URI for the image file
-            uri = FileProvider.getUriForFile(requireContext, requireContext.getApplicationContext().getPackageName() + ".provider", file);
+            uri = Uri.fromFile(file);
 
         } catch (Exception e) {
             Log.e("ERROR_CONVERTING_IMAGE", "Error in saving image");
         }
         return uri;
+//        Uri uri = null;
+//        try {
+//            final BitmapFactory.Options options = new BitmapFactory.Options();
+//            // Decrease the size of the image to reduce memory consumption
+//            options.inSampleSize = 2;
+//
+//            File file = new File(requireContext.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
+//            FileOutputStream out = requireContext.openFileOutput(file.getName(), Context.MODE_PRIVATE);
+//            img.compress(Bitmap.CompressFormat.PNG, 100, out);
+//            out.close();
+//
+//            // Get the content URI for the image file
+//            uri = FileProvider.getUriForFile(requireContext, requireContext.getApplicationContext().getPackageName() + ".provider", file);
+//
+//        } catch (Exception e) {
+//            Log.e("ERROR_CONVERTING_IMAGE", "Error in saving image");
+//        }
+//        return uri;
     }
 
 
