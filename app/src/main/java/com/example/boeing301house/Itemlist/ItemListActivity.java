@@ -70,9 +70,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     private static final String DELETE_ITEM = "DELETE_ITEM";
     private static final String EDIT_ITEM = "EDIT_ITEM";
 
-    private static final int GALLERY_REQUEST = 10;
-    private static final int CAMERA_REQUEST = 11;
-
 
     // for contextual appbar
     private ActionMode itemMultiSelectMode;
@@ -545,5 +542,14 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     @Override
     public void onSortOKPressed(String sortMethod, String sortOrder) {
         controller.sort(sortMethod, sortOrder);
+    }
+
+    /**
+     * Handle back nav pressed
+     */
+    @Override
+    public void onBackPressed() {
+        addButton.show();
+        super.onBackPressed();
     }
 }

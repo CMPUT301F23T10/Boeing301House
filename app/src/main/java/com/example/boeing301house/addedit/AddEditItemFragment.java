@@ -149,6 +149,8 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
+    private boolean isAwaiting = false;
+
 
 
 
@@ -247,6 +249,7 @@ public class AddEditItemFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
+
 
         uri = new ArrayList<>();
         newTags = new ArrayList<>(currentItem.getTags());
@@ -836,19 +839,21 @@ public class AddEditItemFragment extends Fragment {
      * @param barcode item barcode
      */
     public void getBarcodeData(String barcode) {
-
         GoogleSearchThread thread = new GoogleSearchThread(barcode, result -> {
             if (result != null) {
                 SearchUIRunnable searchRunnable = new SearchUIRunnable(result, title -> {
-                    if (title != null) {
-                        binding.updateDesc.getEditText().setText(title);
-                    } else {
-                        Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
-                        binding.updateDesc.getEditText().setText(barcode);
-                    }
+                    if (binding != null)
+                        if (title != null) {
+                            binding.updateDesc.getEditText().setText(title);
+                        } else {
+                            Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
+                            binding.updateDesc.getEditText().setText(barcode);
+                        }
                 });
 
-                getActivity().runOnUiThread(searchRunnable);
+                if (binding != null) {
+                    getActivity().runOnUiThread(searchRunnable);
+                }
             }
         });
 
