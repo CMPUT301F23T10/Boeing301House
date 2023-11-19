@@ -269,7 +269,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             builder.setTitle("Confirm Delete");
             builder.setMessage("Are you sure you want to delete this item?");
         }
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent resultIntent = new Intent();
@@ -287,7 +287,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
                 finish();
             }
         });
-        builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("DISCARD", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // if were editing and they cancel we want to return to the ItemViewActivity

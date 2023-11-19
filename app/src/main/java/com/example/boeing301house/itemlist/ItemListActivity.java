@@ -71,7 +71,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     // for contextual appbar
     private ActionMode itemMultiSelectMode;
 
-    private Button btnReset;
+    private Button resetButton;
     private AlertDialog.Builder builder;
 
     private ItemListController controller;
@@ -242,24 +242,25 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             }
         });
 
-        btnReset = findViewById(R.id.resetButton);
+        resetButton = findViewById(R.id.resetButton);
         builder = new AlertDialog.Builder(this);
 
-        btnReset.setOnClickListener(new View.OnClickListener() {
+        resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"PLACEHOLDER BUTTON"),
                         Toast.LENGTH_SHORT).show(); // for testing
-                builder.setTitle("Alert!!")
-                        .setMessage("Do you want to reset you date filter")
+                builder.setTitle("Confirm")
+                        .setMessage("Clear Filters?")
                         .setCancelable(true)
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 controller.filterClear();
+                                makeSnackbar("FILTERS CLEARED");
                             }
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
@@ -440,7 +441,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         builder.setTitle("Confirm Delete");
         builder.setMessage(String.format(Locale.CANADA, "Are you sure you want to delete %d items?", controller.itemsSelectedSize()));
         final boolean[] isDelete = new boolean[1];
-        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -450,7 +451,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             }
         });
 
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 isDelete[0] = false;

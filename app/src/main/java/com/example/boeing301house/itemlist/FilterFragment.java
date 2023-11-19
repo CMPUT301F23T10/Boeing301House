@@ -148,8 +148,8 @@ public class FilterFragment extends DialogFragment {
         return builder.setView(view)
                 .setTitle("Filter Items")
                 .setCancelable(true)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setNegativeButton("CANCEL", null)
+                .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         listener.onFilterOKPressed(dateStart, dateEnd);
