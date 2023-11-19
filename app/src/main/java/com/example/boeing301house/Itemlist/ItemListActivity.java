@@ -412,7 +412,9 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
             // handle user tap on tag
             else if (item.getItemId() == R.id.itemMultiselectTag) {
+//                makeSnackbar("TAGS");
                 new MultiTagFragment().show(getSupportFragmentManager(), "MULTITAG");
+                mode.finish(); // TODO: fix
                 return true;
             }
             return false;
