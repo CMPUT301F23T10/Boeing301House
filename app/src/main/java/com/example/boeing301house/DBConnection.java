@@ -10,7 +10,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Firebase;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +28,7 @@ public class DBConnection {
     private static final String TAG = "DBConnection";
 
     private FirebaseFirestore db;
+    private StorageReference storage;
 
     protected String firstStart;
     protected String uuid;
@@ -37,6 +41,7 @@ public class DBConnection {
         this.db = FirebaseFirestore.getInstance();
         setUUID(context);
         storeUUID(context);
+        setStorage();
         Log.d(TAG, "UUID: " + this.uuid);
 
     }
@@ -64,8 +69,8 @@ public class DBConnection {
             HashMap<String, Object> userData = new HashMap<>();
             userData.put("UUID", (pref.getString("userID","Error")));
             userData.put("password", "To be implemented");
-            userData.put("Tags", new ArrayList<>());
-            userData.put("Ref", "items" + (pref.getString("userID","Error")));
+            userData.put("Tags", new HashMap<String, Integer>());
+            userData.put("Ref", "items" + uuid);
 
             usersRef.document(pref.getString("userID","Error"))
                     .set(userData)
@@ -123,6 +128,26 @@ public class DBConnection {
     public CollectionReference getItemsRef() {
         //TODO: implement
         return this.db.collection("items"); // PLACEHOLDER
+//        return this.db.collection("items" + uuid); //TODO: SWITCH ONCE UUID FIXED
+    }
+
+    /**
+     * Get reference to user document
+     * @return reference to user doc
+     */
+    public DocumentReference getUserRef() {
+        return this.db.collection("users").document(uuid);
+    }
+
+    /**
+     * Set reference to storage
+     */
+    private void setStorage() {
+        storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com")
+                .getReference("images")
+                .child(uuid);
+
+
     }
 
 }

@@ -72,7 +72,9 @@ public class ItemList {
      */
     public ItemList(DBConnection connection) { // TODO: finish implementation
         this.db = connection.getDB();
-        this.itemsRef = this.db.collection("items");
+//        this.itemsRef = this.db.collection("items");
+
+        this.itemsRef = connection.getItemsRef();
         this.itemQuery = itemsRef.orderBy(FieldPath.documentId());
         searchFilters = new ArrayList<>();
         tagFilter = new ArrayList<>();
@@ -124,10 +126,9 @@ public class ItemList {
         itemData.put("Est Value", item.getValue());
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
+        itemData.put("Tags",item.getTags());
 
 
-        ArrayList<String> tags = new ArrayList<>(); // placeholder
-        itemData.put("Tags", tags); // placeholder
 //        updateItemListView();
         itemsRef.document(item.getItemID())
                 .set(itemData)
@@ -218,10 +219,8 @@ public class ItemList {
         itemData.put("Est Value", item.getValue());
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
+        itemData.put("Tags", item.getTags());
 
-        // TODO: implement
-        ArrayList<String> tags = new ArrayList<>(); // placeholder
-        itemData.put("Tags", tags); // placeholder for tags since we haven't done it yet
 
         // Get the document reference for the item
         DocumentReference itemRef = itemsRef.document(item.getItemID());
@@ -320,6 +319,7 @@ public class ItemList {
                     Double value = doc.getDouble("Est Value");
                     String desc = doc.getString("Desc");
                     String comment = doc.getString("Comment");
+                    ArrayList<String> tags = (ArrayList<String>)doc.get("Tags");
                     String id = doc.getId();
                     // TODO: tags and images
 
@@ -334,6 +334,7 @@ public class ItemList {
                             .addValue(value)
                             .addDescription(desc)
                             .addComment(comment)
+                            .addTag(tags)
                             .build();
 
                     itemList.add(item);
@@ -384,6 +385,11 @@ public class ItemList {
 
         } else if (method.matches("Make")) { //if the sort type is description
             itemQuery = itemsRef.orderBy("Make", direction);
+
+        } else if (method.matches("Tags")) { //if sort type is by tag
+            // TODO: finish, might be wrong
+            itemQuery = itemsRef.orderBy("Tags", direction);
+
 
         } else{ //by default, sort by date added!
             itemQuery = itemsRef.orderBy(FieldPath.documentId(), direction);

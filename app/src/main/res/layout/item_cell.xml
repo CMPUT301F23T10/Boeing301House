@@ -3,7 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/bg_ripple_default"
+    >
 
     <TextView
         android:id="@+id/itemMake"
@@ -90,6 +94,19 @@
         android:layout_marginTop="2dp"
         android:text="comment"
 
+        />
+
+    <TextView
+        android:id="@+id/itemTags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/itemSN"
+        app:layout_constraintTop_toBottomOf="@id/itemDescription"
+        android:layout_marginTop="2dp"
+        android:text="tag1, tag2, ..."
+        style="@style/TextAppearance.Material3.LabelSmall"
+        android:textColor="@color/itemCellTextColor"
+        android:visibility="gone"
         />
 
 

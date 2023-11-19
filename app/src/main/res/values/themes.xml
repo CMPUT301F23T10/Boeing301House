@@ -8,6 +8,7 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close_button_24dp</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
+        <item name="android:actionModeBackground"> @color/colorTitleBar </item>
     </style>
     <style name="Theme.Boeing301House" parent="Base.Theme.Boeing301House" />
 </resources>

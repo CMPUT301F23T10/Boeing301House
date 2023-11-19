@@ -41,12 +41,34 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
     // navgraph stuff
-    implementation("androidx.navigation:navigation-fragment:2.7.4")
-    implementation("androidx.navigation:navigation-ui:2.7.4")
-    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.4")
-    implementation("com.google.firebase:firebase-auth:22.2.0")
-    androidTestImplementation("androidx.navigation:navigation-testing:2.7.4")
-    implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("androidx.navigation:navigation-fragment:2.7.5")
+    implementation("androidx.navigation:navigation-ui:2.7.5")
+    implementation("androidx.navigation:navigation-dynamic-features-fragment:2.7.5")
+
+    implementation("com.google.firebase:firebase-auth:22.3.0")
+    implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
+
+    implementation("com.squareup.picasso:picasso:2.8")
+
+
+    // CameraX core library using the camera2 implementation
+    val camerax_version = "1.4.0-alpha02"
+    // The following line is optional, as the core library is included indirectly by camera-camera2
+    implementation("androidx.camera:camera-core:${camerax_version}")
+    implementation("androidx.camera:camera-camera2:${camerax_version}")
+    // If you want to additionally use the CameraX Lifecycle library
+    implementation("androidx.camera:camera-lifecycle:${camerax_version}")
+    // If you want to additionally use the CameraX VideoCapture library
+    implementation("androidx.camera:camera-video:${camerax_version}")
+    // If you want to additionally use the CameraX View class
+    implementation("androidx.camera:camera-view:${camerax_version}")
+    // If you want to additionally add CameraX ML Kit Vision Integration
+    implementation("androidx.camera:camera-mlkit-vision:${camerax_version}")
+    // If you want to additionally use the CameraX Extensions library
+    implementation("androidx.camera:camera-extensions:${camerax_version}")
+
+
+
 
     // ML stuff for scanning
 //    implementation("com.google.firebase:firebase-ml-vision:24.0.3")
@@ -64,7 +86,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("com.google.firebase:testlab-instr-lib:0.2")
     implementation("org.apache.commons:commons-lang3:3.9")
-    implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-firestore")
     compileOnly(files("${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"))
 }

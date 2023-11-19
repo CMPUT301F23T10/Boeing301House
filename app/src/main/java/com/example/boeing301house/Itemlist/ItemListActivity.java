@@ -9,16 +9,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.ActivityBase;
 import com.example.boeing301house.addedit.AddEditItemFragment;
@@ -32,7 +35,6 @@ import com.example.boeing301house.SortFragment;
 import com.example.boeing301house.UserProfileActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -46,16 +48,12 @@ import java.util.Locale;
  */
 public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
 
-    private FirebaseFirestore db;
 
-    private ListView itemListView;
+    private RecyclerView itemListRecyclerView;
     //    private FloatingActionButton addButton;
-    private ItemAdapter itemAdapter;
+    private ItemRecyclerAdapter itemAdapter;
 
     private TextView subTotalText;
-    public ArrayList<Item> itemList;
-
-    private ArrayList<Item> selectedItems;
 
     private Button itemListFilterButton;
     private Button itemListSortButton;
@@ -66,11 +64,14 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     private FloatingActionButton addButton;
 
     // intent return codes
-    private static final int select = 1;
+    private static final int SELECT = 1;
 
     // action codes
     private static final String DELETE_ITEM = "DELETE_ITEM";
     private static final String EDIT_ITEM = "EDIT_ITEM";
+
+    private static final int GALLERY_REQUEST = 10;
+    private static final int CAMERA_REQUEST = 11;
 
 
     // for contextual appbar
@@ -102,13 +103,81 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         controller.setTotalListener(this::calculateTotalPrice);
 
         //sets up item list
-        db = FirebaseFirestore.getInstance(); // get instance for firestore db
         DBConnection dbConnection = new DBConnection(getApplicationContext());
 
-        itemListView = findViewById(R.id.itemList); // binds the city list to the xml file
-
+        itemListRecyclerView = findViewById(R.id.itemList); // binds the city list to the xml file
+        // add divider lines
+        itemListRecyclerView.addItemDecoration(
+                new DividerItemDecoration(getBaseContext(), LinearLayoutManager.VERTICAL)
+        );
         itemAdapter = controller.getItemAdapter();
-        itemListView.setAdapter(itemAdapter);
+
+        // Handle multiselect first step
+        itemAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(View view, int position) {
+                if (!isSelectMultiple) {
+                    Item current = (Item) itemAdapter.getItemAtPosition(position);
+                    controller.onMultiSelectStart(current);
+
+                    isSelectMultiple = true;
+//                    view.setBackgroundResource(R.color.colorHighlight); // visually select
+                    view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.colorHighlight));
+//                    view.setBackgroundResource(R.drawable.bg_ripple_selected);
+
+                    // contextual app bar
+                    if (itemMultiSelectMode != null) {
+                        return false;
+                    }
+
+                    itemMultiSelectMode = startActionMode(itemMultiSelectModeCallback); // TODO: convert to startSupportActionBar
+                }
+                return true;
+            }
+        });
+
+        itemAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int i) {
+                Item item = (Item) itemAdapter.getItemAtPosition(i);
+                ArrayList<Item> itemRef = new ArrayList<>();
+                itemRef.add(item);
+
+                if (!isSelectMultiple) {
+                    Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
+                    intent.putExtra("Selected Item", item);
+
+                    pos = i;
+                    intent.putExtra("pos", pos);
+
+                    startActivityForResult(intent, SELECT);
+
+                } else { // select multiple + delete multiple functionality
+                    if (controller.onMultiSelect(itemRef)) { // if selecting
+//                        view.setBackgroundResource(R.color.colorHighlight); // visually select
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.colorHighlight));
+                    }
+                    else { // deselecting
+                        // view.setBackgroundResource(R.drawable.bg_ripple_default); // visually deselect
+//                        view.setBackgroundColor(0);
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.white));
+                    }
+
+
+//                    selectedItemViews.size();
+                    itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", controller.itemsSelectedSize()));
+
+                    // deselect all items -> no longer selecting multiple
+                    if (controller.itemsSelectedSize() == 0) {
+                        isSelectMultiple = false;
+                        itemMultiSelectMode.finish(); // close contextual app bar
+                    }
+
+                }
+            }
+        });
+
+        itemListRecyclerView.setAdapter(itemAdapter);
 
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
         setSupportActionBar(topbar);
@@ -126,92 +195,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
 
-
-        // Handle multiselect first step
-        itemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            /**
-             * When an item is long pressed
-             */
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // begin select multiple
-
-                if (!isSelectMultiple) {
-                    Item current = (Item) itemListView.getItemAtPosition(position);
-                    controller.onMultiSelectStart(current);
-
-                    isSelectMultiple = true;
-                    view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
-
-                    // contextual app bar
-                    if (itemMultiSelectMode != null) {
-                        return false;
-                    }
-
-                    itemMultiSelectMode = startActionMode(itemMultiSelectModeCallback); // TODO: convert to startSupportActionBar
-
-                    // for testing
-//                    CharSequence text = "Selecting multiple";
-//                    int duration = Toast.LENGTH_SHORT;
-//                    Toast toast = Toast.makeText(getBaseContext(), text, duration);
-//                    toast.show();
-
-                }
-                return true;
-            }
-        });
-
-
-        // handle item selection during multiselect and regular selection
-        itemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            // TODO: finish javadocs
-            /**
-             * When an item is clicked from the list
-             * @param adapterView The AdapterView where the click happened.
-             * @param view The view within the AdapterView that was clicked (this
-             *            will be a view provided by the adapter)
-             * @param i The position of the view in the adapter.
-             * @param l The row id of the item that was clicked.
-             */
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Item item = (Item) itemListView.getItemAtPosition(i);
-                ArrayList<Item> itemRef = new ArrayList<>();
-                itemRef.add(item);
-
-                if (!isSelectMultiple) {
-                    Intent intent = new Intent(ItemListActivity.this, ItemViewActivity.class);
-                    intent.putExtra("Selected Item", item);
-
-                    pos = i;
-                    intent.putExtra("pos", pos);
-
-                    startActivityForResult(intent, select);
-
-                } else { // select multiple + delete multiple functionality
-                    if (controller.onMultiSelect(itemRef)) {
-                        view.setBackgroundColor(getResources().getColor(R.color.colorHighlight)); // visually select
-                    }
-                    else {
-                        view.setBackgroundColor(0); // visually deselect
-                    }
-
-
-//                    selectedItemViews.size();
-                    itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", controller.itemsSelectedSize()));
-
-
-                    // deselect all items -> no longer selecting multiple
-                    if (controller.itemsSelectedSize() == 0) {
-                        isSelectMultiple = false;
-                        itemMultiSelectMode.finish(); // close contextual app bar
-                    }
-
-                }
-
-            }
-
-        });
 
         //for launching the sort fragment
         itemListFilterButton.setOnClickListener(new View.OnClickListener() {
@@ -257,7 +240,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 //                        .add(R.id.content_frame, detailFrag, null)
                         .add(R.id.itemListContent, addFrag, null)
                         .replace(R.id.itemListContent, addFrag, "LIST_TO_ADD")
-                        // .addToBackStack("Add Item")
+                        .addToBackStack("Add Item")
                         .commit();
 
 
@@ -333,8 +316,12 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        // https://stackoverflow.com/a/22685084
+        for (Fragment fragment: getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
         // if we returned RESULT_OK that means we want to delete an item
-        if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK && requestCode == SELECT) {
             String action = data.getStringExtra("action");
             assert action != null;
 
@@ -344,8 +331,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             if (action.contentEquals(DELETE_ITEM)) {
 
                 if (itemIndex != -1) {
-                    Item itemToDelete = itemList.get(itemIndex);
-                    controller.removeItem(itemToDelete);
+                    // Bundle bundle = data.getExtras();
+                    controller.removeItem(itemIndex);
                 }
             } else if (action.contentEquals(EDIT_ITEM)) {
                 if (itemIndex != -1) {

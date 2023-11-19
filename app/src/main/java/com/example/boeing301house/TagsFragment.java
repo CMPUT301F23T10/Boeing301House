@@ -3,24 +3,23 @@ package com.example.boeing301house;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.boeing301house.databinding.FragmentTagsBinding;
-import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**
@@ -87,12 +86,12 @@ public class TagsFragment extends Fragment {
         View view = binding.getRoot();
         TextView chipTextView = binding.chipsTextView;
         ChipGroup chipGroup = binding.chipsGroup;
+        EditText editText = binding.addTagEditText;
         // TODO: remove testing chips
-        ArrayList<String> arrayList = new ArrayList<>();
-        arrayList.add("Tag1");
-        arrayList.add("Tag2");
-        arrayList.add("Tag3");
-        arrayList.add("Tag4");
+
+        Tags tags = Tags.getInstance();
+        ArrayList<String> arrayList = tags.getTags();
+        ArrayList<String> selectedTags = currentItem.getTags();
 
         Random random = new Random();
         for (String s: arrayList) {
@@ -109,9 +108,11 @@ public class TagsFragment extends Fragment {
                     chipTextView.setText("No tags selected");
                 } else {
                     StringBuilder stringBuilder = new StringBuilder();
+                    selectedTags.clear();
                     for (int i: checkedIds) {
                         Chip chip = getActivity().findViewById(i);
                         stringBuilder.append(", ").append(chip.getText());
+                        selectedTags.add((String)chip.getText());
                     }
                     chipTextView.setText("Selected Tag(s): " + stringBuilder.toString().replaceFirst(",",""));
                 }
@@ -122,8 +123,7 @@ public class TagsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO: add functionality and check over
-                listener.onCancel();
-                // deleteFrag();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
@@ -132,6 +132,39 @@ public class TagsFragment extends Fragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), UserProfileActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        binding.updateItemConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), String.format(Locale.CANADA,selectedTags.toString()),
+                                        Toast.LENGTH_SHORT).show(); // for testing
+                currentItem.addTags(selectedTags);
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+        binding.addTagButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!editText.getText().toString().isEmpty()){
+                    Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
+                    chip.setText(editText.getText().toString());
+                    chip.setId(random.nextInt());
+                    chipGroup.addView(chip);
+//                    tag.addTag(editText.getText().toString(), new OnCompleteListener<String>() {
+//                        @Override
+//                        public void onComplete(String item, boolean success) {
+//                            if (success){
+//                                Toast.makeText(getActivity(), String.format(Locale.CANADA,"Tags Added"),
+//                                        Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(getActivity(), String.format(Locale.CANADA,"Error, try again"),
+//                                        Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+                };
             }
         });
         return view;
