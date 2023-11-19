@@ -1,5 +1,6 @@
 package com.example.boeing301house.Itemlist;
 
+import android.app.StatusBarManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -87,6 +88,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 
         setContentView(R.layout.activity_item_list);

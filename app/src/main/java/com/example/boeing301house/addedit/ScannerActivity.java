@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.objects.ObjectDetector;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
@@ -57,6 +59,9 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ProcessCameraProvider cameraProvider;
+
+    private ObjectDetector detector; // TODO: implement
+    private Rect barcodeRect = null;
 
     /**
      * Result key
@@ -173,11 +178,12 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
             try {
                 cameraProvider = (ProcessCameraProvider) cameraProviderFuture.get();
+                bindPreview();
             } catch (ExecutionException | InterruptedException e) {
                 Log.e(TAG, "FAILED TO GET CAMERA PROVIDER");
                 throw new RuntimeException(e);
             }
-            bindPreview();
+
 
         }, ContextCompat.getMainExecutor(this));
 
@@ -253,7 +259,10 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         boxHeight = bottom - top;
         boxWidth = right - left;
         //Changing the value of x in diameter/x will change the size of the box ; inversely proportionate to x
-        canvas.drawRect(left, top, right, bottom, paint);
+
+        if (barcodeRect == null) {
+            canvas.drawRect(left, top, right, bottom, paint);
+        }
         holder.unlockCanvasAndPost(canvas);
     }
 
