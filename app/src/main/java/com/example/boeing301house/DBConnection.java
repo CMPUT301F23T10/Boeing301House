@@ -47,7 +47,6 @@ public class DBConnection {
         this.db = FirebaseFirestore.getInstance();
         setUUID(context);
         storeUUID(context);
-        set();
         Log.d(TAG, "UUID: " + this.uuid);
 
     }
