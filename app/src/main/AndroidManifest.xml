@@ -23,6 +23,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Boeing301House"
         tools:targetApi="31">
+        <provider
+            android:authorities="com.example.boeing301house"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/paths">
+
+            </meta-data>
+
+        </provider>
+
         <activity
             android:name=".addedit.SNScanner"
             android:exported="false" />

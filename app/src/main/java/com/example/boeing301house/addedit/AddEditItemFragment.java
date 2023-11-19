@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
@@ -60,6 +61,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
@@ -150,6 +152,8 @@ public class AddEditItemFragment extends Fragment {
     private ArrayList<Uri> uri;
 
     private boolean isAwaiting = false;
+
+    private Uri newURI;
 
 
 
@@ -265,9 +269,10 @@ public class AddEditItemFragment extends Fragment {
             }
         });
 
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
+        // GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
+        // LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         // layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        imgRecyclerView.setLayoutManager(layoutManager);
+        // imgRecyclerView.setLayoutManager(layoutManager);
         imgRecyclerView.setAdapter(imgAdapter);
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -610,37 +615,23 @@ public class AddEditItemFragment extends Fragment {
 
                 for (int i = 0; i < x; i++) {
                     uri.add(data.getClipData().getItemAt(i).getUri());
+                    String imgURI = data.getClipData().getItemAt(i).getUri().toString();
+                    Log.d("CAMERA_TEST", imgURI);
 
                 }
                 imgAdapter.notifyDataSetChanged();
             } else if (data.getData() != null) {
-                String imgURL = data.getData().getPath();
-                uri.add(Uri.parse(imgURL));
+                String imgURI = data.getData().getPath();
+                Log.d("CAMERA_TEST", imgURI);
+                uri.add(Uri.parse(imgURI));
 
             }
             imgAdapter.notifyDataSetChanged();
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data != null && data.getExtras() != null) {
-                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
-                Bitmap img = (Bitmap) data.getExtras().get("data");
-                if (img != null) {
-                    Uri imgURI = bitmapToUriConverter(requireContext(), img);
-                    uri.add(imgURI);
-                    imgAdapter.notifyDataSetChanged();
-                }
-            }
-//            if (data.getData() != null) {
-//                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
-//                Bitmap img = (Bitmap) data.getExtras().get("data");
-//                assert img != null;
-//                Uri imgURI = bitmapToUriConverter(requireContext(), img);
-////                Uri imgURI = data.getData();
-//                uri.add(imgURI);
-//            }
-//            imgAdapter.notifyDataSetChanged();
+            Log.d("CAMERA_TEST", newURI.toString());
+            uri.add(newURI);
+            imgAdapter.notifyDataSetChanged();
 
-//            String imgURL = data.getData().getPath();
-//            uri.add(Uri.parse(imgURL));
         } else if (requestCode == SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getExtras() != null) {
                 Bitmap image = (Bitmap) data.getExtras().get("data");
@@ -648,49 +639,7 @@ public class AddEditItemFragment extends Fragment {
                 scanBarcode(image);
             }
         }
-    }
 
-//     TODO: BROKEN
-    /**
-     * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
-     * Convert bitmap to uri
-     * @param requireContext app context
-     * @param img image bitmap
-     * @return uri of the image -> convert later to URL to save on firestore
-     */
-    private Uri bitmapToUriConverter(Context requireContext, Bitmap img) {
-        Uri uri = null;
-        try {
-            File file = new File(requireContext.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
-            FileOutputStream out = new FileOutputStream(file);
-            img.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.close();
-
-            // Get the content URI for the image file
-            uri = Uri.fromFile(file);
-
-        } catch (Exception e) {
-            Log.e("ERROR_CONVERTING_IMAGE", "Error in saving image");
-        }
-        return uri;
-//        Uri uri = null;
-//        try {
-//            final BitmapFactory.Options options = new BitmapFactory.Options();
-//            // Decrease the size of the image to reduce memory consumption
-//            options.inSampleSize = 2;
-//
-//            File file = new File(requireContext.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
-//            FileOutputStream out = requireContext.openFileOutput(file.getName(), Context.MODE_PRIVATE);
-//            img.compress(Bitmap.CompressFormat.PNG, 100, out);
-//            out.close();
-//
-//            // Get the content URI for the image file
-//            uri = FileProvider.getUriForFile(requireContext, requireContext.getApplicationContext().getPackageName() + ".provider", file);
-//
-//        } catch (Exception e) {
-//            Log.e("ERROR_CONVERTING_IMAGE", "Error in saving image");
-//        }
-//        return uri;
     }
 
 
@@ -793,6 +742,17 @@ public class AddEditItemFragment extends Fragment {
     public void openCamera(Integer requestCode) {
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (requestCode == CAMERA_REQUEST) {
+            // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
+            // store img at new path and remember URI
+            File imgPath = new File(requireContext().getFilesDir(), "images");
+            File newFile = new File(imgPath, System.currentTimeMillis() + ".jpg");
+            newURI = FileProvider.getUriForFile(requireContext(), "com.example.boeing301house", newFile);
+
+
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, newURI);
+            Log.d("CAMERA_TEST", "PATH CREATED");
+        }
 
         startActivityForResult(intent, requestCode);
     }
