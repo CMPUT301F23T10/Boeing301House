@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,6 +35,10 @@ public class DBConnection {
     protected String firstStart;
     protected String uuid;
 
+    private FirebaseAuth auth;
+
+    private FirebaseUser user;
+
     /**
      * Connects to Firebase Firestore database
      * @param context: context of application
@@ -41,7 +47,7 @@ public class DBConnection {
         this.db = FirebaseFirestore.getInstance();
         setUUID(context);
         storeUUID(context);
-        setStorage();
+        set();
         Log.d(TAG, "UUID: " + this.uuid);
 
     }
@@ -139,7 +145,7 @@ public class DBConnection {
         return this.db.collection("users").document(uuid);
     }
 
-    /**
+    /**Storage
      * Set reference to storage
      */
     private void setStorage() {
