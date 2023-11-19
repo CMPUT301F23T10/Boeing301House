@@ -637,6 +637,18 @@ public class AddEditItemFragment extends Fragment {
                 assert image != null;
                 scanBarcode(image);
             }
+        } else if (requestCode == SCAN_SN_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data.getExtras() != null) {
+                String SN = data.getStringExtra(SNScannerActivity.RETURN_SN);
+                if (SN == null) {
+                    return;
+                }
+                if (SN.isEmpty()) {
+                    Snackbar.make(binding.itemAddEditContent, "FAILED TO READ SN", Snackbar.LENGTH_SHORT).show();
+                } else {
+                    binding.updateSN.getEditText().setText(SN);
+                }
+            }
         }
 
     }

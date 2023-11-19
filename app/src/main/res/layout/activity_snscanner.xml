@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".addedit.SNScannerActivity">
+    tools:context=".addedit.SNScannerActivity"
+    android:id="@+id/scanContent"
+    >
 
     <Button
         android:id="@+id/scanShutterButton"
@@ -22,17 +24,32 @@
         >
 
     </Button>
-    
+
+
     <androidx.camera.view.PreviewView
         android:id="@+id/scanViewFinder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/scanShutterButton"
         android:layout_marginBottom="40dp"
-        >
+        android:elevation="10dp"
+        />
 
-    </androidx.camera.view.PreviewView>
+    <SurfaceView
+        android:id="@+id/scanOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/scanShutterButton"
+        android:layout_marginBottom="40dp"
+        android:elevation="999dp"
+        />
+
 
     <Button
         android:layout_width="wrap_content"
@@ -61,6 +78,7 @@
 
         >
     </Button>
+
 
 
 
