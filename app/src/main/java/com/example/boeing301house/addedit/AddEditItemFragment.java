@@ -7,24 +7,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.PopupMenu;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,27 +27,21 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.Scraping.GoogleSearchThread;
 import com.example.boeing301house.Scraping.SearchUIRunnable;
-import com.example.boeing301house.Tags;
-import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
@@ -61,15 +49,10 @@ import com.google.mlkit.vision.common.InputImage;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -648,7 +631,7 @@ public class AddEditItemFragment extends Fragment {
             }
         } else if (requestCode == SCAN_SN_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getExtras() != null) {
-                String SN = data.getStringExtra(SNScannerActivity.RETURN_SN);
+                String SN = data.getStringExtra(ScannerActivity.RETURN_SN);
                 if (SN == null) {
                     return;
                 }
@@ -813,7 +796,7 @@ public class AddEditItemFragment extends Fragment {
      * Open custom camera for SN
      */
     public void openSNCamera() {
-        Intent intent = new Intent(getActivity(), SNScannerActivity.class);
+        Intent intent = new Intent(getActivity(), ScannerActivity.class);
         startActivityForResult(intent, SCAN_SN_REQUEST); // result -> String if SN found, null otherwise
 
 

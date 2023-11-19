@@ -40,8 +40,8 @@ import java.util.concurrent.ExecutionException;
  * <a href="https://www.geeksforgeeks.org/how-to-create-custom-camera-using-camerax-in-android/">...</a>
  * <a href="https://developers.google.com/ml-kit/vision/text-recognition/v2/android#java">...</a>
  */
-public class SNScannerActivity extends AppCompatActivity implements SurfaceHolder.Callback {
-    private static final String TAG = "ANALYZE_SN";
+public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+    private static final String TAG = "SCANNER";
 
     private PreviewView viewFinder;
 
@@ -73,7 +73,7 @@ public class SNScannerActivity extends AppCompatActivity implements SurfaceHolde
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_snscanner);
+        setContentView(R.layout.activity_scanner);
 
         viewFinder = findViewById(R.id.scanViewFinder);
         Button shutterButton = findViewById(R.id.scanShutterButton);
