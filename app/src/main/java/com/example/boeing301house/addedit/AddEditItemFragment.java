@@ -483,6 +483,11 @@ public class AddEditItemFragment extends Fragment {
                 newSN = binding.updateSN.getEditText().getText().toString();
                 newDescription = binding.updateDesc.getEditText().getText().toString();
 
+                String inputString = binding.updateTags.getEditText().getText().toString();
+                if (!inputString.isEmpty()) {
+                    newTags.add(inputString.trim());
+                }
+
                 if (isAdd)
                 {
                     if(!checkFields()) {

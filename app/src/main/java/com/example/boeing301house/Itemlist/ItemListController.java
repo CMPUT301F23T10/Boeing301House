@@ -281,6 +281,7 @@ public class ItemListController {
 
         for (Item item: selectedItems) {
             item.addTags(tags, true);
+            itemList.firestoreEdit(item, null);
         }
         tags.clear();
 

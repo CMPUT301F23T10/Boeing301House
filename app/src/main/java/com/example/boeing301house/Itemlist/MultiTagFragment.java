@@ -109,8 +109,19 @@ public class MultiTagFragment extends DialogFragment {
         return builder.setView(view)
                 .setTitle("ADD TAGS")
                 .setCancelable(true)
-                .setNegativeButton("Cancel", (dialog, which) -> listener.onTagOKPressed(null, false))
-                .setPositiveButton("OK", (dialog, which) -> listener.onTagOKPressed(newTags, true)).create();
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    listener.onTagOKPressed(null, false);
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String inputString = updateMultiTag.getEditText().getText().toString();
+                        if (!inputString.isEmpty()) {
+                            newTags.add(inputString.trim());
+                        }
+                        listener.onTagOKPressed(newTags, true);
+                    }
+                }).create();
 
         // return super.onCreateDialog(savedInstanceState);
     }
