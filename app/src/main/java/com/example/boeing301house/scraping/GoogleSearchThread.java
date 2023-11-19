@@ -1,4 +1,4 @@
-package com.example.boeing301house.Scraping;
+package com.example.boeing301house.scraping;
 
 import android.util.Log;
 

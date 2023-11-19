@@ -31,8 +31,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
-import com.example.boeing301house.Scraping.GoogleSearchThread;
-import com.example.boeing301house.Scraping.SearchUIRunnable;
+import com.example.boeing301house.scraping.GoogleSearchThread;
+import com.example.boeing301house.scraping.SearchUIRunnable;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

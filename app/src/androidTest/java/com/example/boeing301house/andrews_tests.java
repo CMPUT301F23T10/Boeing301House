@@ -30,12 +30,10 @@ import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObject;
 import androidx.test.uiautomator.UiObjectNotFoundException;
-import androidx.test.uiautomator.UiSelector;
 import androidx.test.uiautomator.Until;
 
-import com.example.boeing301house.Itemlist.ItemListActivity;
+import com.example.boeing301house.itemlist.ItemListActivity;
 
 import org.junit.Rule;
 import org.junit.Test;

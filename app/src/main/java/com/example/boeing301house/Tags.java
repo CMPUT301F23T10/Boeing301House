@@ -94,9 +94,9 @@ public class Tags {
     /**
      * Add tag to list + db
      * @param tag tag to be added
-     * @param listener optional {@link com.example.boeing301house.Itemlist.OnCompleteListener} for error handling
+     * @param listener optional {@link com.example.boeing301house.itemlist.OnCompleteListener} for error handling
      */
-    public void addTag(String tag, @Nullable com.example.boeing301house.Itemlist.OnCompleteListener<String> listener) {
+    public void addTag(String tag, @Nullable com.example.boeing301house.itemlist.OnCompleteListener<String> listener) {
         if (listener != null) {
             if (tag == null) {
                 listener.onComplete(null, false); // TODO: snackbar "No tag"
@@ -124,9 +124,9 @@ public class Tags {
     /**
      * Remove tag from tags
      * @param tag tag to be removed
-     * @param listener optional {@link com.example.boeing301house.Itemlist.OnCompleteListener} for error handling
+     * @param listener optional {@link com.example.boeing301house.itemlist.OnCompleteListener} for error handling
      */
-    public void removeTag(String tag, @Nullable com.example.boeing301house.Itemlist.OnCompleteListener<String> listener) {
+    public void removeTag(String tag, @Nullable com.example.boeing301house.itemlist.OnCompleteListener<String> listener) {
         if (listener != null) {
             if (tag == null) {
                 listener.onComplete(null, false); // TODO: snackbar "No tag"

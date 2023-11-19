@@ -75,6 +75,7 @@ dependencies {
 //    implementation("com.google.firebase:firebase-ml-vision-barcode-model:16.0.1")
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
     implementation("com.google.mlkit:text-recognition:16.0.0")
+    implementation("com.google.mlkit:object-detection:17.0.0")
 
 
 

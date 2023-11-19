@@ -1,10 +1,7 @@
 package com.example.boeing301house;
 
-import android.util.Log;
-
 import androidx.test.core.app.ApplicationProvider;
 
-import com.example.boeing301house.Itemlist.OnCompleteListener;
 import com.google.firebase.FirebaseApp;
 
 import org.junit.Before;

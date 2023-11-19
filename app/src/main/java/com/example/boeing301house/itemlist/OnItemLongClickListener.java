@@ -1,7 +1,6 @@
-package com.example.boeing301house.Itemlist;
+package com.example.boeing301house.itemlist;
 
 import android.view.View;
-import android.widget.AdapterView;
 
 /**
  * Item long click listener for RecyclerView
