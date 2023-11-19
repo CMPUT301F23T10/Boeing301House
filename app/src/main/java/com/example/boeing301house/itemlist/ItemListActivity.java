@@ -1,6 +1,5 @@
-package com.example.boeing301house.Itemlist;
+package com.example.boeing301house.itemlist;
 
-import android.app.StatusBarManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;

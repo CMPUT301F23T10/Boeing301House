@@ -1,4 +1,4 @@
-package com.example.boeing301house.Itemlist;
+package com.example.boeing301house.itemlist;
 
 import android.view.View;
 

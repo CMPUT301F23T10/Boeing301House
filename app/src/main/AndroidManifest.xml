@@ -58,7 +58,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".Itemlist.ItemListActivity"
+            android:name=".itemlist.ItemListActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan" />
         <activity
