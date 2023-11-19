@@ -248,10 +248,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ItemListActivity.this, String.format(Locale.CANADA,"PLACEHOLDER BUTTON"),
-                        Toast.LENGTH_SHORT).show(); // for testing
-                builder.setTitle("Confirm")
-                        .setMessage("Clear Filters?")
+                builder.setTitle("Confirm Filter Clear")
+                        .setMessage("Are you sure you want to clear filters?")
                         .setCancelable(true)
                         .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                             @Override
