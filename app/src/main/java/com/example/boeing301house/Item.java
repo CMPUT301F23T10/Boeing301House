@@ -298,6 +298,21 @@ public class Item implements Parcelable {
     }
 
     /**
+     * Add tags to multiple item
+     * @param tags list of tags
+     */
+    public void addTags(ArrayList<String> tags, boolean isMulti) {
+        if (!isMulti) {
+            addTags(tags);
+            return;
+        }
+
+        for (String tag: tags) {
+            addTags(tag);
+        }
+    }
+
+    /**
      * Remove tag from item
      * @param tag tag to be removed
      */

@@ -278,9 +278,11 @@ public class ItemListController {
      * @param tags tags to add
      */
     public void multiAddTag(ArrayList<String> tags) {
+
         for (Item item: selectedItems) {
-            item.addTags(tags);
+            item.addTags(tags, true);
         }
+        tags.clear();
 
     }
     /**
