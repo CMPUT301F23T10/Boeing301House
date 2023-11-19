@@ -69,7 +69,7 @@ public class DBConnection {
             HashMap<String, Object> userData = new HashMap<>();
             userData.put("UUID", (pref.getString("userID","Error")));
             userData.put("password", "To be implemented");
-            userData.put("Tags", new ArrayList<>());
+            userData.put("Tags", new HashMap<String, Integer>());
             userData.put("Ref", "items" + uuid);
 
             usersRef.document(pref.getString("userID","Error"))
@@ -128,6 +128,7 @@ public class DBConnection {
     public CollectionReference getItemsRef() {
         //TODO: implement
         return this.db.collection("items"); // PLACEHOLDER
+//        return this.db.collection("items" + uuid); //TODO: SWITCH ONCE UUID FIXED
     }
 
     /**

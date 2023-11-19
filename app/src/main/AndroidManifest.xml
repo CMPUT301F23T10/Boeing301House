@@ -7,11 +7,10 @@
         android:required="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="MediaStore.createWriteRequest"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>-->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
-
+    <uses-permission android:name="MediaStore.createWriteRequest" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,32 +18,31 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Boeing301House"
-        android:largeHeap="true"
         tools:targetApi="31">
+        <activity
+            android:name=".addedit.SNScanner"
+            android:exported="false" />
         <activity
             android:name=".ItemViewActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".UserProfileActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"
-            />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Itemlist.ItemListActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-
-            />
-        <activity android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".MainActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan"
-            android:noHistory="true">
-
+            android:noHistory="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

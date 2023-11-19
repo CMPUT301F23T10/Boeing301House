@@ -12,12 +12,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,22 +37,36 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
+import com.example.boeing301house.Scraping.GoogleSearchThread;
+import com.example.boeing301house.Scraping.SearchUIRunnable;
+import com.example.boeing301house.Tags;
 import com.example.boeing301house.TagsFragment;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.common.InputImage;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
@@ -57,6 +76,7 @@ import java.util.TimeZone;
  * Observer pattern used
  */
 public class AddEditItemFragment extends Fragment {
+    private static final String TAG = "ADD_EDIT_FRAG";
     /**
      * Current item being added/edited
      */
@@ -107,6 +127,8 @@ public class AddEditItemFragment extends Fragment {
      */
     private Long newDate = null;
 
+    private ArrayList<String> newTags;
+
     /**
      * New SN
      */
@@ -127,10 +149,15 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
+
+
+
     private static final int READ_PERMISSIONS = 101;
     private static final int CAMERA_PERMISSIONS = 102;
-    private static final int GALLERY_REQUEST = 10;
-    private static final int CAMERA_REQUEST = 11;
+    private static final int GALLERY_REQUEST = 110;
+    private static final int CAMERA_REQUEST = 111;
+    private static final int SCAN_BARCODE_REQUEST = 112;
+    private static final int SCAN_SN_REQUEST = 113;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -222,6 +249,7 @@ public class AddEditItemFragment extends Fragment {
         View view = binding.getRoot();
 
         uri = new ArrayList<>();
+        newTags = new ArrayList<>(currentItem.getTags());
 
         imgRecyclerView = binding.addEditImageRecycler;
         imgAdapter = new AddEditImageAdapter(uri);
@@ -264,17 +292,22 @@ public class AddEditItemFragment extends Fragment {
             // TODO: allow backing from fragment to fragment
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                /*
                 if (item.getItemId() == R.id.itemAddEditTag) {
                     Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
                             Toast.LENGTH_SHORT).show(); // for testing
                     Fragment tagsFragment = TagsFragment.newInstance(currentItem);
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.itemAddEditContent, tagsFragment, "tagsFragment")
+                            .replace(R.id.itemAddEditContent, tagsFragment, "UPDATE_TO_TAG")
                             .addToBackStack(null)
                             .commit();
+
                     return true;
 
-                } else if (item.getItemId() == R.id.itemAddEditPhotoButton) {
+                } else
+
+                 */
+                if (item.getItemId() == R.id.itemAddEditPhotoButton) {
                     // add camera functionality
                     View menuItemView = view.findViewById(item.getItemId());
                     PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
@@ -284,7 +317,7 @@ public class AddEditItemFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.camera) {
-                                return askCameraPerms();
+                                return askCameraPerms(CAMERA_REQUEST);
                             }
                             else if (item.getItemId() == R.id.gallery) {
                                 return askGalleryPerms();
@@ -304,11 +337,36 @@ public class AddEditItemFragment extends Fragment {
 
                     return true;
 
+
                 } else if (item.getItemId() == R.id.itemAddEditScanButton) {
                     // add scanning functionality
-                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"Available on next version"),
-                            Toast.LENGTH_SHORT).show(); // for testing
-                    return true;
+                    View menuItemView = view.findViewById(item.getItemId());
+                    PopupMenu popup = new PopupMenu(getActivity(), menuItemView);
+
+                    popup.getMenuInflater().inflate(R.menu.scan_popup_menu, popup.getMenu());
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if (item.getItemId() == R.id.scanBarcode) {
+                                return askCameraPerms(SCAN_BARCODE_REQUEST);
+                            }
+                            else if (item.getItemId() == R.id.scanSN) {
+                                return askCameraPerms(SCAN_SN_REQUEST);
+                            }
+                            return false;
+                        }
+                    });
+
+                    popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
+                        @Override
+                        public void onDismiss(PopupMenu menu) {
+                            return;
+                        }
+                    });
+
+                    popup.show();
+
                 }
                 return false;
             }
@@ -330,6 +388,36 @@ public class AddEditItemFragment extends Fragment {
         binding.updateSN.setHint(String.format("SN: %s", currentItem.getSN()));
         binding.updateComment.setHint(String.format("Comment: %s", currentItem.getComment()));
         binding.updateDesc.setHint(String.format("Desc: %s", currentItem.getDescription()));
+
+        fillChipGroup();
+
+        binding.updateTags.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                return;
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                return;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    if (s.charAt(s.length() - 1) == ' ' || s.charAt(s.length() - 1) == '\n') {
+                        if (s.length() > 1 && (!newTags.contains(s.toString().trim()))) {
+                            newTags.add(s.toString().trim());
+                            Log.d("TAG TEST", "Size: " + newTags.size());
+                            // TODO: update chip group
+                            addChip(s.toString().trim());
+                        }
+                        s.clear();
+                    }
+                }
+
+            }
+        });
 
         // create instance of material date picker builder
         //  creating datepicker
@@ -400,7 +488,9 @@ public class AddEditItemFragment extends Fragment {
                         currentItem.setDate(newDate);
                         currentItem.setValue(newValue);
                         currentItem.setSN(newSN);
+                        Log.d("TAG TEST", "Size: " + newTags.size());
                         currentItem.setDescription(newDescription);
+                        currentItem.setTags(newTags);
 
                         listener.onConfirmPressed(currentItem); // transfers the new data to main
                     }
@@ -438,6 +528,7 @@ public class AddEditItemFragment extends Fragment {
                     currentItem.setValue(newValue);
                     currentItem.setSN(newSN);
                     currentItem.setDescription(newDescription);
+                    currentItem.setTags(newTags);
                     listener.onConfirmPressed(currentItem);
 
                 }
@@ -526,16 +617,67 @@ public class AddEditItemFragment extends Fragment {
             }
             imgAdapter.notifyDataSetChanged();
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data.getExtras() != null) {
+            if (data != null && data.getExtras() != null) {
+                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
                 Bitmap img = (Bitmap) data.getExtras().get("data");
-                assert img != null;
-                Uri imgURI = bitmapToUriConverter(requireContext(), img);
-                uri.add(imgURI);
+                if (img != null) {
+                    Uri imgURI = bitmapToUriConverter(requireContext(), img);
+                    uri.add(imgURI);
+                    imgAdapter.notifyDataSetChanged();
+                } else {
+                    // when null do nothing...
+                }
+            } else {
+                // TODO: Handle the case where data or data.getExtras() is null
             }
-            imgAdapter.notifyDataSetChanged();
+//            if (data.getData() != null) {
+//                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
+//                Bitmap img = (Bitmap) data.getExtras().get("data");
+//                assert img != null;
+//                Uri imgURI = bitmapToUriConverter(requireContext(), img);
+////                Uri imgURI = data.getData();
+//                uri.add(imgURI);
+//            }
+//            imgAdapter.notifyDataSetChanged();
+
 //            String imgURL = data.getData().getPath();
 //            uri.add(Uri.parse(imgURL));
+        } else if (requestCode == SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) {
+            if (data.getExtras() != null) {
+                Bitmap image = (Bitmap) data.getExtras().get("data");
+                assert image != null;
+                scanBarcode(image);
+            }
         }
+    }
+
+//     TODO: BROKEN
+    /**
+     * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
+     * Convert bitmap to uri
+     * @param requireContext app context
+     * @param img image bitmap
+     * @return uri of the image -> convert later to URL to save on firestore
+     */
+    private Uri bitmapToUriConverter(Context requireContext, Bitmap img) {
+        Uri uri = null;
+        try {
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            // Decrease the size of the image to reduce memory consumption
+            options.inSampleSize = 2;
+
+            File file = new File(requireContext.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
+            FileOutputStream out = requireContext.openFileOutput(file.getName(), Context.MODE_PRIVATE);
+            img.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.close();
+
+            // Get the content URI for the image file
+            uri = FileProvider.getUriForFile(requireContext, requireContext.getApplicationContext().getPackageName() + ".provider", file);
+
+        } catch (Exception e) {
+            Log.e("ERROR_CONVERTING_IMAGE", "Error in saving image");
+        }
+        return uri;
     }
 
 
@@ -570,56 +712,138 @@ public class AddEditItemFragment extends Fragment {
      * Get permission to use camera and open camera
      * @return true if camera opened, false otherwise
      */
-    private boolean askCameraPerms() {
+    private boolean askCameraPerms(int requestCode) {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
             return false;
         } else {
-            openCamera();
+            if (requestCode == CAMERA_REQUEST) {
+                openCamera(CAMERA_REQUEST);
+            } else if (requestCode == SCAN_BARCODE_REQUEST) {
+                openCamera(SCAN_BARCODE_REQUEST);
+            }
             return true;
         }
     }
 
+
     /**
-     * Open camera
+     * Fill chip group w/ item tags (for initializing)
      */
-    private void openCamera() {
+    public void fillChipGroup() {
+        for (int i = 0; i < newTags.size(); i++) {
+            final String name = newTags.get(i);
+            final Chip newChip = new Chip(requireContext());
+            newChip.setText(name);
+            newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+            newChip.setCloseIconEnabled(true);
+            newChip.setContentDescription("chip"+name);
+            newChip.setCloseIconContentDescription("close"+name); // for ui testing
+            newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    newTags.remove(name);
+                    binding.itemAddEditChipGroup.removeView(newChip);
+                }
+            });
+
+            binding.itemAddEditChipGroup.addView(newChip);
+        }
+    }
+
+
+    /**
+     * Add chip to chip group
+     */
+    public void addChip(String tag) {
+        final String name = tag;
+        final Chip newChip = new Chip(requireContext());
+        newChip.setText(name);
+        newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+        newChip.setCloseIconEnabled(true);
+        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTags.remove(name);
+                binding.itemAddEditChipGroup.removeView(newChip);
+            }
+        });
+
+        binding.itemAddEditChipGroup.addView(newChip);
+
+    }
+
+    /**
+     * Open camera (overloaded function for use w/ scanning)
+     */
+    public void openCamera(Integer requestCode) {
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        // TODO handle photo using startActivityForResult i think..
-        startActivityForResult(intent, CAMERA_REQUEST);
-        // startActivityForResult(intent, CAMERA_REQUEST);
+
+        startActivityForResult(intent, requestCode);
     }
 
     /**
-     * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
-     * Convert bitmap to uri
-     * @param context app context
-     * @param mBitmap image bitmap
-     * @return uri
+     * Scan barcode via img from camera
+     * <a href="https://developers.google.com/ml-kit/vision/barcode-scanning/android">...</a>
      */
-    public Uri bitmapToUriConverter(Context context, Bitmap mBitmap) {
-        Uri uri = null;
-        try {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            // Decrease the size of the image to reduce memory consumption
-            options.inSampleSize = 2;
+    public void scanBarcode(Bitmap image) {
+        Log.d("SEARCH", "BARCODE FUNC CALLED");
+        final ArrayList<String> productInfo = new ArrayList<>();
+        Log.d(TAG, "Image: " + image.toString());
+        InputImage inputImage = InputImage.fromBitmap(image, 0);
 
-            File file = new File(context.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
-            FileOutputStream out = context.openFileOutput(file.getName(), Context.MODE_PRIVATE);
-            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.close();
+        BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
+        barcodeScanner.process(inputImage).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+            @Override
+            public void onSuccess(List<Barcode> barcodes) {
+                Log.d("SEARCH", "BARCODE FUNC CALLED");
+                Log.d("SEARCH", "Successfully processed barcode. # " + barcodes.size());
+                Log.d(TAG, "Successfully processed barcode. # " + barcodes.size());
+                for (Barcode barcode: barcodes) {
+                    String barcodeData = barcode.getRawValue();
 
-            // Get the content URI for the image file
-            uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
+                    getBarcodeData(barcodeData);
 
-        } catch (Exception e) {
-            Log.e("Your_Tag", "Error in saving image");
-        }
-        return uri;
+                    productInfo.add(barcodeData);
+                    Log.d("SEARCH", "BARCODE SCANNED IN ADD EDIT");
+                    Log.d(TAG, barcode.getRawValue());
+                }
+
+                // binding.updateDesc.getEditText().setText(StringUtils.join(productInfo, ". "));
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Failed to process barcode");
+            }
+        });
     }
 
+    /**
+     * Run web search for product info
+     * @param barcode item barcode
+     */
+    public void getBarcodeData(String barcode) {
 
+        GoogleSearchThread thread = new GoogleSearchThread(barcode, result -> {
+            if (result != null) {
+                SearchUIRunnable searchRunnable = new SearchUIRunnable(result, title -> {
+                    if (title != null) {
+                        binding.updateDesc.getEditText().setText(title);
+                    } else {
+                        Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
+                        binding.updateDesc.getEditText().setText(barcode);
+                    }
+                });
+
+                getActivity().runOnUiThread(searchRunnable);
+            }
+        });
+
+        thread.start();
+
+    }
 
 }

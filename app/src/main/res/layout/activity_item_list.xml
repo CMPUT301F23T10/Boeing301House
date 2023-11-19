@@ -9,15 +9,17 @@
     android:id="@+id/itemListContent"
     >
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:id="@+id/itemList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="?actionBarSize"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="vertical"
         >
 
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 
 <!--        TODO: FIX POSITION -->
@@ -60,21 +62,24 @@
         android:id="@+id/itemListAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true"
+        app:liftOnScrollTargetViewId="@id/itemList"
         >
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/itemListMaterialToolbar"
+            app:title="Items"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorTitleBar"
             android:minHeight="?attr/actionBarSize"
             app:menu="@menu/ab_item_list_appbar"
-            app:title="Items"
             app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
-            app:titleTextColor="@color/white">
+            app:titleTextColor="@color/white"
+            android:elevation="0dp">
 
         </com.google.android.material.appbar.MaterialToolbar>
-
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/itemListSFBar"
