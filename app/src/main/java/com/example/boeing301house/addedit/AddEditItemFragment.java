@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.provider.MediaStore;
@@ -161,6 +162,7 @@ public class AddEditItemFragment extends Fragment {
 
     private static final int READ_PERMISSIONS = 101;
     private static final int CAMERA_PERMISSIONS = 102;
+    private static final int WRITE_PERMISSIONS = 103; // FOR API < 32
     private static final int GALLERY_REQUEST = 110;
     private static final int CAMERA_REQUEST = 111;
     private static final int SCAN_BARCODE_REQUEST = 112;
@@ -613,6 +615,7 @@ public class AddEditItemFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 //        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("CAMERA_TEST", "rqC: " + requestCode + " | rC: " + resultCode);
         if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
@@ -625,14 +628,15 @@ public class AddEditItemFragment extends Fragment {
                 }
                 imgAdapter.notifyDataSetChanged();
             } else if (data.getData() != null) {
-                String imgURI = data.getData().getPath();
+                Uri imgURI = data.getData();
 //                Log.d("CAMERA_TEST", imgURI);
-                uri.add(Uri.parse(imgURI));
+                uri.add(imgURI);
 
             }
             imgAdapter.notifyDataSetChanged();
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-//            Log.d("CAMERA_TEST", newURI.toString());
+            Log.d("CAMERA_TEST", newURI.toString());
+
             uri.add(newURI);
             imgAdapter.notifyDataSetChanged();
 
@@ -665,13 +669,25 @@ public class AddEditItemFragment extends Fragment {
      */
     private boolean askGalleryPerms() {
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
-                != PackageManager.PERMISSION_GRANTED) {
+                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, READ_PERMISSIONS);
             return false;
-        } else {
+        } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
+            return false;
+        }
+//        else {
+//            openGallery();
+//            return true;
+//        }
+        if ((ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
+                == PackageManager.PERMISSION_GRANTED) || (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED)) {
             openGallery();
             return true;
         }
+        return false;
     }
 
     /**
@@ -688,29 +704,37 @@ public class AddEditItemFragment extends Fragment {
 
     /**
      * Get permission to use camera and open camera
-     * @return true if camera opened, false otherwise
+     * @return true if camera/scanner opened, false otherwise
      */
     private boolean askCameraPerms(int requestCode) {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSIONS);
+        }
+
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
             return false;
-        } else {
+
+        }
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
             if (requestCode == SCAN_SN_REQUEST) {
                 openSNCamera();
+                return true;
             }
             else {
-                openCamera(requestCode);
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+                    openCamera(requestCode);
+                    return true;
+                } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    openCamera(requestCode);
+                    return true;
+                } else { return false; }
             }
-//            if (requestCode == CAMERA_REQUEST) {
-//                openCamera(CAMERA_REQUEST);
-//            } else if (requestCode == SCAN_BARCODE_REQUEST) {
-//                openCamera(SCAN_BARCODE_REQUEST);
-//            } else if (requestCode == SCAN_SN_REQUEST) {
-//                openCamera(SCAN_SN_REQUEST);
-//            }
-            return true;
-        }
+        } else { return false; }
     }
 
 
@@ -771,6 +795,9 @@ public class AddEditItemFragment extends Fragment {
             // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
             // store img at new path and remember URI
             File imgPath = new File(requireContext().getFilesDir(), "images");
+            if (!imgPath.exists()) {
+                imgPath.mkdirs();
+            }
             File newFile = new File(imgPath, System.currentTimeMillis() + ".jpg");
             newURI = FileProvider.getUriForFile(requireContext(), "com.example.boeing301house", newFile);
 
