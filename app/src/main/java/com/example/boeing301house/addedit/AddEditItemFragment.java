@@ -51,6 +51,7 @@ import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
@@ -416,8 +417,6 @@ public class AddEditItemFragment extends Fragment {
                     if (s.charAt(s.length() - 1) == ' ' || s.charAt(s.length() - 1) == '\n') {
                         if (s.length() > 1 && (!newTags.contains(s.toString().trim()))) {
                             newTags.add(s.toString().trim());
-                            Log.d("TAG TEST", "Size: " + newTags.size());
-                            // TODO: update chip group
                             addChip(s.toString().trim());
                         }
                         s.clear();
@@ -616,19 +615,19 @@ public class AddEditItemFragment extends Fragment {
                 for (int i = 0; i < x; i++) {
                     uri.add(data.getClipData().getItemAt(i).getUri());
                     String imgURI = data.getClipData().getItemAt(i).getUri().toString();
-                    Log.d("CAMERA_TEST", imgURI);
+//                    Log.d("CAMERA_TEST", imgURI);
 
                 }
                 imgAdapter.notifyDataSetChanged();
             } else if (data.getData() != null) {
                 String imgURI = data.getData().getPath();
-                Log.d("CAMERA_TEST", imgURI);
+//                Log.d("CAMERA_TEST", imgURI);
                 uri.add(Uri.parse(imgURI));
 
             }
             imgAdapter.notifyDataSetChanged();
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Log.d("CAMERA_TEST", newURI.toString());
+//            Log.d("CAMERA_TEST", newURI.toString());
             uri.add(newURI);
             imgAdapter.notifyDataSetChanged();
 
@@ -680,11 +679,19 @@ public class AddEditItemFragment extends Fragment {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
             return false;
         } else {
-            if (requestCode == CAMERA_REQUEST) {
-                openCamera(CAMERA_REQUEST);
-            } else if (requestCode == SCAN_BARCODE_REQUEST) {
-                openCamera(SCAN_BARCODE_REQUEST);
+            if (requestCode == SCAN_SN_REQUEST) {
+                openSNCamera();
             }
+            else {
+                openCamera(requestCode);
+            }
+//            if (requestCode == CAMERA_REQUEST) {
+//                openCamera(CAMERA_REQUEST);
+//            } else if (requestCode == SCAN_BARCODE_REQUEST) {
+//                openCamera(SCAN_BARCODE_REQUEST);
+//            } else if (requestCode == SCAN_SN_REQUEST) {
+//                openCamera(SCAN_SN_REQUEST);
+//            }
             return true;
         }
     }
@@ -758,10 +765,26 @@ public class AddEditItemFragment extends Fragment {
     }
 
     /**
+     * Open custom camera for SN
+     */
+    public void openSNCamera() {
+        Intent intent = new Intent(getActivity(), SNScannerActivity.class);
+        startActivityForResult(intent, SCAN_SN_REQUEST); // result -> String if SN found, null otherwise
+
+
+    }
+
+    /**
      * Scan barcode via img from camera
      * <a href="https://developers.google.com/ml-kit/vision/barcode-scanning/android">...</a>
      */
     public void scanBarcode(Bitmap image) {
+        Snackbar snackbar = Snackbar.make(binding.itemAddEditContent, "PROCESSING BARCODE...", Snackbar.LENGTH_LONG);
+        snackbar.setAction("DISMISS", v -> {
+            snackbar.dismiss();
+        });
+        snackbar.show();
+
         Log.d("SEARCH", "BARCODE FUNC CALLED");
         final ArrayList<String> productInfo = new ArrayList<>();
         Log.d(TAG, "Image: " + image.toString());
@@ -774,6 +797,9 @@ public class AddEditItemFragment extends Fragment {
                 Log.d("SEARCH", "BARCODE FUNC CALLED");
                 Log.d("SEARCH", "Successfully processed barcode. # " + barcodes.size());
                 Log.d(TAG, "Successfully processed barcode. # " + barcodes.size());
+                if (barcodes.size() == 0) {
+                    snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("NO BARCODE DETECTED").show();
+                }
                 for (Barcode barcode: barcodes) {
                     String barcodeData = barcode.getRawValue();
 
@@ -790,6 +816,7 @@ public class AddEditItemFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "Failed to process barcode");
+                snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("FAILED TO PROCESS").show();
             }
         });
     }
@@ -799,14 +826,20 @@ public class AddEditItemFragment extends Fragment {
      * @param barcode item barcode
      */
     public void getBarcodeData(String barcode) {
+        Snackbar snackbar = Snackbar.make(binding.itemAddEditContent, "PROCESSING BARCODE...", Snackbar.LENGTH_LONG);
+        snackbar.setAction("DISMISS", v -> {
+            snackbar.dismiss();
+        });
+
         GoogleSearchThread thread = new GoogleSearchThread(barcode, result -> {
             if (result != null) {
                 SearchUIRunnable searchRunnable = new SearchUIRunnable(result, title -> {
                     if (binding != null)
                         if (title != null) {
+                            snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("PROCESSED").show();
                             binding.updateDesc.getEditText().setText(title);
                         } else {
-                            Toast.makeText(requireContext(), "SEARCH FAILED", Toast.LENGTH_SHORT).show();
+                            snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("NO INFO FOUND").show();
                             binding.updateDesc.getEditText().setText(barcode);
                         }
                 });
@@ -817,8 +850,11 @@ public class AddEditItemFragment extends Fragment {
             }
         });
 
+
         thread.start();
 
     }
+
+
 
 }

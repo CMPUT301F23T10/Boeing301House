@@ -37,7 +37,7 @@
         </provider>
 
         <activity
-            android:name=".addedit.SNScanner"
+            android:name=".addedit.SNScannerActivity"
             android:exported="false" />
         <activity
             android:name=".ItemViewActivity"
