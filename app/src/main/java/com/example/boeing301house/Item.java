@@ -294,6 +294,7 @@ public class Item implements Parcelable {
         for (String tag: tags) {
             addTags(tag);
         }
+        tags.clear();
     }
 
     /**

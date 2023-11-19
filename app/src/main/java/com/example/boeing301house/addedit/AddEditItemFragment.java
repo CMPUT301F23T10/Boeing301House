@@ -736,8 +736,9 @@ public class AddEditItemFragment extends Fragment {
 
     /**
      * Add chip to chip group
+     * @param tag tag to add
      */
-    public void addChip(String tag) {
+    private void addChip(String tag) {
         final String name = tag;
         final Chip newChip = new Chip(requireContext());
         newChip.setText(name);

@@ -7,7 +7,6 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,12 +25,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.boeing301house.ActivityBase;
 import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.example.boeing301house.DBConnection;
-import com.example.boeing301house.FilterFragment;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
 import com.example.boeing301house.ItemViewActivity;
 import com.example.boeing301house.R;
-import com.example.boeing301house.SortFragment;
 import com.example.boeing301house.UserProfileActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -46,7 +43,7 @@ import java.util.Locale;
  *
  * This class is for the list activity, where you can see/interact with items
  */
-public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener {
+public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener, MultiTagFragment.OnTagInteractionListener {
 
 
     private RecyclerView itemListRecyclerView;
@@ -415,7 +412,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
             // handle user tap on tag
             else if (item.getItemId() == R.id.itemMultiselectTag) {
-                makeSnackbar("Available on next version");
+                new MultiTagFragment().show(getSupportFragmentManager(), "MULTITAG");
                 return true;
             }
             return false;
@@ -545,6 +542,17 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     }
 
     /**
+     * Handle tagging functionality during multiselect
+     * @param tags tags to add
+     */
+    @Override
+    public void onTagOKPressed(ArrayList<String> tags, boolean success) {
+        if (success) {
+            controller.multiAddTag(tags);
+        }
+    }
+
+    /**
      * Handle back nav pressed
      */
     @Override
@@ -552,4 +560,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         addButton.show();
         super.onBackPressed();
     }
+
+
 }

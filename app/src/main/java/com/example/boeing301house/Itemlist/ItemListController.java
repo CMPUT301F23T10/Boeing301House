@@ -274,13 +274,14 @@ public class ItemListController {
 
     /**
      * Add selected tags to multiple items
-     * @param items selected items
+     *
      * @param tags tags to add
      */
-    public void multiAddTag(ArrayList<Item> items, ArrayList<String> tags) {
-        for (Item item: items) {
+    public void multiAddTag(ArrayList<String> tags) {
+        for (Item item: selectedItems) {
             item.addTags(tags);
         }
+
     }
     /**
      * Gets Item Adapter
