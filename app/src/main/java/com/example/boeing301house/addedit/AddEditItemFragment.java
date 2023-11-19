@@ -617,15 +617,29 @@ public class AddEditItemFragment extends Fragment {
             }
             imgAdapter.notifyDataSetChanged();
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            if (data.getData() != null) {
+            if (data != null && data.getExtras() != null) {
                 Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
                 Bitmap img = (Bitmap) data.getExtras().get("data");
-                assert img != null;
-                Uri imgURI = bitmapToUriConverter(requireContext(), img);
-//                Uri imgURI = data.getData();
-                uri.add(imgURI);
+                if (img != null) {
+                    Uri imgURI = bitmapToUriConverter(requireContext(), img);
+                    uri.add(imgURI);
+                    imgAdapter.notifyDataSetChanged();
+                } else {
+                    // when null do nothing...
+                }
+            } else {
+                // TODO: Handle the case where data or data.getExtras() is null
             }
-            imgAdapter.notifyDataSetChanged();
+//            if (data.getData() != null) {
+//                Log.d("CAMERA_TEST", "NONNULL DATA RECEIVED");
+//                Bitmap img = (Bitmap) data.getExtras().get("data");
+//                assert img != null;
+//                Uri imgURI = bitmapToUriConverter(requireContext(), img);
+////                Uri imgURI = data.getData();
+//                uri.add(imgURI);
+//            }
+//            imgAdapter.notifyDataSetChanged();
+
 //            String imgURL = data.getData().getPath();
 //            uri.add(Uri.parse(imgURL));
         } else if (requestCode == SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) {
@@ -635,6 +649,35 @@ public class AddEditItemFragment extends Fragment {
                 scanBarcode(image);
             }
         }
+    }
+
+//     TODO: BROKEN
+    /**
+     * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
+     * Convert bitmap to uri
+     * @param requireContext app context
+     * @param img image bitmap
+     * @return uri of the image -> convert later to URL to save on firestore
+     */
+    private Uri bitmapToUriConverter(Context requireContext, Bitmap img) {
+        Uri uri = null;
+        try {
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            // Decrease the size of the image to reduce memory consumption
+            options.inSampleSize = 2;
+
+            File file = new File(requireContext.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
+            FileOutputStream out = requireContext.openFileOutput(file.getName(), Context.MODE_PRIVATE);
+            img.compress(Bitmap.CompressFormat.PNG, 100, out);
+            out.close();
+
+            // Get the content URI for the image file
+            uri = FileProvider.getUriForFile(requireContext, requireContext.getApplicationContext().getPackageName() + ".provider", file);
+
+        } catch (Exception e) {
+            Log.e("ERROR_CONVERTING_IMAGE", "Error in saving image");
+        }
+        return uri;
     }
 
 
@@ -682,37 +725,6 @@ public class AddEditItemFragment extends Fragment {
             }
             return true;
         }
-    }
-
-
-
-    // TODO: BROKEN
-    /**
-     * via <a href="https://chat.openai.com/share/50916fb9-ab46-493b-a866-607f35278554">...</a>
-     * Convert bitmap to uri
-     * @param context app context
-     * @param mBitmap image bitmap
-     * @return uri
-     */
-    public Uri bitmapToUriConverter(Context context, Bitmap mBitmap) {
-        Uri uri = null;
-        try {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            // Decrease the size of the image to reduce memory consumption
-            options.inSampleSize = 2;
-
-            File file = new File(context.getFilesDir(), "Image" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date()) + ".png");
-            FileOutputStream out = context.openFileOutput(file.getName(), Context.MODE_PRIVATE);
-            mBitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            out.close();
-
-            // Get the content URI for the image file
-            uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
-
-        } catch (Exception e) {
-            Log.e("Your_Tag", "Error in saving image");
-        }
-        return uri;
     }
 
 
