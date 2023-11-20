@@ -275,8 +275,11 @@ public class Item implements Parcelable {
      * @param tag tag
      */
     public void addTags(String tag) {
+//        Tags tagTracker = Tags.getInstance();
+
         if (!this.tags.contains(tag)) {
             this.tags.add(tag);
+//            tagTracker.addTag(tag, null);
         }
         this.tags.sort(new Comparator<String>() {
             @Override
@@ -317,7 +320,11 @@ public class Item implements Parcelable {
      * @param tag tag to be removed
      */
     public void removeTag(String tag) {
+//        Tags tagTracker = Tags.getInstance();
+//        tagTracker.removeTag(tag, null);
+
         tags.remove(tag);
+
     }
 
     /**
@@ -326,6 +333,10 @@ public class Item implements Parcelable {
      */
     public void setTags(ArrayList<String> newTags) {
         ArrayList<String> temp = new ArrayList<>(newTags); // to compensate for pass by ref when dealing with arrays
+
+//        Tags tagTracker = Tags.getInstance();
+//        tagTracker.removeTags(this.tags, null);
+
         this.tags.clear();
         addTags(temp);
     }

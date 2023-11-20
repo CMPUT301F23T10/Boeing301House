@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.example.boeing301house.ActivityBase;
 import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
+import com.example.boeing301house.Tags;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,12 +36,17 @@ public class ItemListController {
     public ItemListController(Activity activity) {
         this.activity = (ActivityBase) activity; // downcast
         db = FirebaseFirestore.getInstance();
-        itemsRef = db.collection("items");
-        itemList = new ItemList(itemsRef); // TODO: SWITCH TO DBCONN ONCE USER
+
 
 //        // USING USER SPECIFIC ITEM LIST
-//        connection = new DBConnection(activity.getApplicationContext());
+        connection = new DBConnection(activity.getApplicationContext());
 //        itemList = new ItemList(connection);
+
+        Tags tags = Tags.getInstance();
+        tags.setConnection(connection);
+
+        itemsRef = db.collection("items");
+        itemList = new ItemList(itemsRef); // TODO: SWITCH TO DBCONN ONCE USER
 
         itemAdapter = new ItemRecyclerAdapter(itemList.get());
         selectedItems = new ArrayList<>();

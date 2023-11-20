@@ -68,7 +68,7 @@ public class ItemList {
 
     /**
      * Constructor for db connections
-     * @param connection connection to databse
+     * @param connection connection to database
      */
     public ItemList(DBConnection connection) { // TODO: finish implementation
         this.db = connection.getDB();
@@ -99,9 +99,18 @@ public class ItemList {
 
     }
 
+    /**
+     * Getter for raw (unfiltered) list
+     * @return lists of items
+     */
+    public ArrayList<Item> getRawList() {
+        returnList.clear();
+        return returnList;
+//        return itemList;
+    }
 
     /**
-     * Getter for list
+     * Getter for filtered list
      * @return lists of items
      */
     public ArrayList<Item> get() {

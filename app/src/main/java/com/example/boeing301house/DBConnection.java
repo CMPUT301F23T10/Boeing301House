@@ -96,9 +96,11 @@ public class DBConnection {
      */
     private void storeUUID(Context context) {
         CollectionReference users = db.collection("users");
-        HashMap<String, String> userData = new HashMap<>();
+        HashMap<String, Object> userData = new HashMap<>();
         userData.put("UUID", this.uuid);
         userData.put("password", "To be implemented");
+        userData.put("Tags", new HashMap<String, Integer>());
+        userData.put("Ref", "items" + uuid);
 
         users.document(this.uuid)
                 .set(userData);
