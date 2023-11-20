@@ -357,6 +357,9 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             newChip.setText(name);
             newChip.setSelected(true);
             newChip.setChecked(true);
+            newChip.setClickable(false);
+            newChip.setFocusable(false);
+            newChip.setBackgroundColor(getColor(R.color.colorItemChipBG));
             newChip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
