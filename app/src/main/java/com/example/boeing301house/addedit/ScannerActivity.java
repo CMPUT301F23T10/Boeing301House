@@ -304,7 +304,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
                                     public void onSuccess(List<Barcode> barcodes) {
                                         for (Barcode barcode: barcodes) {
                                             barcodeRect = barcode.getBoundingBox();
-                                            drawRect(R.color.colorHighlight);
+                                            // drawRect(R.color.colorHighlight);
                                         }
                                         imageProxy.close();
                                     }
@@ -390,11 +390,14 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         boxWidth = right - left;
         //Changing the value of x in diameter/x will change the size of the box ; inversely proportionate to x
 
-        if (barcodeRect == null) {
-            canvas.drawRect(left, top, right, bottom, paint);
-        } else {
-            canvas.drawRect(barcodeRect, paint);
-        }
+
+        canvas.drawRect(left, top, right, bottom, paint);
+//        if (barcodeRect == null) {
+//            canvas.drawRect(left, top, right, bottom, paint);
+//        }
+//        else {
+//            canvas.drawRect(barcodeRect, paint);
+//        }
         holder.unlockCanvasAndPost(canvas);
     }
 
