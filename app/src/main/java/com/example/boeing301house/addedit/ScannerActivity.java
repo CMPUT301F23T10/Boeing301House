@@ -1,5 +1,8 @@
 package com.example.boeing301house.addedit;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,10 +20,12 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -30,6 +35,7 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.boeing301house.Detection.ScanTransform;
 import com.example.boeing301house.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -70,10 +76,14 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     private PreviewView viewFinder;
 
+    private SurfaceView surfaceView;
+
     private CameraSelector cameraSelector;
 
     private int boxWidth;
     private int boxHeight;
+
+    private boolean isFlipped;
 
     /**
      * For controlling display surface
@@ -86,7 +96,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     private ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private ObjectDetector detector; // TODO: implement
-    private Rect barcodeRect = null;
+    private RectF barcodeRect = null;
+
 
     /**
      * Result key
@@ -96,12 +107,15 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     public static final String RETURN_BARCODE = "RETURN_BARCODE";
 
     private int requestCode;
+    private Button shutterButton;
 
     /**
      * For rectangle/cropping
      */
     private int left;
     private int top;
+
+    private boolean needUpdateGraphicOverlayImageSourceInfo;
 
 
 
@@ -113,14 +127,14 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         setContentView(R.layout.activity_scanner);
 
         viewFinder = findViewById(R.id.scanViewFinder);
-        Button shutterButton = findViewById(R.id.scanShutterButton);
+        shutterButton = findViewById(R.id.scanShutterButton);
         Button backButton = findViewById(R.id.scanBackButton);
         Button flipButton = findViewById(R.id.scanFlipCamButton);
-        SurfaceView surfaceView = findViewById(R.id.scanOverlay);
+        surfaceView = findViewById(R.id.scanOverlay);
         surfaceView.setZOrderOnTop(true);
 
         cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-
+        isFlipped = false;
 
         // holder.addCallback(this);
 
@@ -128,14 +142,16 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
         flipButton.setOnClickListener(v -> {
             flipCamera();
+            isFlipped = !isFlipped;
         });
+
 
         shutterButton.setOnClickListener(v -> {
             Log.d(TAG, "BUTTON CLICK");
             Bitmap scannedIMG = capture();
 
             if (requestCode == SCAN_BARCODE_REQUEST) {
-                analyzeBarcode(scannedIMG);
+                analyzeBarcode(viewFinder.getBitmap());
             }
 
             if (requestCode == SCAN_SN_REQUEST) {
@@ -143,6 +159,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
             }
 
         });
+
+
 
         // getSupportActionBar().hide();
 
@@ -281,47 +299,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
                 .build();
 
         if (requestCode == SCAN_BARCODE_REQUEST) {
-
-
-            imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
-                @OptIn(markerClass = ExperimentalGetImage.class)
-                @Override
-                public void analyze(@NonNull ImageProxy imageProxy) {
-                    Image mediaImage = imageProxy.getImage();
-
-                    if (mediaImage != null) {
-                        InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
-
-                        Bitmap bmap = imageProxy.toBitmap();
-                        int viewHeight = bmap.getHeight();
-                        int viewWidth = bmap.getWidth();
-
-                        BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
-
-                        Task<List<Barcode>> result = barcodeScanner.process(image)
-                                .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                                    @Override
-                                    public void onSuccess(List<Barcode> barcodes) {
-                                        for (Barcode barcode: barcodes) {
-                                            barcodeRect = barcode.getBoundingBox();
-                                            // drawRect(R.color.colorHighlight); // TODO: FIX
-                                        }
-                                        imageProxy.close();
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.e(TAG, "ERROR: " + e);
-                                        imageProxy.close();
-                                    }
-                                });
-
-
-                    }
-
-                }
-            });
+            bindBarcodeAnalyzer(imageAnalysis);
         }
 
 
@@ -338,7 +316,68 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         }
 
     }
+    private void bindBarcodeAnalyzer(ImageAnalysis imageAnalysis) {
+        imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
+            @OptIn(markerClass = ExperimentalGetImage.class)
+            @Override
+            public void analyze(@NonNull ImageProxy imageProxy) {
+                Image mediaImage = imageProxy.getImage();
 
+                if (mediaImage != null) {
+                    InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+
+                    Bitmap bmap = imageProxy.toBitmap();
+                    int viewHeight = bmap.getHeight();
+                    int viewWidth = bmap.getWidth();
+
+                    BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
+
+                    Task<List<Barcode>> result = barcodeScanner.process(image)
+                            .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                                @Override
+                                public void onSuccess(List<Barcode> barcodes) {
+                                    for (Barcode barcode: barcodes) {
+
+                                        barcodeRect = new RectF(barcode.getBoundingBox());
+
+                                        ScanTransform transform = new ScanTransform(surfaceView, image, isFlipped);
+                                        transform.updateTransformationIfNeeded();
+                                        float x0 = transform.translateX(barcodeRect.left);
+                                        float x1 = transform.translateX(barcodeRect.right);
+                                        barcodeRect.left = (float) (min(x0, x1));
+                                        barcodeRect.right = (float) (max(x0, x1));
+                                        barcodeRect.top = (float) (transform.translateY(barcodeRect.top));
+                                        barcodeRect.bottom = (float) (transform.translateY(barcodeRect.bottom));
+
+
+
+
+
+//                                            drawRect(R.color.colorHighlight); // TODO: FIX (async, make canvas here)
+                                        Canvas canvas = holder.lockCanvas();
+                                        if (canvas != null) {
+                                            drawRect(getColor(R.color.colorHighlight), canvas);
+                                            holder.unlockCanvasAndPost(canvas);
+                                        }
+
+                                    }
+                                    imageProxy.close();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "ERROR: " + e);
+                                    imageProxy.close();
+                                }
+                            });
+
+
+                }
+
+            }
+        });
+    }
     /**
      * Flip camera
      */
@@ -351,7 +390,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
      * Draw box on camera
      * @param color color of box
      */
-    private void drawRect(int color) {
+    private void drawRect(int color, Canvas canvas) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int height = viewFinder.getHeight();
@@ -368,7 +407,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         int offset = (int) (0.05 * diameter);
         diameter -= offset;
 
-        Canvas canvas = holder.lockCanvas();
+//        Canvas canvas = holder.lockCanvas();
+
         canvas.drawColor(0, PorterDuff.Mode.CLEAR);
         //border's properties
         /**
@@ -377,7 +417,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(color);
-        paint.setStrokeWidth(5);
+        paint.setStrokeWidth(4.0f);
 
         left = (width / 10);
         top = height / 2 - diameter / 5;
@@ -391,14 +431,13 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         //Changing the value of x in diameter/x will change the size of the box ; inversely proportionate to x
 
 
-        canvas.drawRect(left, top, right, bottom, paint);
-//        if (barcodeRect == null) {
-//            canvas.drawRect(left, top, right, bottom, paint);
-//        }
-//        else {
-//            canvas.drawRect(barcodeRect, paint);
-//        }
-        holder.unlockCanvasAndPost(canvas);
+//        canvas.drawRect(left, top, right, bottom, paint);
+        if (barcodeRect == null) {
+            canvas.drawRect(left, top, right, bottom, paint);
+        }
+        else {
+            canvas.drawRect(barcodeRect.left, barcodeRect.top, barcodeRect.right, barcodeRect.bottom, paint);
+        }
     }
 
     /**
@@ -407,13 +446,16 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        drawRect(getColor(R.color.colorHighlight));
+        Canvas canvas = holder.lockCanvas();
+        drawRect(getColor(R.color.colorHighlight), canvas);
+        holder.unlockCanvasAndPost(canvas);
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-        drawRect(getColor(R.color.colorHighlight));
+        Canvas canvas = holder.lockCanvas();
+        drawRect(getColor(R.color.colorHighlight), canvas);
+        holder.unlockCanvasAndPost(canvas);
 
     }
 
@@ -421,10 +463,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     public void surfaceDestroyed(SurfaceHolder holder) {
 
     }
-
-
-
-
 
 
 }
