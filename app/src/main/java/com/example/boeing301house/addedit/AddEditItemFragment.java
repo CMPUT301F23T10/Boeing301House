@@ -29,6 +29,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
@@ -42,6 +43,10 @@ import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
@@ -50,6 +55,7 @@ import com.google.mlkit.vision.common.InputImage;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,6 +63,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TimeZone;
+
+import org.apache.commons.io.FileUtils;
+
 
 /**
  * Fragment for Adding and Editing an {@link Item}
@@ -140,7 +149,7 @@ public class AddEditItemFragment extends Fragment {
 
     private Uri newURI;
 
-
+    private File imgPath;
 
 
     private static final int READ_PERMISSIONS = 101;
@@ -150,6 +159,10 @@ public class AddEditItemFragment extends Fragment {
     private static final int CAMERA_REQUEST = 111;
 //    private static final int SCAN_BARCODE_REQUEST = 112;
 //    private static final int SCAN_SN_REQUEST = 113;
+
+
+    FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
+    StorageReference storageRef = storage.getReference();
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -178,11 +191,12 @@ public class AddEditItemFragment extends Fragment {
      * @param isAdd boolean (true if adding, false if editing)
      * @return fragment instance
      */
-    public static AddEditItemFragment newInstance(Item item, boolean isAdd) {
+    public static AddEditItemFragment newInstance(Item item, boolean isAdd, String[] uriStrings) {
         AddEditItemFragment fragment = new AddEditItemFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ITEM_KEY, item);
         bundle.putBoolean(IS_ADD, isAdd);
+        bundle.putStringArray("URIS", uriStrings);
         fragment.setArguments(bundle);
 
         return fragment;
@@ -240,6 +254,10 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
 
+        imgPath = new File(requireContext().getFilesDir(), "images");
+        if (!imgPath.exists()) {
+            imgPath.mkdirs();
+        }
 
         uri = new ArrayList<>();
         newTags = new ArrayList<>(currentItem.getTags());
@@ -250,6 +268,8 @@ public class AddEditItemFragment extends Fragment {
         imgAdapter.setOnClickListener(new ImageSelectListener() {
             @Override
             public void onItemClicked(int position) {
+                // updating firebase when we delete an image
+                updateFirebaseImages(false, (Integer) position);
                 uri.remove(position);
                 imgAdapter.notifyDataSetChanged();
             }
@@ -489,6 +509,12 @@ public class AddEditItemFragment extends Fragment {
                         currentItem.setDescription(newDescription);
                         currentItem.setTags(newTags);
 
+                        try {
+                            deleteRecursive(imgPath);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
                         listener.onConfirmPressed(currentItem); // transfers the new data to main
                     }
 
@@ -604,16 +630,22 @@ public class AddEditItemFragment extends Fragment {
                 int x = data.getClipData().getItemCount();
 
                 for (int i = 0; i < x; i++) {
+                    newURI = data.getClipData().getItemAt(i).getUri();
                     uri.add(data.getClipData().getItemAt(i).getUri());
                     String imgURI = data.getClipData().getItemAt(i).getUri().toString();
 //                    Log.d("CAMERA_TEST", imgURI);
+                    // adding from gallery
+                    updateFirebaseImages(true, null);
 
                 }
                 imgAdapter.notifyDataSetChanged();
             } else if (data.getData() != null) {
                 Uri imgURI = data.getData();
+                newURI = imgURI;
 //                Log.d("CAMERA_TEST", imgURI);
                 uri.add(imgURI);
+                // adding from gallery
+                updateFirebaseImages(true, null);
 
             }
             imgAdapter.notifyDataSetChanged();
@@ -622,6 +654,9 @@ public class AddEditItemFragment extends Fragment {
 
             uri.add(newURI);
             imgAdapter.notifyDataSetChanged();
+
+            // adding a image from camera
+            updateFirebaseImages(true, null);
 
         } else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) { // TODO: CONVERT TO SCANNER INTENT
             if (data.getExtras() != null) {
@@ -777,10 +812,11 @@ public class AddEditItemFragment extends Fragment {
         if (requestCode == CAMERA_REQUEST) {
             // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
             // store img at new path and remember URI
-            File imgPath = new File(requireContext().getFilesDir(), "images");
-            if (!imgPath.exists()) {
-                imgPath.mkdirs();
-            }
+//            imgPath = new File(requireContext().getFilesDir(), "images");
+//            if (!imgPath.exists()) {
+//                imgPath.mkdirs();
+//            }
+            // creating the new file path
             File newFile = new File(imgPath, System.currentTimeMillis() + ".jpg");
             newURI = FileProvider.getUriForFile(requireContext(), "com.example.boeing301house", newFile);
 
@@ -793,12 +829,67 @@ public class AddEditItemFragment extends Fragment {
     }
 
     /**
+     * Updates firebase and stores the image when a image is added and deletes the image from firebase upon deleting too.
+     * @param adding Boolean to check if were adding a image
+     * @param position Integer of the position in the URI array list
+     */
+    private void updateFirebaseImages(boolean adding, Integer position) {
+        // adding is true and position is null means were adding
+        if (adding == true && position == null) {
+            Uri fileUri = newURI;
+            StorageReference ref = storageRef.child("images/" + fileUri.getLastPathSegment());
+            UploadTask uploadTask = ref.putFile(fileUri);
+            Log.d("PHOTO_UPLOADED", "updateFirebaseImages: WORKED");
+
+            // Register observers to listen for when the download is done or if it fails
+            uploadTask.addOnFailureListener(exception -> {
+                return;
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // message for succesful upload
+                    Log.d("PHOTO_ADDED", "onSuccess: YESSSS");
+                }
+            });
+        }
+        // else if were deleting an existing image
+        else if (position != null) {
+            // getting the position
+            String result = uri.get(position).getPath();
+            int cut = result.lastIndexOf('/'); // formating the string
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+                storageRef.child("images/" + result).
+                // Delete the file
+                delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("PHOTO_DELETED", "onSuccess: DELETED");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Uh-oh, an error occurred!
+                    }
+                });
+            }
+        }
+    }
+
+    /**
+     * Deletes folder directory on the phone and children too
+     * @param directory
+     */
+    void deleteRecursive(File directory) throws IOException {
+        // delete the folder on device
+        FileUtils.deleteDirectory(directory);
+    }
+    /**
      * Open custom camera for SN
      */
     public void openSNCamera() {
         Intent intent = new Intent(getActivity(), ScannerActivity.class);
         startActivityForResult(intent, ScannerActivity.SCAN_SN_REQUEST); // result -> String if SN found, null otherwise
-
 
     }
 

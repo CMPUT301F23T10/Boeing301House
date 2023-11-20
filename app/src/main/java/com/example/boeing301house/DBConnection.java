@@ -50,7 +50,7 @@ public class DBConnection {
     public DBConnection(Context context) {
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
-        this.user = auth.getCurrentUser();
+//        this.user = auth.getCurrentUser();
         /*this.auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -194,7 +194,8 @@ public class DBConnection {
         return this.db.collection("users").document(uuid);
     }
 
-    /**Storage
+    /**
+     * Storage
      * Set reference to storage
      */
     private void setStorage() {
@@ -203,6 +204,13 @@ public class DBConnection {
                 .child(uuid);
 
 
+    }
+
+    /**
+     *
+     */
+    private void uploadImage() {
+        return;
     }
 
 }
