@@ -3,6 +3,7 @@ package com.example.boeing301house.addedit;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
@@ -21,13 +22,18 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.widget.Button;
 
 import com.example.boeing301house.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.objects.ObjectDetector;
 import com.google.mlkit.vision.text.Text;
@@ -35,6 +41,7 @@ import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -77,6 +84,9 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
      */
     public static final String RETURN_SN = "RETURN_SN";
 
+    public static final String RETURN_BARCODE = "RETURN_BARCODE";
+
+    private int requestCode;
 
     /**
      * For rectangle/cropping
@@ -87,6 +97,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestCode = getIntent().getIntExtra("REQUEST", SCAN_SN_REQUEST);
         setContentView(R.layout.activity_scanner);
 
         viewFinder = findViewById(R.id.scanViewFinder);
@@ -109,8 +121,16 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
         shutterButton.setOnClickListener(v -> {
             Log.d(TAG, "BUTTON CLICK");
-            Bitmap SNImg = capture();
-            analyze(SNImg);
+            Bitmap scannedIMG = capture();
+
+            if (requestCode == SCAN_BARCODE_REQUEST) {
+                analyzeBarcode(scannedIMG);
+            }
+
+            if (requestCode == SCAN_SN_REQUEST) {
+                analyzeText(scannedIMG);
+            }
+
         });
 
         // getSupportActionBar().hide();
@@ -148,7 +168,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     /**
      * Analyze text
      */
-    public void analyze(Bitmap bitmap) {
+    public void analyzeText(Bitmap bitmap) {
         Log.d(TAG, "START ANALYZING");
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
@@ -172,6 +192,44 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
                     }
                 });
+
+    }
+
+    // TODO: implement
+    /**
+     * Analyze barcode
+     * <a href="https://developers.google.com/ml-kit/vision/barcode-scanning/android">...</a>
+     */
+    public void analyzeBarcode(Bitmap bitmap) {
+        Log.d(TAG, "ANALYZING BARCODE");
+        // TODO: finish
+
+        InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
+
+        BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
+
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.scanContent), "", Snackbar.LENGTH_SHORT);
+        snackbar.setAction("DISMISS", v -> snackbar.dismiss());
+
+
+        barcodeScanner.process(inputImage).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+            @Override
+            public void onSuccess(List<Barcode> barcodes) {
+                if (barcodes.size() == 0) {
+                    snackbar.setText("NO BARCODE DETECTED").show();
+                }
+                else {
+                    String barcodeData = barcodes.get(0).getRawValue();
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(RETURN_BARCODE, barcodeData);
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
+                }
+            }
+        }).addOnFailureListener(e -> snackbar.setText("FAILED TO PROCESS").show());
+
+
+
 
     }
 

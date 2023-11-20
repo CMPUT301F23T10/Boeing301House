@@ -29,7 +29,6 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
@@ -660,9 +659,8 @@ public class AddEditItemFragment extends Fragment {
 
         } else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) { // TODO: CONVERT TO SCANNER INTENT
             if (data.getExtras() != null) {
-                Bitmap image = (Bitmap) data.getExtras().get("data");
-                assert image != null;
-                scanBarcode(image);
+                String barcode = data.getExtras().getString(ScannerActivity.RETURN_BARCODE);
+                getBarcodeData(barcode);
             }
         } else if (requestCode == ScannerActivity.SCAN_SN_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getExtras() != null) {
@@ -694,18 +692,15 @@ public class AddEditItemFragment extends Fragment {
                 != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
             return false;
+        } else {
+            openGallery();
+            return true;
+
         }
 //        else {
 //            openGallery();
 //            return true;
 //        }
-        if ((ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
-                == PackageManager.PERMISSION_GRANTED) || (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED)) {
-            openGallery();
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -725,34 +720,31 @@ public class AddEditItemFragment extends Fragment {
      * @return true if camera/scanner opened, false otherwise
      */
     private boolean askCameraPerms(int requestCode) {
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSIONS);
-        }
-
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
             return false;
 
-        }
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == ScannerActivity.SCAN_SN_REQUEST) {
-                openSNCamera();
+        } else {
+            if (requestCode == ScannerActivity.SCAN_SN_REQUEST || requestCode == ScannerActivity.SCAN_BARCODE_REQUEST) {
+                openScanner(requestCode);
                 return true;
             }
-            else {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
-                    openCamera(requestCode);
-                    return true;
-                } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    openCamera(requestCode);
-                    return true;
-                } else { return false; }
+//            else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST) {
+//                openScanner(requestCode);
+//                return true;
+//            }
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+                ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSIONS);
+                return false;
+            } else {
+                openCamera(requestCode);
+                return true;
             }
-        } else { return false; }
+        }
+
+
     }
 
 
@@ -885,60 +877,15 @@ public class AddEditItemFragment extends Fragment {
         FileUtils.deleteDirectory(directory);
     }
     /**
-     * Open custom camera for SN
+     * Open custom camera for scanning
      */
-    public void openSNCamera() {
+    public void openScanner(int requestCode) {
         Intent intent = new Intent(getActivity(), ScannerActivity.class);
-        startActivityForResult(intent, ScannerActivity.SCAN_SN_REQUEST); // result -> String if SN found, null otherwise
+        intent.putExtra("REQUEST", requestCode);
+        startActivityForResult(intent, requestCode); // result -> String if SN found, null otherwise
 
     }
-
-    /**
-     * Scan barcode via img from camera
-     * <a href="https://developers.google.com/ml-kit/vision/barcode-scanning/android">...</a>
-     */
-    public void scanBarcode(Bitmap image) {
-        Snackbar snackbar = Snackbar.make(binding.itemAddEditContent, "PROCESSING BARCODE...", Snackbar.LENGTH_LONG);
-        snackbar.setAction("DISMISS", v -> {
-            snackbar.dismiss();
-        });
-        snackbar.show();
-
-        Log.d("SEARCH", "BARCODE FUNC CALLED");
-        final ArrayList<String> productInfo = new ArrayList<>();
-        Log.d(TAG, "Image: " + image.toString());
-        InputImage inputImage = InputImage.fromBitmap(image, 0);
-
-        BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
-        barcodeScanner.process(inputImage).addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-            @Override
-            public void onSuccess(List<Barcode> barcodes) {
-                Log.d("SEARCH", "BARCODE FUNC CALLED");
-                Log.d("SEARCH", "Successfully processed barcode. # " + barcodes.size());
-                Log.d(TAG, "Successfully processed barcode. # " + barcodes.size());
-                if (barcodes.size() == 0) {
-                    snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("NO BARCODE DETECTED").show();
-                }
-                for (Barcode barcode: barcodes) {
-                    String barcodeData = barcode.getRawValue();
-
-                    getBarcodeData(barcodeData);
-
-                    productInfo.add(barcodeData);
-                    Log.d("SEARCH", "BARCODE SCANNED IN ADD EDIT");
-                    Log.d(TAG, barcode.getRawValue());
-                }
-
-                // binding.updateDesc.getEditText().setText(StringUtils.join(productInfo, ". "));
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d(TAG, "Failed to process barcode");
-                snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("FAILED TO PROCESS").show();
-            }
-        });
-    }
+    
 
     /**
      * Run web search for product info
