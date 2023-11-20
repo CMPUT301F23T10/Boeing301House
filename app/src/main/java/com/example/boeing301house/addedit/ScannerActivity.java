@@ -1,10 +1,14 @@
 package com.example.boeing301house.addedit;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -17,6 +21,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -43,6 +48,8 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Activity class for Serial Number Scanner (custom camera)
@@ -76,6 +83,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ProcessCameraProvider cameraProvider;
 
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+
     private ObjectDetector detector; // TODO: implement
     private Rect barcodeRect = null;
 
@@ -93,6 +102,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
      */
     private int left;
     private int top;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,7 +248,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
      * Starts camera
      */
     public void startCamera() {
-        cameraProviderFuture = ProcessCameraProvider.getInstance(getApplicationContext());
+        cameraProviderFuture = ProcessCameraProvider.getInstance(this);
 
         // run in separate thread
         cameraProviderFuture.addListener((Runnable) () -> {
@@ -265,11 +276,63 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 //            CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 //            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
+        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build();
+
+        if (requestCode == SCAN_BARCODE_REQUEST) {
+
+
+            imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
+                @OptIn(markerClass = ExperimentalGetImage.class)
+                @Override
+                public void analyze(@NonNull ImageProxy imageProxy) {
+                    Image mediaImage = imageProxy.getImage();
+
+                    if (mediaImage != null) {
+                        InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+
+                        Bitmap bmap = imageProxy.toBitmap();
+                        int viewHeight = bmap.getHeight();
+                        int viewWidth = bmap.getWidth();
+
+                        BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
+
+                        Task<List<Barcode>> result = barcodeScanner.process(image)
+                                .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
+                                    @Override
+                                    public void onSuccess(List<Barcode> barcodes) {
+                                        for (Barcode barcode: barcodes) {
+                                            barcodeRect = barcode.getBoundingBox();
+                                            drawRect(R.color.colorHighlight);
+                                        }
+                                        imageProxy.close();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.e(TAG, "ERROR: " + e);
+                                        imageProxy.close();
+                                    }
+                                });
+
+
+                    }
+
+                }
+            });
+        }
+
+
         try {
             // unbind usecases for rebinding
             cameraProvider.unbindAll();
             // bind usecases to camera
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
+            if (requestCode == SCAN_BARCODE_REQUEST) {
+                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview);
+            }
+            Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
         } catch (Exception e) {
             Log.e(TAG, "USE CASE BINDING FAILED");
         }
@@ -329,6 +392,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
         if (barcodeRect == null) {
             canvas.drawRect(left, top, right, bottom, paint);
+        } else {
+            canvas.drawRect(barcodeRect, paint);
         }
         holder.unlockCanvasAndPost(canvas);
     }
