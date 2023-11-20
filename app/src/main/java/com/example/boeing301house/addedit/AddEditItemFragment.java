@@ -885,7 +885,7 @@ public class AddEditItemFragment extends Fragment {
         startActivityForResult(intent, requestCode); // result -> String if SN found, null otherwise
 
     }
-    
+
 
     /**
      * Run web search for product info
