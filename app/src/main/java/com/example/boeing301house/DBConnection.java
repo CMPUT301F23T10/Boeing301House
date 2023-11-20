@@ -6,9 +6,12 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -48,40 +51,57 @@ public class DBConnection {
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
         this.user = auth.getCurrentUser();
-        this.auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+        /*this.auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = firebaseAuth.getCurrentUser();
                 setUser();
             }
-        });
+        });*/
 
         setUUID(context);
-        setUser();
         storeUUID(context);
+//        setUser();
         Log.d(TAG, "UUID: " + this.uuid);
 
     }
 
-    private void setUser() {
+    /*private void setUser() {
         if (this.user != null) {
             Log.d(TAG, this.user.toString());
             return;
         } else {
             Log.d(TAG, "null user");
-            auth.signInWithCustomToken(this.uuid);
+            auth.signInWithCustomToken(this.uuid).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        user = auth.getCurrentUser();
+                        Log.d(TAG, "COMPLETE: " + user.toString());
+                    } else {
+                        Log.d(TAG, "ERROR");
+                    }
+                }
+            });
             // Log.d(TAG, user.toString());
         }
 
-    }
+    }*/
 
     /**
-     * Sets the firstStart of device to identify firstStart Procedure.
+     *
      * Stores UUID in Firebase
      * @param context: context of application.
      */
     private void storeUUID(Context context) {
-        SharedPreferences pref;
+        CollectionReference users = db.collection("users");
+        HashMap<String, String> userData = new HashMap<>();
+        userData.put("UUID", this.uuid);
+        userData.put("password", "To be implemented");
+
+        users.document(this.uuid)
+                .set(userData);
+        /*SharedPreferences pref;
         pref = context.getApplicationContext().getSharedPreferences("mypref", Context.MODE_PRIVATE);
 
         // check if app has been launched for the first time
@@ -116,23 +136,25 @@ public class DBConnection {
                             Log.e("Firestore", "db write failed");
                         }
                     });
-        }
+        }*/
     }
 
     /**
-     * Sets the UUID of device to identify user.
+     * Sets the firstStart of device to identify firstStart Procedure.
+     * Sets the UUID of device to identify user and updates preferences
      * @param context: context of application.
      */
     protected void setUUID(Context context) {
         SharedPreferences pref;
         pref = context.getApplicationContext().getSharedPreferences("mypref", Context.MODE_PRIVATE);
 
-
+        // UUID/user currently based on app instance
         uuid = pref.getString("UUID", null);
         if (uuid == null) {
             SharedPreferences.Editor editor = pref.edit();
             uuid = UUID.randomUUID().toString();
             editor.putString("UUID", uuid);
+            editor.putBoolean("firststart", false); //
             editor.commit();
         }
 
