@@ -304,7 +304,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
                                     public void onSuccess(List<Barcode> barcodes) {
                                         for (Barcode barcode: barcodes) {
                                             barcodeRect = barcode.getBoundingBox();
-                                            // drawRect(R.color.colorHighlight);
+                                            // drawRect(R.color.colorHighlight); // TODO: FIX
                                         }
                                         imageProxy.close();
                                     }
