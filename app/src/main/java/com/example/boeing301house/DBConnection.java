@@ -29,6 +29,7 @@ public class DBConnection {
     // for tag in firestore log
     private static final String TAG = "DBConnection";
 
+
     private FirebaseFirestore db;
     private StorageReference storage;
 
@@ -45,9 +46,32 @@ public class DBConnection {
      */
     public DBConnection(Context context) {
         this.db = FirebaseFirestore.getInstance();
+        this.auth = FirebaseAuth.getInstance();
+        this.user = auth.getCurrentUser();
+        this.auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                user = firebaseAuth.getCurrentUser();
+                setUser();
+            }
+        });
+
         setUUID(context);
+        setUser();
         storeUUID(context);
         Log.d(TAG, "UUID: " + this.uuid);
+
+    }
+
+    private void setUser() {
+        if (this.user != null) {
+            Log.d(TAG, this.user.toString());
+            return;
+        } else {
+            Log.d(TAG, "null user");
+            auth.signInWithCustomToken(this.uuid);
+            // Log.d(TAG, user.toString());
+        }
 
     }
 
@@ -82,6 +106,7 @@ public class DBConnection {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
+
                             Log.i("Firestore", "DocumentSnapshot successfully written");
                         }
                     })
@@ -102,12 +127,15 @@ public class DBConnection {
         SharedPreferences pref;
         pref = context.getApplicationContext().getSharedPreferences("mypref", Context.MODE_PRIVATE);
 
+
+        uuid = pref.getString("UUID", null);
         if (uuid == null) {
             SharedPreferences.Editor editor = pref.edit();
             uuid = UUID.randomUUID().toString();
             editor.putString("UUID", uuid);
             editor.commit();
         }
+
     }
 
     /**

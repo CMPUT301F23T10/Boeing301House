@@ -148,8 +148,8 @@ public class AddEditItemFragment extends Fragment {
     private static final int WRITE_PERMISSIONS = 103; // FOR API < 32
     private static final int GALLERY_REQUEST = 110;
     private static final int CAMERA_REQUEST = 111;
-    private static final int SCAN_BARCODE_REQUEST = 112;
-    private static final int SCAN_SN_REQUEST = 113;
+//    private static final int SCAN_BARCODE_REQUEST = 112;
+//    private static final int SCAN_SN_REQUEST = 113;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -343,10 +343,10 @@ public class AddEditItemFragment extends Fragment {
                         @Override
                         public boolean onMenuItemClick(MenuItem item) {
                             if (item.getItemId() == R.id.scanBarcode) {
-                                return askCameraPerms(SCAN_BARCODE_REQUEST);
+                                return askCameraPerms(ScannerActivity.SCAN_BARCODE_REQUEST);
                             }
                             else if (item.getItemId() == R.id.scanSN) {
-                                return askCameraPerms(SCAN_SN_REQUEST);
+                                return askCameraPerms(ScannerActivity.SCAN_SN_REQUEST);
                             }
                             return false;
                         }
@@ -623,13 +623,13 @@ public class AddEditItemFragment extends Fragment {
             uri.add(newURI);
             imgAdapter.notifyDataSetChanged();
 
-        } else if (requestCode == SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) { // TODO: CONVERT TO SCANNER INTENT
             if (data.getExtras() != null) {
                 Bitmap image = (Bitmap) data.getExtras().get("data");
                 assert image != null;
                 scanBarcode(image);
             }
-        } else if (requestCode == SCAN_SN_REQUEST && resultCode == Activity.RESULT_OK) {
+        } else if (requestCode == ScannerActivity.SCAN_SN_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getExtras() != null) {
                 String SN = data.getStringExtra(ScannerActivity.RETURN_SN);
                 if (SN == null) {
@@ -703,7 +703,7 @@ public class AddEditItemFragment extends Fragment {
         }
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
-            if (requestCode == SCAN_SN_REQUEST) {
+            if (requestCode == ScannerActivity.SCAN_SN_REQUEST) {
                 openSNCamera();
                 return true;
             }
@@ -797,7 +797,7 @@ public class AddEditItemFragment extends Fragment {
      */
     public void openSNCamera() {
         Intent intent = new Intent(getActivity(), ScannerActivity.class);
-        startActivityForResult(intent, SCAN_SN_REQUEST); // result -> String if SN found, null otherwise
+        startActivityForResult(intent, ScannerActivity.SCAN_SN_REQUEST); // result -> String if SN found, null otherwise
 
 
     }

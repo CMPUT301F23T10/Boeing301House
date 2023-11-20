@@ -43,7 +43,16 @@ import java.util.concurrent.ExecutionException;
  * <a href="https://developers.google.com/ml-kit/vision/text-recognition/v2/android#java">...</a>
  */
 public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+    /**
+     * For logging
+     */
     private static final String TAG = "SCANNER";
+
+    /**
+     * Request codes for intent
+     */
+    public static final int SCAN_SN_REQUEST = 113;
+    public static final int SCAN_BARCODE_REQUEST = 112;
 
     private PreviewView viewFinder;
 
