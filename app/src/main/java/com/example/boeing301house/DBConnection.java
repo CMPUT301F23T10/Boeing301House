@@ -2,6 +2,7 @@ package com.example.boeing301house;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -207,9 +208,17 @@ public class DBConnection {
     }
 
     /**
-     *
+     * @param image image to be uploaded to firebase
      */
-    private void uploadImage() {
+    private void uploadImage(Uri image) {
+
+        return;
+    }
+
+    /**
+     * @param image image to be deleted from firebase
+     */
+    private void deleteImage(Uri image) {
         return;
     }
 
