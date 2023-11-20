@@ -1,4 +1,4 @@
-package com.example.boeing301house.Itemlist;
+package com.example.boeing301house.itemlist;
 
 import android.app.Activity;
 
@@ -274,13 +274,17 @@ public class ItemListController {
 
     /**
      * Add selected tags to multiple items
-     * @param items selected items
+     *
      * @param tags tags to add
      */
-    public void multiAddTag(ArrayList<Item> items, ArrayList<String> tags) {
-        for (Item item: items) {
-            item.addTags(tags);
+    public void multiAddTag(ArrayList<String> tags) {
+
+        for (Item item: selectedItems) {
+            item.addTags(tags, true);
+            itemList.firestoreEdit(item, null);
         }
+        tags.clear();
+
     }
     /**
      * Gets Item Adapter

@@ -6,8 +6,8 @@ import static org.junit.Assert.assertTrue;
 
 import android.util.Log;
 
-import com.example.boeing301house.Itemlist.ItemList;
-import com.example.boeing301house.Itemlist.OnCompleteListener;
+import com.example.boeing301house.itemlist.ItemList;
+import com.example.boeing301house.itemlist.OnCompleteListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.FirebaseFirestore;
 

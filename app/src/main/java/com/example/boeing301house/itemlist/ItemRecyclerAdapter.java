@@ -1,4 +1,4 @@
-package com.example.boeing301house.Itemlist;
+package com.example.boeing301house.itemlist;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -7,15 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
-
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.Locale;

@@ -31,7 +31,7 @@ import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 
-import com.example.boeing301house.Itemlist.ItemListActivity;
+import com.example.boeing301house.itemlist.ItemListActivity;
 
 /**
  * Instrumented test, which will execute on an Android device.

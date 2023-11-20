@@ -1,4 +1,4 @@
-package com.example.boeing301house;
+package com.example.boeing301house.itemlist;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package com.example.boeing301house.Itemlist;
+package com.example.boeing301house.itemlist;
 
 import android.util.Log;
 
@@ -209,7 +209,7 @@ public class ItemList {
      * Updates item in firestore if it has been edited
      * @param item edited item
      */
-    private void firestoreEdit(Item item, @Nullable OnCompleteListener<Item> completeListener) {
+    public void firestoreEdit(Item item, @Nullable OnCompleteListener<Item> completeListener) {
 //        TODO: convert to WriteBatch
         HashMap<String, Object> itemData = new HashMap<>();
         itemData.put("Make", item.getMake());

@@ -2,5 +2,7 @@
     <string name="app_name">Boeing301House</string>
     <string name="required_field_text">*Required <font color='#ff0000'> </font> </string>
     <string name="edit">Edit</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

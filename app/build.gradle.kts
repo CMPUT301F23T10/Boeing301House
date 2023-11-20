@@ -49,6 +49,7 @@ dependencies {
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
 
     implementation("com.squareup.picasso:picasso:2.8")
+    implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
 
 
     // CameraX core library using the camera2 implementation
@@ -75,6 +76,7 @@ dependencies {
 //    implementation("com.google.firebase:firebase-ml-vision-barcode-model:16.0.1")
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
     implementation("com.google.mlkit:text-recognition:16.0.0")
+    implementation("com.google.mlkit:object-detection:17.0.0")
 
 
 
@@ -85,7 +87,9 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("com.google.firebase:testlab-instr-lib:0.2")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0-alpha03")
     implementation("org.apache.commons:commons-lang3:3.9")
+    implementation ("commons-io:commons-io:2.11.0")
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-storage")
     implementation("com.google.firebase:firebase-firestore")

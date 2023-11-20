@@ -1,13 +1,11 @@
-package com.example.boeing301house;
+package com.example.boeing301house.itemlist;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -16,13 +14,12 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
-import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.example.boeing301house.Item;
+import com.example.boeing301house.R;
 import com.example.boeing301house.databinding.FragmentSortBinding;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -56,18 +53,24 @@ public class SortFragment extends DialogFragment {
     private AutoCompleteTextView autoCompleteTextView;
 
     private OnSortFragmentInteractionListener listener;
+
+    /**
+     * Response listener
+     */
     public interface OnSortFragmentInteractionListener {
         void onSortOKPressed(String sortMethod, String sortOrder);
     }
-    //this constructor initalizes the array list to store the items as the array list passed from listItemActivity
-//    public SortFragment(ArrayList<Item> aItemList){
-//        items = new ArrayList<Item>(aItemList);
-//    }
-
 
 
     /**
-     * No arg constructor
+     * Required empty no arg public constructor
+     */
+    public SortFragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Factory method for constructing item
      * @return fragment instance
      */
     public static SortFragment newInstance() {
@@ -89,7 +92,7 @@ public class SortFragment extends DialogFragment {
             listener = (OnSortFragmentInteractionListener) context;
 
         } else{
-            throw new RuntimeException((context + "OnFilterSortInteractionListener not implemented"));
+            throw new RuntimeException((context + "OnSortInteractionListener not implemented"));
         }
 
     }

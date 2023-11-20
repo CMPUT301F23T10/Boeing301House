@@ -1,4 +1,4 @@
-package com.example.boeing301house;
+package com.example.boeing301house.itemlist;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -13,6 +13,8 @@ import androidx.fragment.app.DialogFragment;
 
 import android.view.View;
 
+import com.example.boeing301house.Item;
+import com.example.boeing301house.R;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
