@@ -43,6 +43,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -826,6 +827,8 @@ public class AddEditItemFragment extends Fragment {
      * @param position Integer of the position in the URI array list
      */
     private void updateFirebaseImages(boolean adding, Integer position) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously();
         // adding is true and position is null means were adding
         if (adding == true && position == null) {
             Uri fileUri = newURI;
