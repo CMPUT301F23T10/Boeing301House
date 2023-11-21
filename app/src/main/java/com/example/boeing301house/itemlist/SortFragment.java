@@ -148,8 +148,8 @@ public class SortFragment extends DialogFragment {
         return builder.setView(view)
                 .setTitle("Sort")
                 .setCancelable(true)
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setNegativeButton("CANCEL", null)
+                .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         listener.onSortOKPressed(type, order);

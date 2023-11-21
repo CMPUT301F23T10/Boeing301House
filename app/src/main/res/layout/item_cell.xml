@@ -14,7 +14,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="make"
-        android:textColor="@color/itemCellTextColor"
+        android:textColor="@color/colorItemCellText"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="3dp"
@@ -29,7 +29,7 @@
         app:layout_constraintTop_toBottomOf="@id/itemMake"
         android:layout_margin="3dp"
         android:text="model"
-        android:textColor="@color/itemCellTextColor"
+        android:textColor="@color/colorItemCellText"
         style="@style/TextAppearance.Material3.HeadlineSmall"
         />
 
@@ -42,7 +42,7 @@
         android:layout_margin="3dp"
         android:text="description"
         style="@style/TextAppearance.Material3.BodySmall"
-        android:textColor="@color/itemCellTextColor"
+        android:textColor="@color/colorItemCellText"
         />
 
     <TextView
@@ -54,7 +54,7 @@
         android:layout_margin="3dp"
         android:text="mm/dd/yyyy"
         style="@style/TextAppearance.Material3.LabelSmall"
-        android:textColor="@color/itemCellTextColor" />
+        android:textColor="@color/colorItemCellText" />
 
 
     <TextView
@@ -68,7 +68,7 @@
         android:layout_marginStart="20dp"
 
         android:text="$0.00"
-        android:textColor="@color/itemCellTextColor"
+        android:textColor="@color/colorItemCellText"
         android:translationX="0dp" />
 
     <TextView
@@ -78,7 +78,7 @@
         app:layout_constraintTop_toBottomOf="@id/itemCost"
         app:layout_constraintStart_toStartOf="@id/itemCost"
         android:text="SN: XXXXXXXXX"
-        android:textColor="@color/itemCellTextColor"
+        android:textColor="@color/colorItemCellText"
         style="@style/TextAppearance.Material3.LabelMedium"
         />
 
@@ -88,7 +88,7 @@
         android:layout_height="35dp"
         app:layout_constraintStart_toStartOf="@id/itemSN"
         app:layout_constraintTop_toBottomOf="@id/itemModel"
-        android:textColor="@color/itemCellTextColor"
+        android:textColor="@color/colorItemCellText"
         android:textStyle="italic"
         style="@style/TextAppearance.Material3.LabelMedium"
         android:layout_marginTop="2dp"
@@ -105,7 +105,7 @@
         android:layout_marginTop="2dp"
         android:text="tag1, tag2, ..."
         style="@style/TextAppearance.Material3.LabelSmall"
-        android:textColor="@color/itemCellTextColor"
+        android:textColor="@color/colorItemCellText"
         android:visibility="gone"
         />
 

@@ -2,13 +2,19 @@ package com.example.boeing301house;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,11 +33,16 @@ public class DBConnection {
     // for tag in firestore log
     private static final String TAG = "DBConnection";
 
+
     private FirebaseFirestore db;
     private StorageReference storage;
 
     protected String firstStart;
     protected String uuid;
+
+    private FirebaseAuth auth;
+
+    private FirebaseUser user;
 
     /**
      * Connects to Firebase Firestore database
@@ -39,20 +50,61 @@ public class DBConnection {
      */
     public DBConnection(Context context) {
         this.db = FirebaseFirestore.getInstance();
+        this.auth = FirebaseAuth.getInstance();
+//        this.user = auth.getCurrentUser();
+        /*this.auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                user = firebaseAuth.getCurrentUser();
+                setUser();
+            }
+        });*/
+
         setUUID(context);
         storeUUID(context);
-        setStorage();
+//        setUser();
         Log.d(TAG, "UUID: " + this.uuid);
 
     }
 
+    /*private void setUser() {
+        if (this.user != null) {
+            Log.d(TAG, this.user.toString());
+            return;
+        } else {
+            Log.d(TAG, "null user");
+            auth.signInWithCustomToken(this.uuid).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        user = auth.getCurrentUser();
+                        Log.d(TAG, "COMPLETE: " + user.toString());
+                    } else {
+                        Log.d(TAG, "ERROR");
+                    }
+                }
+            });
+            // Log.d(TAG, user.toString());
+        }
+
+    }*/
+
     /**
-     * Sets the firstStart of device to identify firstStart Procedure.
+     *
      * Stores UUID in Firebase
      * @param context: context of application.
      */
     private void storeUUID(Context context) {
-        SharedPreferences pref;
+        CollectionReference users = db.collection("users");
+        HashMap<String, Object> userData = new HashMap<>();
+        userData.put("UUID", this.uuid);
+        userData.put("password", "To be implemented");
+        userData.put("Tags", new HashMap<String, Integer>());
+        userData.put("Ref", "items" + uuid);
+
+        users.document(this.uuid)
+                .set(userData);
+        /*SharedPreferences pref;
         pref = context.getApplicationContext().getSharedPreferences("mypref", Context.MODE_PRIVATE);
 
         // check if app has been launched for the first time
@@ -77,6 +129,7 @@ public class DBConnection {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
+
                             Log.i("Firestore", "DocumentSnapshot successfully written");
                         }
                     })
@@ -86,23 +139,28 @@ public class DBConnection {
                             Log.e("Firestore", "db write failed");
                         }
                     });
-        }
+        }*/
     }
 
     /**
-     * Sets the UUID of device to identify user.
+     * Sets the firstStart of device to identify firstStart Procedure.
+     * Sets the UUID of device to identify user and updates preferences
      * @param context: context of application.
      */
     protected void setUUID(Context context) {
         SharedPreferences pref;
         pref = context.getApplicationContext().getSharedPreferences("mypref", Context.MODE_PRIVATE);
 
+        // UUID/user currently based on app instance
+        uuid = pref.getString("UUID", null);
         if (uuid == null) {
             SharedPreferences.Editor editor = pref.edit();
             uuid = UUID.randomUUID().toString();
             editor.putString("UUID", uuid);
+            editor.putBoolean("firststart", false); //
             editor.commit();
         }
+
     }
 
     /**
@@ -140,6 +198,7 @@ public class DBConnection {
     }
 
     /**
+     * Storage
      * Set reference to storage
      */
     private void setStorage() {
@@ -148,6 +207,21 @@ public class DBConnection {
                 .child(uuid);
 
 
+    }
+
+    /**
+     * @param image image to be uploaded to firebase
+     */
+    private void uploadImage(Uri image) {
+
+        return;
+    }
+
+    /**
+     * @param image image to be deleted from firebase
+     */
+    private void deleteImage(Uri image) {
+        return;
     }
 
 }

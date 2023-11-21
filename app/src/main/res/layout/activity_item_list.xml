@@ -135,13 +135,14 @@
 
                 <Button
                     android:id="@+id/resetButton"
-                    android:layout_width="61dp"
-                    android:layout_height="36dp"
-                    android:text="↻"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.Material3.Button.IconButton"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/itemListFilter"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:drawableEnd="@drawable/ic_refresh_24dp"
                     />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
