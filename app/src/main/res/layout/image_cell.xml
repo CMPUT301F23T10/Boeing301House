@@ -13,6 +13,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/ic_close_button_24dp"
+        app:tint="@color/colorDelete"
         android:elevation="999dp"
         >
 
