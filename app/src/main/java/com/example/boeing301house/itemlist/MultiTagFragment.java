@@ -107,12 +107,12 @@ public class MultiTagFragment extends DialogFragment {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder.setView(view)
-                .setTitle("ADD TAGS")
+                .setTitle("Add Tags")
                 .setCancelable(true)
-                .setNegativeButton("Cancel", (dialog, which) -> {
+                .setNegativeButton("CANCEL", (dialog, which) -> {
                     listener.onTagOKPressed(null, false);
                 })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String inputString = updateMultiTag.getEditText().getText().toString();

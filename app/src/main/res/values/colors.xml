@@ -13,7 +13,8 @@
     <color name="colorScanButtonOn">#56CCFB</color>
     <color name="required">#DD3028</color>
     <color name="textBoxColor">#DFF1F0</color>
-    <color name="itemCellTextColor">#008572</color>
+    <color name="colorItemCellText">#008572</color>
+    <color name="colorItemChipBG">#afded8</color>
 
 
     <!--  might not use  -->

@@ -42,12 +42,10 @@
         android:id="@+id/scanOverlay"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/scanShutterButton"
-        android:layout_marginBottom="40dp"
-        android:elevation="999dp"
+        app:layout_constraintStart_toStartOf="@id/scanViewFinder"
+        app:layout_constraintBottom_toBottomOf="@id/scanViewFinder"
+        app:layout_constraintTop_toTopOf="@id/scanViewFinder"
+        app:layout_constraintEnd_toEndOf="@id/scanViewFinder"
         />
 
 
@@ -61,7 +59,7 @@
         app:layout_constraintBottom_toBottomOf="@id/scanShutterButton"
         app:layout_constraintTop_toTopOf="@id/scanShutterButton"
         android:layout_marginStart="30dp"
-        android:textColor="@color/white">
+        android:textColor="@color/colorHighlight">
 
     </Button>
 
@@ -75,6 +73,7 @@
         android:layout_marginEnd="30dp"
         android:id="@+id/scanFlipCamButton"
         android:drawableEnd="@drawable/ic_flip_cam_36dp"
+        android:drawableTint="@color/colorHighlight"
 
         >
     </Button>

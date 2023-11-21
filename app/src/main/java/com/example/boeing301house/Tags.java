@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.boeing301house.itemlist.ItemList;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -14,6 +15,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -70,7 +72,16 @@ public class Tags {
     public void setConnection(DBConnection connection) {
 //        user = connection.getUserRef(); // TODO: SWITCH TO THIS ONCE SEPARATE USERS ADDED
         user = connection.getDB().collection("users").document("global");
-        initTag();
+//        HashMap<String, Object> userData = new HashMap<>();
+//        userData.put("UUID", "global");
+//        userData.put("password", "To be implemented");
+//        userData.put("Tags", new HashMap<String, Integer>());
+//
+//        user.set(userData).addOnCompleteListener(task -> initTag());
+
+        // initTag();
+
+
     }
 
     /**
@@ -97,6 +108,8 @@ public class Tags {
      * @param listener optional {@link com.example.boeing301house.itemlist.OnCompleteListener} for error handling
      */
     public void addTag(String tag, @Nullable com.example.boeing301house.itemlist.OnCompleteListener<String> listener) {
+        Log.d(TAG, "ADDING TAG");
+
         if (listener != null) {
             if (tag == null) {
                 listener.onComplete(null, false); // TODO: snackbar "No tag"
@@ -109,7 +122,7 @@ public class Tags {
         }
         // add tags
         if (tags.containsKey(tag)) {
-            tags.put(tag, tags.get(tag) + 1);
+            tags.put(tag, tags.get(tag) + (Integer) 1);
         } else {
             tags.put(tag, 1);
         }
@@ -141,12 +154,12 @@ public class Tags {
                 return;
             }
         }
-        assert tags.get(tag) != null;
+        assert this.tags.get(tag) != null;
         // remove tag
-        if (tags.get(tag) > 1) {
-            tags.put(tag, tags.get(tag) - 1);
+        if (this.tags.get(tag) > 1) {
+            this.tags.put(tag, tags.get(tag) - 1);
         } else {
-            tags.remove(tag);
+            this.tags.remove(tag);
         }
 
         user.update("Tags", tags).addOnFailureListener(new OnFailureListener() {
@@ -159,6 +172,18 @@ public class Tags {
     }
 
     /**
+     * Remove list of tags from tags
+     * @param tags tags to be removed
+     * @param listener optional {@link com.example.boeing301house.itemlist.OnCompleteListener} for error handling
+     */
+    public void removeTags(ArrayList<String> tags, @Nullable com.example.boeing301house.itemlist.OnCompleteListener<String> listener) {
+        for (String tag: tags) {
+            removeTag(tag, listener);
+        }
+
+    }
+
+    /**
      * Getter for tags
      * @return list of tags
      */
@@ -166,6 +191,26 @@ public class Tags {
         return new ArrayList<String>(tags.keySet());
 
     }
+
+    /**
+     * Temporary brute force method for keeping track of tags
+     * @param itemList {@link ItemList} object
+     * @return list of tags
+     */
+    public static ArrayList<String> getTagsFromItemList(ItemList itemList) {
+        ArrayList<String> tags = new ArrayList<>();
+
+        for (Item item: itemList.getRawList()) {
+            for (String tag: item.getTags()) {
+                if (!tags.contains(tag)) {
+                    tags.add(tag);
+                }
+            }
+        }
+
+        return tags;
+    }
+
 
 //    /**
 //     * Remove multiple tags
