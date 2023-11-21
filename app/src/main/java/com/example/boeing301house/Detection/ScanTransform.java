@@ -97,11 +97,7 @@ public class ScanTransform {
      * Adjusts the y coordinate from the image's coordinate system to the view coordinate system.
      */
     public float translateY(float y) {
-        if (isImageFlipped) {
-            return viewHeight - (scale(y) - postScaleHeightOffset);
-        } else {
-            return scale(y) - postScaleHeightOffset;
-        }
+        return scale(y) - postScaleHeightOffset;
     }
 
     /**

@@ -30,6 +30,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -294,22 +295,27 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 //            CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 //            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
-        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                .build();
-
-        if (requestCode == SCAN_BARCODE_REQUEST) {
-            bindBarcodeAnalyzer(imageAnalysis);
-        }
+//        Size targetResolution = new Size(viewFinder.getWidth(), viewFinder.getHeight());
+//        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+//                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+//                .setTargetResolution(targetResolution)
+//                .build();
+//
+//
+//        if (requestCode == SCAN_BARCODE_REQUEST) {
+//
+//
+//            bindBarcodeAnalyzer(imageAnalysis);
+//        }
 
 
         try {
             // unbind usecases for rebinding
             cameraProvider.unbindAll();
             // bind usecases to camera
-            if (requestCode == SCAN_BARCODE_REQUEST) {
-                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview);
-            }
+//            if (requestCode == SCAN_BARCODE_REQUEST) {
+//                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview);
+//            }
             Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
         } catch (Exception e) {
             Log.e(TAG, "USE CASE BINDING FAILED");
