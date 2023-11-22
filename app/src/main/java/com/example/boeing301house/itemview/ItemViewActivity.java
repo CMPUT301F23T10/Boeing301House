@@ -420,8 +420,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         for (Uri photo: drop) {
             if (keep.contains(photo)) {
                 deleteFromFirebase(photo);
+            } else if (keep.size() == 0) {
+                deleteFromFirebase(photo);
             }
         }
+
     }
 
     /**
