@@ -5,6 +5,9 @@ import android.text.Editable;
 
 import androidx.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+
 import java.util.ArrayList;
 
 /**
@@ -13,6 +16,8 @@ import java.util.ArrayList;
 public class AddEdit {
     ArrayList<Uri> urls;
     ArrayList<String> tags;
+    FirebaseStorage storage;
+    FirebaseAuth auth;
 
     /**
      * Constructor
@@ -50,5 +55,10 @@ public class AddEdit {
         this.tags.remove(name);
     }
 
+    public void updateFirebaseImages(boolean adding, Integer position) {
+        auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously();
+        // code
+    }
 
 }

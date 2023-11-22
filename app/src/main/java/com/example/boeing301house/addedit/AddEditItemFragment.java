@@ -28,13 +28,17 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
 import com.example.boeing301house.scraping.SearchUIRunnable;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
@@ -58,6 +62,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
+import org.checkerframework.checker.units.qual.A;
 
 
 /**
@@ -119,6 +124,7 @@ public class AddEditItemFragment extends Fragment {
     private Long newDate = null;
 
     private ArrayList<String> newTags;
+    private ArrayList<Uri> newUrls;
 
     /**
      * New SN
@@ -180,12 +186,12 @@ public class AddEditItemFragment extends Fragment {
      * @param isAdd boolean (true if adding, false if editing)
      * @return fragment instance
      */
-    public static AddEditItemFragment newInstance(Item item, boolean isAdd, String[] uriStrings) {
+    public static AddEditItemFragment newInstance(Item item, boolean isAdd) {
         AddEditItemFragment fragment = new AddEditItemFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ITEM_KEY, item);
         bundle.putBoolean(IS_ADD, isAdd);
-        bundle.putStringArray("URIS", uriStrings);
+//        bundle.putStringArray("URIS", uriStrings); , String[] uriStrings
         fragment.setArguments(bundle);
 
         return fragment;
@@ -240,29 +246,35 @@ public class AddEditItemFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
+        binding = FragmentAddEditItemBinding.inflate(inflater, container, false); // view binding
         View view = binding.getRoot();
         helper = new AddEditInputHelper(view);
 
+        // creating the new file path
         imgPath = new File(requireContext().getFilesDir(), "images");
         if (!imgPath.exists()) {
             imgPath.mkdirs();
         }
 
-        uri = new ArrayList<>();
+
+        newUrls = currentItem.getPhotos();
+        uri = new ArrayList<>(newUrls); // TODO: not showing photos
         newTags = new ArrayList<>(currentItem.getTags());
 
         controller = new AddEditController(view, uri, newTags);
 
         imgRecyclerView = binding.addEditImageRecycler;
-        imgAdapter = new AddEditImageAdapter(uri);
+        imgAdapter = new AddEditImageAdapter(uri, requireContext());
 
         imgAdapter.setOnClickListener(new ImageSelectListener() {
             @Override
-            public void onItemClicked(int position) {
+            public void onItemClicked(int position)  {
                 // updating firebase when we delete an image
+
                 updateFirebaseImages(false, (Integer) position);
+
                 uri.remove(position);
+                newUrls.remove(position);
                 imgAdapter.notifyDataSetChanged();
             }
         });
@@ -659,11 +671,6 @@ public class AddEditItemFragment extends Fragment {
         if (requestCode == CAMERA_REQUEST) {
             // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
             // store img at new path and remember URI
-//            imgPath = new File(requireContext().getFilesDir(), "images");
-//            if (!imgPath.exists()) {
-//                imgPath.mkdirs();
-//            }
-            // creating the new file path
             File newFile = new File(imgPath, System.currentTimeMillis() + ".jpg");
             newURI = FileProvider.getUriForFile(requireContext(), "com.example.boeing301house", newFile);
 
@@ -684,7 +691,7 @@ public class AddEditItemFragment extends Fragment {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInAnonymously();
         // adding is true and position is null means were adding
-        if (adding == true && position == null) {
+        if (adding && position == null) {
             Uri fileUri = newURI;
             StorageReference ref = storageRef.child("images/" + fileUri.getLastPathSegment());
             UploadTask uploadTask = ref.putFile(fileUri);
@@ -700,9 +707,27 @@ public class AddEditItemFragment extends Fragment {
                     Log.d("PHOTO_ADDED", "onSuccess: YESSSS");
                 }
             });
+
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        newUrls.add(downloadUri);
+                    }
+                }
+            });
         }
         // else if were deleting an existing image
-        else if (position != null) {
+        else if (position != null && isAdd) {
             // getting the position
             String result = uri.get(position).getPath();
             int cut = result.lastIndexOf('/'); // formating the string

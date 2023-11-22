@@ -10,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,10 +22,14 @@ import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.example.boeing301house.itemlist.OnItemClickListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,6 +40,7 @@ import java.util.ArrayList;
  * Pushes {@link Item} changes to ItemList via Result in {@link Intent}
  */
 public class ItemViewActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
+    private static final String TAG = "ITEM VIEW";
     private Item selectedItem; // item user selected
     private String SN;
     private String model;
@@ -51,6 +58,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     private TextView tComment;
     private TextView tEstimatedValue;
     private RecyclerView rvImageCarousel;
+    private ArrayList<Uri> currentPhotos; // for keeping track of what to delete from firebase
     private int pos; // position of item in list, send back during deletion
 
     private boolean editingItem = false; // only set to true after user presses confirm in edit fragment
@@ -60,6 +68,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     private static String EDIT_ITEM = "EDIT_ITEM";
 
     private ChipGroup chipGroup;
+    private CarouselAdapter carouselAdapter;
 
     // TODO: finish javadocs
     /**
@@ -79,21 +88,28 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         chipGroup = findViewById(R.id.itemViewChipGroup);
         rvImageCarousel = findViewById(R.id.itemViewRecycler);
 
+        Intent intent = getIntent();
+        selectedItem = intent.getParcelableExtra("Selected Item");
+        pos = intent.getIntExtra("pos", 0);
+        currentPhotos = new ArrayList<>(selectedItem.getPhotos());
+
+        MaterialToolbar topbar = findViewById(R.id.itemViewMaterialToolBar);
+        setSupportActionBar(topbar);
 
         // TEMPORARY / TESTING
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInAnonymously();
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        auth.signInAnonymously();
 
-        ArrayList<String> test = new ArrayList<>();
-        test.add("https://firebasestorage.googleapis.com/v0/b/boeing301house.appspot.com/o/images%2F1700431770594.jpg?alt=media&token=167bc0fe-d1f3-437b-99f6-c42637aef2f9");
-        test.add("https://firebasestorage.googleapis.com/v0/b/boeing301house.appspot.com/o/images%2F1700431604809.jpg?alt=media&token=4e04c787-d83b-4df9-b7d2-54f9a1d33cbe");
-        CarouselAdapter carouselAdapter = new CarouselAdapter(this, test);
+//        ArrayList<String> test = new ArrayList<>();
+//        test.add("https://firebasestorage.googleapis.com/v0/b/boeing301house.appspot.com/o/images%2F1700431770594.jpg?alt=media&token=167bc0fe-d1f3-437b-99f6-c42637aef2f9");
+//        test.add("https://firebasestorage.googleapis.com/v0/b/boeing301house.appspot.com/o/images%2F1700431604809.jpg?alt=media&token=4e04c787-d83b-4df9-b7d2-54f9a1d33cbe");
+        carouselAdapter = new CarouselAdapter(this, selectedItem.getPhotos());
         carouselAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent fullscreenImageIntent = new Intent(ItemViewActivity.this, FullscreenImageActivity.class);
-                fullscreenImageIntent.putExtra("IMAGE", test.get(position));
+                fullscreenImageIntent.putExtra("IMAGE", selectedItem.getPhotos().get(position));
 //                ActivityOptions animation = ActivityOptions.makeSceneTransitionAnimation(ItemViewActivity.this, view, "IMAGE");
 //                startActivity(fullscreenImageIntent, animation.toBundle());
                 startActivity(fullscreenImageIntent);
@@ -102,15 +118,6 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         rvImageCarousel.setAdapter(carouselAdapter);
 
         // TESTING
-
-        Intent intent = getIntent();
-        selectedItem = intent.getParcelableExtra("Selected Item");
-        pos = intent.getIntExtra("pos", 0);
-
-        MaterialToolbar topbar = findViewById(R.id.itemViewMaterialToolBar);
-        setSupportActionBar(topbar);
-
-
 
 
         // topbar.setNavigationIconTint(getResources().getColor(R.color.white));
@@ -121,20 +128,6 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
 //        clearChipGroup();
         updateTexts();
         fillChipGroup();
-
-
-
-
-
-//        topbar.setOnClickListener();
-
-        // TODO: add gallery carousel and tags
-
-        // TODO: add delete and edit functionality (in onOptionsItemSelected function)
-        // during call back: send item and position back via intent
-        //      delete -> delete item at given position
-        //      edit -> set item in list as newly returned item
-
 
     }
 
@@ -309,6 +302,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
                 resultIntent.putExtra("pos", pos);
                 // adding the position to the intent, can access with key "pos"
                 if (isEdited) {
+                    // TODO: delete old images that aren't in new
+                    deleteFirebasePhotos(selectedItem.getPhotos(), currentPhotos);
                     resultIntent.putExtra("action", EDIT_ITEM);
                     resultIntent.putExtra("edited_item", selectedItem);
                 }
@@ -325,6 +320,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             public void onClick(DialogInterface dialog, int which) {
                 // if were editing and they cancel we want to return to the ItemViewActivity
                 if (isEdited == true) {
+                    // TODO: delete new images that aren't in old
+                    deleteFirebasePhotos(currentPhotos, selectedItem.getPhotos());
                     finish();
                 }
             }
@@ -361,9 +358,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         selectedItem.setComment(updatedItem.getComment());
         selectedItem.setValue(updatedItem.getValue());
         selectedItem.setTags(updatedItem.getTags());
+
         updateTexts(); // updates the text values
         clearChipGroup();
         fillChipGroup();
+        carouselAdapter.notifyDataSetChanged();
 
         exitAddEditFragment(); // closing the fragment
 
@@ -409,6 +408,42 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     public void clearChipGroup() {
         for (int i = chipGroup.getChildCount() - 1; i >= 0; i--) {
             chipGroup.removeView(chipGroup.getChildAt(i));
+        }
+    }
+
+    /**
+     * delete images that are no longer needed from firebase
+     * @param keep image array attached to item
+     * @param drop image array no longer attached to item
+     */
+    private void deleteFirebasePhotos(ArrayList<Uri> keep, ArrayList<Uri> drop) {
+        for (Uri photo: drop) {
+            if (keep.contains(photo)) {
+                deleteFromFirebase(photo);
+            }
+        }
+    }
+
+    /**
+     * Deletes image from firebase
+     * @param photo
+     */
+    private void deleteFromFirebase(Uri photo) {
+        // TODO use DBConn + put in diff class
+        // TODO: NOT WORKING
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously();
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
+        StorageReference storageRef = storage.getReference();
+
+        String path = photo.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            path = path.substring(cut+1);
+            storageRef.child("images/" + path).delete()
+                    .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
+                    .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
+
         }
     }
 }
