@@ -295,7 +295,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         ImageCapture imageCapture = new ImageCapture.Builder().build();
 
 //        CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-        cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+//        cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
 //        DisplayMetrics displayMetrics = new DisplayMetrics();
 //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
