@@ -349,6 +349,21 @@ public class Item implements Parcelable {
         return this.tags;
     }
 
+    /**
+     * Getter for photos
+     * @return photo uri array
+     */
+    public ArrayList<Uri> getPhotos() {
+        return this.photos;
+    }
+
+    /**
+     * Setter for photos
+     * @param photos new photo array
+     */
+    public void setPhotos(ArrayList<Uri> photos) {
+        this.photos = photos;
+    }
 
     @Override
     public int describeContents() {

@@ -1,5 +1,6 @@
 package com.example.boeing301house.itemlist;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -136,6 +137,7 @@ public class ItemList {
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
         itemData.put("Tags",item.getTags());
+        itemData.put("Photos", item.getPhotos());
 
 
 //        updateItemListView();
@@ -229,6 +231,7 @@ public class ItemList {
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
         itemData.put("Tags", item.getTags());
+        itemData.put("Photos", item.getPhotos());
 
 
         // Get the document reference for the item
@@ -328,7 +331,8 @@ public class ItemList {
                     Double value = doc.getDouble("Est Value");
                     String desc = doc.getString("Desc");
                     String comment = doc.getString("Comment");
-                    ArrayList<String> tags = (ArrayList<String>)doc.get("Tags");
+                    ArrayList<String> tags = (ArrayList<String>) doc.get("Tags");
+                    ArrayList<String> photos = (ArrayList<String>) doc.get("Photos");
                     String id = doc.getId();
                     // TODO: tags and images
 
@@ -344,6 +348,7 @@ public class ItemList {
                             .addDescription(desc)
                             .addComment(comment)
                             .addTag(tags)
+                            .addPhotos(photos)
                             .build();
 
                     itemList.add(item);

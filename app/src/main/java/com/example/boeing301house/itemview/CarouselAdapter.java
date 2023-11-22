@@ -1,6 +1,7 @@
 package com.example.boeing301house.itemview;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * Recycler adapter for carousel
  */
 public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHolder> {
-    private ArrayList<String> urlArray;
+    private ArrayList<Uri> urlArray;
     private Context context;
 
     private OnItemClickListener onItemClickListener;
@@ -32,7 +33,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
      * @param context app context
      * @param urlArray array
      */
-    public CarouselAdapter(Context context, ArrayList<String> urlArray) {
+    public CarouselAdapter(Context context, ArrayList<Uri> urlArray) {
         this.urlArray = urlArray;
         this.context = context;
         storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");

@@ -1,5 +1,7 @@
 package com.example.boeing301house;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 
 /**
@@ -124,8 +126,8 @@ public class ItemBuilder {
 
     /**
      * Builder method for declaring tags of an {@link Item}
-     * @param tag: tag to be added
-     * @return this: ItemBuilder object
+     * @param tag tag to be added
+     * @return this ItemBuilder object
      */
     public ItemBuilder addTag(String tag) {
         item.addTags(tag);
@@ -134,11 +136,28 @@ public class ItemBuilder {
 
     /**
      * Builder method for declaring tags of an {@link Item}
-     * @param tag: list of tags to be added
-     * @return this: ItemBuilder object
+     * @param tag list of tags to be added
+     * @return this ItemBuilder object
      */
     public ItemBuilder addTag(ArrayList<String> tag) {
         item.addTags(tag);
+        return this;
+    }
+
+    /**
+     * Add photos to item
+     * @param photos list of photo firebase urls to add
+     * @return this ItemBuilder object
+     */
+    public ItemBuilder addPhotos(ArrayList<String> photos) {
+        if (photos == null) {
+            return this;
+        }
+        ArrayList<Uri> uriPhotos = new ArrayList<>();
+        for (String photo: photos) {
+            uriPhotos.add(Uri.parse(photo));
+        }
+        item.setPhotos(uriPhotos);
         return this;
     }
 
