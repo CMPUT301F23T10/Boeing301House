@@ -145,8 +145,6 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
-    private boolean isAwaiting = false;
-
     private Uri newURI;
 
     private File imgPath;
@@ -157,8 +155,6 @@ public class AddEditItemFragment extends Fragment {
     private static final int WRITE_PERMISSIONS = 103; // FOR API < 32
     private static final int GALLERY_REQUEST = 110;
     private static final int CAMERA_REQUEST = 111;
-//    private static final int SCAN_BARCODE_REQUEST = 112;
-//    private static final int SCAN_SN_REQUEST = 113;
 
 
     FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
@@ -176,8 +172,6 @@ public class AddEditItemFragment extends Fragment {
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();
-
-
         void onConfirmPressed(Item updatedItem);
     }
 
@@ -292,13 +286,8 @@ public class AddEditItemFragment extends Fragment {
 //        }
 
 
-        binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: add functionality and check over
-                listener.onCancel();
-                // deleteFrag();
-            }
+        binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(v -> {
+            listener.onCancel();
         });
 
 
@@ -306,21 +295,6 @@ public class AddEditItemFragment extends Fragment {
             // TODO: allow backing from fragment to fragment
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                /*
-                if (item.getItemId() == R.id.itemAddEditTag) {
-                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
-                            Toast.LENGTH_SHORT).show(); // for testing
-                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.itemAddEditContent, tagsFragment, "UPDATE_TO_TAG")
-                            .addToBackStack(null)
-                            .commit();
-
-                    return true;
-
-                } else
-
-                 */
                 if (item.getItemId() == R.id.itemAddEditPhotoButton) {
                     // add camera functionality
                     View menuItemView = view.findViewById(item.getItemId());
@@ -601,10 +575,6 @@ public class AddEditItemFragment extends Fragment {
             binding.updateDate.setError("This field is required");
             isError = true;
         }
-//        } else if (newDate > currentDate) {
-//            binding.updateDate.setError("Invalid Date");
-//            isError = true;
-//        }
 
         return isError;
     }
@@ -678,77 +648,6 @@ public class AddEditItemFragment extends Fragment {
         }
 
     }
-
-
-    /**
-     * Get permission to use gallery and open gallery
-     * @return true if gallery opened, false otherwise
-     */
-    private boolean askGalleryPerms() {
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
-                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, READ_PERMISSIONS);
-            return false;
-        } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
-            return false;
-        } else {
-            openGallery();
-            return true;
-
-        }
-//        else {
-//            openGallery();
-//            return true;
-//        }
-    }
-
-    /**
-     * Open photo gallery, let user select multiple images to bring back
-     */
-    private void openGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // allow user to select + return multiple item
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Image(s)"), GALLERY_REQUEST);
-        // open gallery
-    }
-
-    /**
-     * Get permission to use camera and open camera
-     * @return true if camera/scanner opened, false otherwise
-     */
-    private boolean askCameraPerms(int requestCode) {
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
-            return false;
-
-        } else {
-            if (requestCode == ScannerActivity.SCAN_SN_REQUEST || requestCode == ScannerActivity.SCAN_BARCODE_REQUEST) {
-                openScanner(requestCode);
-                return true;
-            }
-//            else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST) {
-//                openScanner(requestCode);
-//                return true;
-//            }
-            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
-                ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSIONS);
-                return false;
-            } else {
-                openCamera(requestCode);
-                return true;
-            }
-        }
-
-
-    }
-
-
     /**
      * Fill chip group w/ item tags (for initializing)
      */
@@ -795,6 +694,67 @@ public class AddEditItemFragment extends Fragment {
         binding.itemAddEditChipGroup.addView(newChip);
 
     }
+
+    /**
+     * Get permission to use gallery and open gallery
+     * @return true if gallery opened, false otherwise
+     */
+    private boolean askGalleryPerms() {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_MEDIA_IMAGES)
+                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT > Build.VERSION_CODES.S_V2) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_MEDIA_IMAGES}, READ_PERMISSIONS);
+            return false;
+        } else if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, READ_PERMISSIONS);
+            return false;
+        } else {
+            openGallery();
+            return true;
+
+        }
+    }
+
+    /**
+     * Open photo gallery, let user select multiple images to bring back
+     */
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true); // allow user to select + return multiple item
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Image(s)"), GALLERY_REQUEST);
+        // open gallery
+    }
+
+    /**
+     * Get permission to use camera and open camera
+     * @return true if camera/scanner opened, false otherwise
+     */
+    private boolean askCameraPerms(int requestCode) {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSIONS);
+            return false;
+
+        } else {
+            if (requestCode == ScannerActivity.SCAN_SN_REQUEST || requestCode == ScannerActivity.SCAN_BARCODE_REQUEST) {
+                openScanner(requestCode);
+                return true;
+            }
+            if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
+                ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSIONS);
+                return false;
+            } else {
+                openCamera(requestCode);
+                return true;
+            }
+        }
+
+
+    }
+
 
     /**
      * Open camera (overloaded function for use w/ scanning)
