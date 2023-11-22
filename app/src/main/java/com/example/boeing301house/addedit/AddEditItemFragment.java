@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,10 +46,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
-import com.google.mlkit.vision.barcode.BarcodeScanning;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.common.InputImage;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -59,9 +54,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
@@ -73,6 +66,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class AddEditItemFragment extends Fragment {
     private static final String TAG = "ADD_EDIT_FRAG";
+    private AddEditInputHelper helper;
     /**
      * Current item being added/edited
      */
@@ -176,7 +170,7 @@ public class AddEditItemFragment extends Fragment {
     }
 
     // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
-    // handle passing through an expense object to fragment from activity
+    // handle passing through an item object to fragment from activity
 
     /**
      * This function creates an instance of the fragment and passes an {@link Item} to it.
@@ -210,7 +204,7 @@ public class AddEditItemFragment extends Fragment {
 
         }
         else{
-            throw new RuntimeException(context.toString() + "must implement onfraglistener");
+            throw new RuntimeException(context.toString() + "must implement OnAddEditFragmentInteractionListener");
         }
     }
     // TODO: finish javadoc
@@ -247,6 +241,7 @@ public class AddEditItemFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
         View view = binding.getRoot();
+        helper = new AddEditInputHelper(view);
 
         imgPath = new File(requireContext().getFilesDir(), "images");
         if (!imgPath.exists()) {
@@ -270,11 +265,6 @@ public class AddEditItemFragment extends Fragment {
         });
 
         imgRecyclerView.setAdapter(imgAdapter);
-
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 104);
-        }
 
 
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(v -> {
@@ -352,9 +342,6 @@ public class AddEditItemFragment extends Fragment {
         });
 
         //this sets the current text of the edit expense fragment to the current expense name, cost, date and summary
-//        View view = inflater.inflate(R.layout.add_edit_item_fragment, container, false);
-//        EditText editCost = view.findViewById(R.id.editCost);
-//        editCost.setText(currentItem.getCostString());
         binding.updateValue.setHint(String.format("Cost: $%s", currentItem.getValueString()));
         binding.updateMake.setHint(String.format("Make: %s", currentItem.getMake()));
         binding.updateModel.setHint(String.format("Model: %s", currentItem.getModel()));
@@ -392,51 +379,19 @@ public class AddEditItemFragment extends Fragment {
             }
         });
 
-        // create instance of material date picker builder
-        //  creating datepicker
-        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
 
-        // create constraint for date picker (only let user choose dates on and before current"
-        CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
+        // cancel dialog
+        MaterialDatePicker<Long> materialDatePicker = helper.getDatePicker(selection -> {
+            final TimeZone local = Calendar.getInstance().getTimeZone(); // local timezone
+            long offset = local.getOffset(selection);
+            long localDate = selection - offset; // account for timezone difference
+            String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(localDate);
+            binding.updateDate.getEditText().setText(dateString);
+            newDate = localDate;
+        }, DialogInterface::cancel);
 
-        // define properties/title for material date picker
-        materialDateBuilder.setTitleText("Date Acquired: ");
-        materialDateBuilder.setCalendarConstraints(dateConstraint); // apply date constraint
-        materialDateBuilder.setSelection(Calendar.getInstance().getTimeInMillis());
-        // instantiate date picker
-        final MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
+        binding.updateDate.getEditText().setOnClickListener(v -> materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER"));
 
-        final TimeZone local = Calendar.getInstance().getTimeZone(); // local timezone
-
-        binding.updateDate.getEditText().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-
-
-            }
-        });
-
-
-        // material date picker behaviours
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-            @Override
-            public void onPositiveButtonClick(Long selection) {
-                // since material design picker date is in UTC
-                long offset = local.getOffset(selection);
-                long localDate = selection - offset; // account for timezone difference
-                String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(localDate);
-                binding.updateDate.getEditText().setText(dateString);
-                newDate = localDate;
-            }
-        });
-
-        materialDatePicker.addOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                dialog.cancel(); // cancel dialog
-            }
-        });
 
 
         binding.updateItemConfirm.setOnClickListener(new View.OnClickListener() { //when clicked confirm button
@@ -456,7 +411,7 @@ public class AddEditItemFragment extends Fragment {
 
                 if (isAdd)
                 {
-                    if(!checkFields()) {
+                    if(!helper.checkFields()) {
                         newValue = Double.parseDouble(newValueString);
 
                         // setting the current item with the new fields
@@ -531,40 +486,6 @@ public class AddEditItemFragment extends Fragment {
         binding = null;
     }
 
-    /**
-     * Checks if any required fields were left blank, if any of them were left blank
-     * it alerts the user.
-     * @return boolean
-     */
-    private boolean checkFields() {
-        boolean isError = false;
-        // reset errors
-        binding.updateModel.setError("");
-        binding.updateMake.setError("");
-        binding.updateValue.setError("");
-        binding.updateDate.setError("");
-
-        Long currentDate = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
-
-        if (Objects.requireNonNull(binding.updateModel.getEditText()).length() == 0) {
-            binding.updateModel.setError("This field is required");
-            isError = true;
-        }
-        if (Objects.requireNonNull(binding.updateMake.getEditText()).length() == 0) {
-            binding.updateMake.setError("This field is required");
-            isError = true;
-        }
-        if (Objects.requireNonNull(binding.updateValue.getEditText()).length() == 0) {
-            binding.updateValue.setError("This field is required");
-            isError = true;
-        }
-        if (Objects.requireNonNull(binding.updateDate.getEditText()).length() == 0) {
-            binding.updateDate.setError("This field is required");
-            isError = true;
-        }
-
-        return isError;
-    }
 
     /**
      * Fill chip group w/ item tags (for initializing)
@@ -862,7 +783,7 @@ public class AddEditItemFragment extends Fragment {
                 });
 
                 if (binding != null) {
-                    getActivity().runOnUiThread(searchRunnable);
+                    requireActivity().runOnUiThread(searchRunnable);
                 }
             }
         });
