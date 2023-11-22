@@ -17,7 +17,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 /**
- * Controller
+ * Helper class for user input in {@link AddEditItemFragment}
  */
 public class AddEditInputHelper {
 

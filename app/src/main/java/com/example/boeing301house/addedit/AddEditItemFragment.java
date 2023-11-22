@@ -67,6 +67,7 @@ import org.apache.commons.io.FileUtils;
 public class AddEditItemFragment extends Fragment {
     private static final String TAG = "ADD_EDIT_FRAG";
     private AddEditInputHelper helper;
+    private AddEditController controller;
     /**
      * Current item being added/edited
      */
@@ -251,6 +252,8 @@ public class AddEditItemFragment extends Fragment {
         uri = new ArrayList<>();
         newTags = new ArrayList<>(currentItem.getTags());
 
+        controller = new AddEditController(view, uri, newTags);
+
         imgRecyclerView = binding.addEditImageRecycler;
         imgAdapter = new AddEditImageAdapter(uri);
 
@@ -265,6 +268,11 @@ public class AddEditItemFragment extends Fragment {
         });
 
         imgRecyclerView.setAdapter(imgAdapter);
+
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 104);
+        }
 
 
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(v -> {
@@ -366,15 +374,7 @@ public class AddEditItemFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    if (s.charAt(s.length() - 1) == ' ' || s.charAt(s.length() - 1) == '\n') {
-                        if (s.length() > 1 && (!newTags.contains(s.toString().trim()))) {
-                            newTags.add(s.toString().trim());
-                            addChip(s.toString().trim());
-                        }
-                        s.clear();
-                    }
-                }
+                controller.addTag(s, AddEditItemFragment.this::addChip);
 
             }
         });
@@ -493,21 +493,7 @@ public class AddEditItemFragment extends Fragment {
     public void fillChipGroup() {
         for (int i = 0; i < newTags.size(); i++) {
             final String name = newTags.get(i);
-            final Chip newChip = new Chip(requireContext());
-            newChip.setText(name);
-            newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
-            newChip.setCloseIconEnabled(true);
-            newChip.setContentDescription("chip"+name);
-            newChip.setCloseIconContentDescription("close"+name); // for ui testing
-            newChip.setOnCloseIconClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    newTags.remove(name);
-                    binding.itemAddEditChipGroup.removeView(newChip);
-                }
-            });
-
-            binding.itemAddEditChipGroup.addView(newChip);
+            addChip(name);
         }
     }
 
@@ -521,13 +507,12 @@ public class AddEditItemFragment extends Fragment {
         final Chip newChip = new Chip(requireContext());
         newChip.setText(name);
         newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
-        newChip.setCloseIconEnabled(true);
-        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newTags.remove(name);
-                binding.itemAddEditChipGroup.removeView(newChip);
-            }
+        newChip.setCloseIconVisible(true);
+        newChip.setContentDescription("chip"+name);
+        newChip.setCloseIconContentDescription("close"+name); // for ui testing
+        newChip.setOnCloseIconClickListener(v -> {
+            newTags.remove(name);
+            binding.itemAddEditChipGroup.removeView(newChip);
         });
 
         binding.itemAddEditChipGroup.addView(newChip);
