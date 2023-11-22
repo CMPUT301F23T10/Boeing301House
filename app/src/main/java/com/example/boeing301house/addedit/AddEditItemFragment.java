@@ -145,8 +145,6 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
-    private boolean isAwaiting = false;
-
     private Uri newURI;
 
     private File imgPath;
@@ -157,8 +155,6 @@ public class AddEditItemFragment extends Fragment {
     private static final int WRITE_PERMISSIONS = 103; // FOR API < 32
     private static final int GALLERY_REQUEST = 110;
     private static final int CAMERA_REQUEST = 111;
-//    private static final int SCAN_BARCODE_REQUEST = 112;
-//    private static final int SCAN_SN_REQUEST = 113;
 
 
     FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
@@ -176,8 +172,6 @@ public class AddEditItemFragment extends Fragment {
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();
-
-
         void onConfirmPressed(Item updatedItem);
     }
 
@@ -275,10 +269,6 @@ public class AddEditItemFragment extends Fragment {
             }
         });
 
-        // GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
-        // LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        // layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        // imgRecyclerView.setLayoutManager(layoutManager);
         imgRecyclerView.setAdapter(imgAdapter);
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -287,18 +277,8 @@ public class AddEditItemFragment extends Fragment {
         }
 
 
-//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_IMAGES)) {
-//
-//        }
-
-
-        binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: add functionality and check over
-                listener.onCancel();
-                // deleteFrag();
-            }
+        binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(v -> {
+            listener.onCancel();
         });
 
 
@@ -306,21 +286,6 @@ public class AddEditItemFragment extends Fragment {
             // TODO: allow backing from fragment to fragment
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                /*
-                if (item.getItemId() == R.id.itemAddEditTag) {
-                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
-                            Toast.LENGTH_SHORT).show(); // for testing
-                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.itemAddEditContent, tagsFragment, "UPDATE_TO_TAG")
-                            .addToBackStack(null)
-                            .commit();
-
-                    return true;
-
-                } else
-
-                 */
                 if (item.getItemId() == R.id.itemAddEditPhotoButton) {
                     // add camera functionality
                     View menuItemView = view.findViewById(item.getItemId());
@@ -407,14 +372,10 @@ public class AddEditItemFragment extends Fragment {
 
         binding.updateTags.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                return;
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { return; }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                return;
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { return; }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -601,14 +562,56 @@ public class AddEditItemFragment extends Fragment {
             binding.updateDate.setError("This field is required");
             isError = true;
         }
-//        } else if (newDate > currentDate) {
-//            binding.updateDate.setError("Invalid Date");
-//            isError = true;
-//        }
 
         return isError;
     }
 
+    /**
+     * Fill chip group w/ item tags (for initializing)
+     */
+    public void fillChipGroup() {
+        for (int i = 0; i < newTags.size(); i++) {
+            final String name = newTags.get(i);
+            final Chip newChip = new Chip(requireContext());
+            newChip.setText(name);
+            newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+            newChip.setCloseIconEnabled(true);
+            newChip.setContentDescription("chip"+name);
+            newChip.setCloseIconContentDescription("close"+name); // for ui testing
+            newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    newTags.remove(name);
+                    binding.itemAddEditChipGroup.removeView(newChip);
+                }
+            });
+
+            binding.itemAddEditChipGroup.addView(newChip);
+        }
+    }
+
+
+    /**
+     * Add chip to chip group
+     * @param tag tag to add
+     */
+    private void addChip(String tag) {
+        final String name = tag;
+        final Chip newChip = new Chip(requireContext());
+        newChip.setText(name);
+        newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+        newChip.setCloseIconEnabled(true);
+        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTags.remove(name);
+                binding.itemAddEditChipGroup.removeView(newChip);
+            }
+        });
+
+        binding.itemAddEditChipGroup.addView(newChip);
+
+    }
 
     /**
      * ActivityResult for img from gallery
@@ -698,10 +701,6 @@ public class AddEditItemFragment extends Fragment {
             return true;
 
         }
-//        else {
-//            openGallery();
-//            return true;
-//        }
     }
 
     /**
@@ -731,10 +730,6 @@ public class AddEditItemFragment extends Fragment {
                 openScanner(requestCode);
                 return true;
             }
-//            else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST) {
-//                openScanner(requestCode);
-//                return true;
-//            }
             if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
                 ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSIONS);
@@ -748,53 +743,6 @@ public class AddEditItemFragment extends Fragment {
 
     }
 
-
-    /**
-     * Fill chip group w/ item tags (for initializing)
-     */
-    public void fillChipGroup() {
-        for (int i = 0; i < newTags.size(); i++) {
-            final String name = newTags.get(i);
-            final Chip newChip = new Chip(requireContext());
-            newChip.setText(name);
-            newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
-            newChip.setCloseIconEnabled(true);
-            newChip.setContentDescription("chip"+name);
-            newChip.setCloseIconContentDescription("close"+name); // for ui testing
-            newChip.setOnCloseIconClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    newTags.remove(name);
-                    binding.itemAddEditChipGroup.removeView(newChip);
-                }
-            });
-
-            binding.itemAddEditChipGroup.addView(newChip);
-        }
-    }
-
-
-    /**
-     * Add chip to chip group
-     * @param tag tag to add
-     */
-    private void addChip(String tag) {
-        final String name = tag;
-        final Chip newChip = new Chip(requireContext());
-        newChip.setText(name);
-        newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
-        newChip.setCloseIconEnabled(true);
-        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newTags.remove(name);
-                binding.itemAddEditChipGroup.removeView(newChip);
-            }
-        });
-
-        binding.itemAddEditChipGroup.addView(newChip);
-
-    }
 
     /**
      * Open camera (overloaded function for use w/ scanning)

@@ -1,11 +1,13 @@
-package com.example.boeing301house;
+package com.example.boeing301house.itemview;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +16,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.boeing301house.Item;
+import com.example.boeing301house.R;
 import com.example.boeing301house.addedit.AddEditItemFragment;
+import com.example.boeing301house.itemlist.OnItemClickListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 
 /**
  * Class for item view activity (lets user view specific {@link Item})
@@ -42,7 +50,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     private TextView tDescription;
     private TextView tComment;
     private TextView tEstimatedValue;
-    private Intent returnIntent;
+    private RecyclerView rvImageCarousel;
     private int pos; // position of item in list, send back during deletion
 
     private boolean editingItem = false; // only set to true after user presses confirm in edit fragment
@@ -69,8 +77,31 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         setContentView(R.layout.activity_item_view);
 
         chipGroup = findViewById(R.id.itemViewChipGroup);
+        rvImageCarousel = findViewById(R.id.itemViewRecycler);
 
 
+        // TEMPORARY / TESTING
+
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously();
+
+        ArrayList<String> test = new ArrayList<>();
+        test.add("https://firebasestorage.googleapis.com/v0/b/boeing301house.appspot.com/o/images%2F1700431770594.jpg?alt=media&token=167bc0fe-d1f3-437b-99f6-c42637aef2f9");
+        test.add("https://firebasestorage.googleapis.com/v0/b/boeing301house.appspot.com/o/images%2F1700431604809.jpg?alt=media&token=4e04c787-d83b-4df9-b7d2-54f9a1d33cbe");
+        CarouselAdapter carouselAdapter = new CarouselAdapter(this, test);
+        carouselAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent fullscreenImageIntent = new Intent(ItemViewActivity.this, FullscreenImageActivity.class);
+                fullscreenImageIntent.putExtra("IMAGE", test.get(position));
+//                ActivityOptions animation = ActivityOptions.makeSceneTransitionAnimation(ItemViewActivity.this, view, "IMAGE");
+//                startActivity(fullscreenImageIntent, animation.toBundle());
+                startActivity(fullscreenImageIntent);
+            }
+        });
+        rvImageCarousel.setAdapter(carouselAdapter);
+
+        // TESTING
 
         Intent intent = getIntent();
         selectedItem = intent.getParcelableExtra("Selected Item");
@@ -87,9 +118,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         if (selectedItem == null) {
             throw new IllegalArgumentException();
         }
-        clearChipGroup();
+//        clearChipGroup();
         updateTexts();
         fillChipGroup();
+
+
 
 
 
@@ -359,7 +392,6 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             newChip.setChecked(true);
             newChip.setClickable(false);
             newChip.setFocusable(false);
-            newChip.setBackgroundColor(getColor(R.color.colorItemChipBG));
             newChip.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

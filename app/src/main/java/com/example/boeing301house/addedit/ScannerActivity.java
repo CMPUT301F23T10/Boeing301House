@@ -20,11 +20,9 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.Image;
 import android.os.Bundle;
@@ -33,10 +31,8 @@ import android.util.Log;
 import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.widget.Button;
 
-import com.example.boeing301house.Detection.ScanTransform;
 import com.example.boeing301house.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -53,6 +49,7 @@ import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -156,7 +153,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
             }
 
             if (requestCode == SCAN_SN_REQUEST) {
-                analyzeText(scannedIMG);
+                analyzeSN(scannedIMG);
             }
 
         });
@@ -198,21 +195,22 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     /**
      * Analyze text
      */
-    public void analyzeText(Bitmap bitmap) {
+    public void analyzeSN(Bitmap bitmap) {
         Log.d(TAG, "START ANALYZING");
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
+
 
         Task<Text> result = recognizer.process(inputImage)
                 .addOnSuccessListener(new OnSuccessListener<Text>() {
                     @Override
                     public void onSuccess(Text text) {
                         Log.d(TAG, "SUCCESS: " + text.getText());
-
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra(RETURN_SN, text.getText());
                         setResult(RESULT_OK, resultIntent);
                         finish();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -222,6 +220,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
                     }
                 });
+
 
     }
 
@@ -286,22 +285,27 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     }
 
+    /**
+     * Binds preview view to camera
+     */
     private void bindPreview() {
         Preview preview = new Preview.Builder().build();
         preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
         ImageCapture imageCapture = new ImageCapture.Builder().build();
 
-//            CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-//            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+//        CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+        cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
-//        Size targetResolution = new Size(viewFinder.getWidth(), viewFinder.getHeight());
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        Size targetResolution = new Size(viewFinder.getWidth(), displayMetrics.heightPixels);
 //        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
 //                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-//                .setTargetResolution(targetResolution)
+////                .setTargetResolution(targetResolution
 //                .build();
-//
-//
+
+
 //        if (requestCode == SCAN_BARCODE_REQUEST) {
 //
 //
@@ -315,6 +319,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
             // bind usecases to camera
 //            if (requestCode == SCAN_BARCODE_REQUEST) {
 //                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview);
+//            } else {
+//                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
 //            }
             Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
         } catch (Exception e) {
@@ -322,6 +328,11 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         }
 
     }
+
+    /**
+     * Binds barcode analyzer + image analysis to camera
+     * @param imageAnalysis
+     */
     private void bindBarcodeAnalyzer(ImageAnalysis imageAnalysis) {
         imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
             @OptIn(markerClass = ExperimentalGetImage.class)
@@ -333,8 +344,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
                     InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
 
                     Bitmap bmap = imageProxy.toBitmap();
-                    int viewHeight = bmap.getHeight();
-                    int viewWidth = bmap.getWidth();
+//                    int viewHeight = bmap.getHeight();
+//                    int viewWidth = bmap.getWidth();
 
                     BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
 
@@ -424,6 +435,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(color);
         paint.setStrokeWidth(4.0f);
+        
 
         left = (width / 10);
         top = height / 2 - diameter / 5;
@@ -452,9 +464,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Canvas canvas = holder.lockCanvas();
-        drawRect(getColor(R.color.colorHighlight), canvas);
-        holder.unlockCanvasAndPost(canvas);
+
     }
 
     @Override
@@ -467,7 +477,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        cameraProvider.unbindAll();
     }
 
 
