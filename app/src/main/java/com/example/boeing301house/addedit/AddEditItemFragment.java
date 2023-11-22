@@ -579,7 +579,53 @@ public class AddEditItemFragment extends Fragment {
         return isError;
     }
 
+    /**
+     * Fill chip group w/ item tags (for initializing)
+     */
+    public void fillChipGroup() {
+        for (int i = 0; i < newTags.size(); i++) {
+            final String name = newTags.get(i);
+            final Chip newChip = new Chip(requireContext());
+            newChip.setText(name);
+            newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+            newChip.setCloseIconEnabled(true);
+            newChip.setContentDescription("chip"+name);
+            newChip.setCloseIconContentDescription("close"+name); // for ui testing
+            newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    newTags.remove(name);
+                    binding.itemAddEditChipGroup.removeView(newChip);
+                }
+            });
 
+            binding.itemAddEditChipGroup.addView(newChip);
+        }
+    }
+
+
+    /**
+     * Add chip to chip group
+     * @param tag tag to add
+     */
+    private void addChip(String tag) {
+        final String name = tag;
+        final Chip newChip = new Chip(requireContext());
+        newChip.setText(name);
+        newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+        newChip.setCloseIconEnabled(true);
+        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newTags.remove(name);
+                binding.itemAddEditChipGroup.removeView(newChip);
+            }
+        });
+
+        binding.itemAddEditChipGroup.addView(newChip);
+
+    }
+    
     /**
      * ActivityResult for img from gallery
      * @param requestCode The integer request code originally supplied to
@@ -648,52 +694,7 @@ public class AddEditItemFragment extends Fragment {
         }
 
     }
-    /**
-     * Fill chip group w/ item tags (for initializing)
-     */
-    public void fillChipGroup() {
-        for (int i = 0; i < newTags.size(); i++) {
-            final String name = newTags.get(i);
-            final Chip newChip = new Chip(requireContext());
-            newChip.setText(name);
-            newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
-            newChip.setCloseIconEnabled(true);
-            newChip.setContentDescription("chip"+name);
-            newChip.setCloseIconContentDescription("close"+name); // for ui testing
-            newChip.setOnCloseIconClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    newTags.remove(name);
-                    binding.itemAddEditChipGroup.removeView(newChip);
-                }
-            });
 
-            binding.itemAddEditChipGroup.addView(newChip);
-        }
-    }
-
-
-    /**
-     * Add chip to chip group
-     * @param tag tag to add
-     */
-    private void addChip(String tag) {
-        final String name = tag;
-        final Chip newChip = new Chip(requireContext());
-        newChip.setText(name);
-        newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
-        newChip.setCloseIconEnabled(true);
-        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newTags.remove(name);
-                binding.itemAddEditChipGroup.removeView(newChip);
-            }
-        });
-
-        binding.itemAddEditChipGroup.addView(newChip);
-
-    }
 
     /**
      * Get permission to use gallery and open gallery
