@@ -11,6 +11,7 @@ import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
@@ -18,6 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -180,6 +183,7 @@ public class ItemList {
                         Log.d("Firestore", "Item successfully deleted!");
                         if (completeListener != null) {
                             completeListener.onComplete(item, true);
+                            removeFirebaseImages(item);
                         }
                     }
                 })
@@ -504,8 +508,25 @@ public class ItemList {
         returnList.addAll(itemList);
     }
 
+    /**
+     * Remove images (associated with item) from firebase
+     * @param item item being deleted
+     */
+    public void removeFirebaseImages(Item item) {
+        ArrayList<Uri> photos = item.getPhotos();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously();
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
+        StorageReference storageRef = storage.getReference();
+        for (Uri photo: photos) {
+            String path = photo.getPath();
+            storageRef.child(path).delete()
+                .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
+                .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
 
 
+        }
+    }
 
 
 

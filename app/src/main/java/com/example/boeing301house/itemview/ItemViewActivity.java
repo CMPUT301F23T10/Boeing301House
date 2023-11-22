@@ -437,13 +437,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         StorageReference storageRef = storage.getReference();
 
         String path = photo.getPath();
-        int cut = path.lastIndexOf('/');
-        if (cut != -1) {
-            path = path.substring(cut+1);
-            storageRef.child("images/" + path).delete()
-                    .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
-                    .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
 
-        }
+        storageRef.child(path).delete()
+            .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
+            .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
+
+
     }
 }
