@@ -269,21 +269,12 @@ public class AddEditItemFragment extends Fragment {
             }
         });
 
-        // GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
-        // LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        // layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        // imgRecyclerView.setLayoutManager(layoutManager);
         imgRecyclerView.setAdapter(imgAdapter);
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 104);
         }
-
-
-//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_IMAGES)) {
-//
-//        }
 
 
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(v -> {
@@ -381,14 +372,10 @@ public class AddEditItemFragment extends Fragment {
 
         binding.updateTags.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                return;
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { return; }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                return;
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { return; }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -625,7 +612,7 @@ public class AddEditItemFragment extends Fragment {
         binding.itemAddEditChipGroup.addView(newChip);
 
     }
-    
+
     /**
      * ActivityResult for img from gallery
      * @param requestCode The integer request code originally supplied to
