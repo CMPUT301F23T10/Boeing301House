@@ -48,7 +48,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.0")
     implementation("androidx.coordinatorlayout:coordinatorlayout:1.2.0")
 
-    implementation("com.squareup.picasso:picasso:2.8")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
 
 

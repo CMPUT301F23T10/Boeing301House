@@ -464,9 +464,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        Canvas canvas = holder.lockCanvas();
-        drawRect(getColor(R.color.colorHighlight), canvas);
-        holder.unlockCanvasAndPost(canvas);
+
     }
 
     @Override
@@ -479,7 +477,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-
+        cameraProvider.unbindAll();
     }
 
 
