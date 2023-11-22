@@ -28,6 +28,7 @@ import android.media.Image;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.widget.Button;
@@ -284,22 +285,27 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     }
 
+    /**
+     * Binds preview view to camera
+     */
     private void bindPreview() {
         Preview preview = new Preview.Builder().build();
         preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
         ImageCapture imageCapture = new ImageCapture.Builder().build();
 
-//            CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-//            cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+//        CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+        cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
-//        Size targetResolution = new Size(viewFinder.getWidth(), viewFinder.getHeight());
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        Size targetResolution = new Size(viewFinder.getWidth(), displayMetrics.heightPixels);
 //        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
 //                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-//                .setTargetResolution(targetResolution)
+////                .setTargetResolution(targetResolution
 //                .build();
-//
-//
+
+
 //        if (requestCode == SCAN_BARCODE_REQUEST) {
 //
 //
@@ -313,6 +319,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
             // bind usecases to camera
 //            if (requestCode == SCAN_BARCODE_REQUEST) {
 //                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, imageAnalysis, preview);
+//            } else {
+//                Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
 //            }
             Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
         } catch (Exception e) {
@@ -320,6 +328,11 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         }
 
     }
+
+    /**
+     * Binds barcode analyzer + image analysis to camera
+     * @param imageAnalysis
+     */
     private void bindBarcodeAnalyzer(ImageAnalysis imageAnalysis) {
         imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
             @OptIn(markerClass = ExperimentalGetImage.class)
@@ -331,8 +344,8 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
                     InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
 
                     Bitmap bmap = imageProxy.toBitmap();
-                    int viewHeight = bmap.getHeight();
-                    int viewWidth = bmap.getWidth();
+//                    int viewHeight = bmap.getHeight();
+//                    int viewWidth = bmap.getWidth();
 
                     BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
 
@@ -422,6 +435,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(color);
         paint.setStrokeWidth(4.0f);
+        
 
         left = (width / 10);
         top = height / 2 - diameter / 5;
