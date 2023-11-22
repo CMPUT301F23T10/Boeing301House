@@ -6,15 +6,17 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="MediaStore.createWriteRequest" />
     <uses-permission android:name="android.permission.CAMERA" /> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.INTERNET" />
-
 
     <application
         android:allowBackup="true"
@@ -27,30 +29,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Boeing301House"
         tools:targetApi="31">
+        <activity
+            android:name=".itemview.FullscreenImageActivity"
+            android:exported="false" />
+
         <provider
-            android:authorities="com.example.boeing301house"
             android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.boeing301house"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/paths">
-
-            </meta-data>
+                android:resource="@xml/paths"></meta-data>
             <meta-data
                 android:name="com.google.mlkit.vision.DEPENDENCIES"
-                android:value="ocr" >
-
-            </meta-data>
-
-
+                android:value="ocr"></meta-data>
         </provider>
 
         <activity
             android:name=".addedit.ScannerActivity"
             android:exported="false" />
         <activity
-            android:name=".ItemViewActivity"
+            android:name=".itemview.ItemViewActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity

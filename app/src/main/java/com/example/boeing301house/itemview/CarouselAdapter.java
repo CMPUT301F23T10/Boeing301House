@@ -1,4 +1,4 @@
-package com.example.boeing301house;
+package com.example.boeing301house.itemview;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.boeing301house.R;
 import com.example.boeing301house.itemlist.OnItemClickListener;
 import com.google.firebase.storage.FirebaseStorage;
 

@@ -1,4 +1,4 @@
-package com.example.boeing301house;
+package com.example.boeing301house.itemview;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,14 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.boeing301house.Item;
+import com.example.boeing301house.R;
 import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.example.boeing301house.itemlist.OnItemClickListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -91,7 +92,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         carouselAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                return;
+                Intent fullscreenImageIntent = new Intent(ItemViewActivity.this, FullscreenImageActivity.class);
+                fullscreenImageIntent.putExtra("IMAGE", test.get(position));
+//                ActivityOptions animation = ActivityOptions.makeSceneTransitionAnimation(ItemViewActivity.this, view, "IMAGE");
+//                startActivity(fullscreenImageIntent, animation.toBundle());
+                startActivity(fullscreenImageIntent);
             }
         });
         rvImageCarousel.setAdapter(carouselAdapter);

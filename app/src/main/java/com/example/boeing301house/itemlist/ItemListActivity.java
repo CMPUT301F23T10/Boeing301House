@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -27,7 +26,7 @@ import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
-import com.example.boeing301house.ItemViewActivity;
+import com.example.boeing301house.itemview.ItemViewActivity;
 import com.example.boeing301house.R;
 import com.example.boeing301house.UserProfileActivity;
 import com.google.android.material.appbar.MaterialToolbar;
