@@ -44,7 +44,7 @@ import java.util.Locale;
  */
 public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener, MultiTagFragment.OnTagInteractionListener {
 
-
+    private ActionMode contextualMode;
     private RecyclerView itemListRecyclerView;
     //    private FloatingActionButton addButton;
     private ItemRecyclerAdapter itemAdapter;
@@ -373,6 +373,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
          */
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            contextualMode = mode;
             findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
             int n = controller.itemsSelectedSize();
@@ -413,7 +414,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             else if (item.getItemId() == R.id.itemMultiselectTag) {
 //                makeSnackbar("TAGS");
                 new MultiTagFragment().show(getSupportFragmentManager(), "MULTITAG");
-                mode.finish(); // TODO: fix
+
                 return true;
             }
             return false;
@@ -550,6 +551,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     public void onTagOKPressed(ArrayList<String> tags, boolean success) {
         if (success) {
             controller.multiAddTag(tags);
+            contextualMode.finish();
         }
     }
 
