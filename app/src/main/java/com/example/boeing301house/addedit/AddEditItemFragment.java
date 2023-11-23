@@ -28,7 +28,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
+//import com.bumptech.glide.Glide;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
@@ -274,7 +274,7 @@ public class AddEditItemFragment extends Fragment {
             public void onItemClicked(int position)  {
                 // updating firebase when we delete an image
 
-                updateFirebaseImages(false, (Integer) position);
+                updateFirebaseImages(false, (Integer) position, false);
 
                 uri.remove(position);
                 newUrls.remove(position);
@@ -563,7 +563,7 @@ public class AddEditItemFragment extends Fragment {
                     String imgURI = data.getClipData().getItemAt(i).getUri().toString();
 //                    Log.d("CAMERA_TEST", imgURI);
                     // adding from gallery
-                    updateFirebaseImages(true, null);
+                    updateFirebaseImages(true, null, true);
 
                 }
                 imgAdapter.notifyDataSetChanged();
@@ -573,7 +573,7 @@ public class AddEditItemFragment extends Fragment {
 //                Log.d("CAMERA_TEST", imgURI);
                 uri.add(imgURI);
                 // adding from gallery
-                updateFirebaseImages(true, null);
+                updateFirebaseImages(true, null, true);
 
             }
             imgAdapter.notifyDataSetChanged();
@@ -584,7 +584,7 @@ public class AddEditItemFragment extends Fragment {
             imgAdapter.notifyDataSetChanged();
 
             // adding a image from camera
-            updateFirebaseImages(true, null);
+            updateFirebaseImages(true, null, false);
 
         } else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) { // TODO: CONVERT TO SCANNER INTENT
             if (data.getExtras() != null) {
@@ -694,14 +694,23 @@ public class AddEditItemFragment extends Fragment {
      * @param adding Boolean to check if were adding a image
      * @param position Integer of the position in the URI array list
      */
-    private void updateFirebaseImages(boolean adding, Integer position) {
+    private void updateFirebaseImages(boolean adding, Integer position, Boolean fromGallery) {
         // adding is true and position is null means were adding
         if (adding && position == null) {
             isAwaiting = true;
             Uri fileUri = newURI;
-            StorageReference ref = storageRef.child("images/" + fileUri.getLastPathSegment());
+            StorageReference ref = null;
+            // if were adding from gallery, add the time to the reference so we can distinguish between adding the same photo multiple times
+            if (fromGallery == true) {
+                ref = storageRef.child("images/" + System.currentTimeMillis() + fileUri.getLastPathSegment());
+            }
+            // else if not from gallery then its just the uri
+            else if (fromGallery == false) {
+                ref = storageRef.child("images/" + fileUri.getLastPathSegment());
+            }
             UploadTask uploadTask = ref.putFile(fileUri);
             Log.d("PHOTO_UPLOADED", "updateFirebaseImages: WORKED");
+            StorageReference finalRef = ref;
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -709,7 +718,7 @@ public class AddEditItemFragment extends Fragment {
                         throw task.getException();
                     }
                     Log.d(TAG, "URL");
-                    return ref.getDownloadUrl();
+                    return finalRef.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
