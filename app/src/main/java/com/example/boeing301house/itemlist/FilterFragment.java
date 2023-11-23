@@ -97,26 +97,7 @@ public class FilterFragment extends DialogFragment {
         ChipGroup filterChipGroup = view.findViewById(R.id.filterChipGroup);
         ArrayList<String> tags = Tags.getInstance().getTagsFromItemList();
         ArrayList<String> selectedTags = new ArrayList<>();
-        for (String tag: tags) {
-            final String name = tag;
-            final Chip newChip = (Chip) getLayoutInflater().inflate(R.layout.chip_layout, null);
-            newChip.setText(name);
-            newChip.setClickable(true);
-            newChip.setSelected(false);
-            newChip.setChecked(false);
-            newChip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (v.isSelected()) {
-                        selectedTags.remove(name);
-                    } else {
-                        selectedTags.add(name);
-                    }
-                }
-            });
-            filterChipGroup.addView(newChip);
-
-        }
+        // TODO: fill + onclick func
 
         CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
         final TimeZone local = Calendar.getInstance().getTimeZone();
