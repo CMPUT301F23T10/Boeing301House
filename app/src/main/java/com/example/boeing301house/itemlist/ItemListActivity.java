@@ -2,6 +2,7 @@ package com.example.boeing301house.itemlist;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -290,7 +291,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
      * @param updatedItem is the newly updated item from the AddEditItem fragment
      */
     @Override
-    public void onConfirmPressed(Item updatedItem) {
+    public void onConfirmPressed(Item updatedItem, ArrayList<Uri> addedPhotos) {
         exitAddEditFragment();
         addButton.show();
         controller.add(updatedItem);

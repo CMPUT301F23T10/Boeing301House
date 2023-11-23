@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -22,8 +21,6 @@ import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.example.boeing301house.itemlist.OnItemClickListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -58,7 +55,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     private TextView tComment;
     private TextView tEstimatedValue;
     private RecyclerView rvImageCarousel;
-    private ArrayList<Uri> currentPhotos; // for keeping track of what to delete from firebase
+    private ArrayList<Uri> initialPhotos; // for keeping track of what to delete from firebase
+    private ArrayList<Uri> newPhotos; // for keeping track of what to delete from firebase
     private int pos; // position of item in list, send back during deletion
 
     private boolean editingItem = false; // only set to true after user presses confirm in edit fragment
@@ -91,7 +89,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         Intent intent = getIntent();
         selectedItem = intent.getParcelableExtra("Selected Item");
         pos = intent.getIntExtra("pos", 0);
-        currentPhotos = new ArrayList<>(selectedItem.getPhotos());
+        initialPhotos = new ArrayList<>(selectedItem.getPhotos());
+        newPhotos = new ArrayList<>();
 
         MaterialToolbar topbar = findViewById(R.id.itemViewMaterialToolBar);
         setSupportActionBar(topbar);
@@ -303,7 +302,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
                 // adding the position to the intent, can access with key "pos"
                 if (isEdited) {
                     // TODO: delete old images that aren't in new
-                    deleteFirebasePhotos(selectedItem.getPhotos(), currentPhotos);
+                    deleteFirebasePhotos(selectedItem.getPhotos(), initialPhotos);
+                    deleteFirebasePhotos(selectedItem.getPhotos(), newPhotos);
                     resultIntent.putExtra("action", EDIT_ITEM);
                     resultIntent.putExtra("edited_item", selectedItem);
                 }
@@ -321,7 +321,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
                 // if were editing and they cancel we want to return to the ItemViewActivity
                 if (isEdited == true) {
                     // TODO: delete new images that aren't in old
-                    deleteFirebasePhotos(currentPhotos, selectedItem.getPhotos());
+                    deleteFirebasePhotos(initialPhotos, selectedItem.getPhotos());
+                    deleteFirebasePhotos(initialPhotos, newPhotos);
                     finish();
                 }
             }
@@ -348,7 +349,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      * @param updatedItem
      */
     @Override
-    public void onConfirmPressed(Item updatedItem) {
+    public void onConfirmPressed(Item updatedItem, ArrayList<Uri> addedPhotos) {
         editingItem = true;
         selectedItem.setSN(updatedItem.getSN());
         selectedItem.setModel(updatedItem.getModel());
@@ -358,6 +359,8 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         selectedItem.setComment(updatedItem.getComment());
         selectedItem.setValue(updatedItem.getValue());
         selectedItem.setTags(updatedItem.getTags());
+
+        newPhotos.addAll(addedPhotos);
 
         updateTexts(); // updates the text values
         clearChipGroup();
