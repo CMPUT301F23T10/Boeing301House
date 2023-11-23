@@ -425,7 +425,7 @@ public class AddEditItemFragment extends Fragment {
                 {
                     if(!helper.checkFields()) {
                         newValue = Double.parseDouble(newValueString);
-
+                        Log.d(TAG, "EXIT");
                         // setting the current item with the new fields
                         currentItem.setComment(newComment);
                         currentItem.setMake(newMake);
@@ -697,23 +697,13 @@ public class AddEditItemFragment extends Fragment {
             UploadTask uploadTask = ref.putFile(fileUri);
             Log.d("PHOTO_UPLOADED", "updateFirebaseImages: WORKED");
 
-            // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(exception -> {
-                return;
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // message for succesful upload
-                    Log.d("PHOTO_ADDED", "onSuccess: YESSSS");
-                }
-            });
-
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                     if (!task.isSuccessful()) {
                         throw task.getException();
                     }
+                    Log.d(TAG, "URL");
                     return ref.getDownloadUrl();
                 }
             }).addOnCompleteListener(new OnCompleteListener<Uri>() {
@@ -722,9 +712,24 @@ public class AddEditItemFragment extends Fragment {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         newUrls.add(downloadUri);
+                        controller.addPhotos(currentItem, newUrls);
+                        Log.d(TAG, "GOT URL");
                     }
                 }
             });
+
+            // Register observers to listen for when the download is done or if it fails
+            uploadTask.addOnFailureListener(exception -> {
+                return;
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // message for succesful upload
+                    Log.d(TAG, "Photo added");
+                }
+            });
+
+
         }
         // else if were deleting an existing image
         else if (position != null && isAdd) {

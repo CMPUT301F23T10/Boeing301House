@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.text.Editable;
 import android.view.View;
 
+import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.google.android.material.chip.Chip;
 
@@ -35,6 +36,10 @@ public class AddEditController {
 
     public void removeTag(String name) {
         addEditModel.removeTag(name);
+    }
+
+    public void addPhotos(Item item, ArrayList<Uri> photoUrls) {
+//        addEditModel.updateImagesToItem(item, photoUrls); // TODO: FIX
     }
 
 }

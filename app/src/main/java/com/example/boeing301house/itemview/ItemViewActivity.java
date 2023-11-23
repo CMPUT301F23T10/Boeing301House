@@ -109,7 +109,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             @Override
             public void onItemClick(View view, int position) {
                 Intent fullscreenImageIntent = new Intent(ItemViewActivity.this, FullscreenImageActivity.class);
-                fullscreenImageIntent.putExtra("IMAGE", selectedItem.getPhotos().get(position));
+                fullscreenImageIntent.putExtra("IMAGE", selectedItem.getPhotos().get(position).toString());
 //                ActivityOptions animation = ActivityOptions.makeSceneTransitionAnimation(ItemViewActivity.this, view, "IMAGE");
 //                startActivity(fullscreenImageIntent, animation.toBundle());
                 startActivity(fullscreenImageIntent);
@@ -418,11 +418,10 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      */
     private void deleteFirebasePhotos(ArrayList<Uri> keep, ArrayList<Uri> drop) {
         for (Uri photo: drop) {
-            if (keep.contains(photo)) {
+            if (!keep.contains(photo)) {
                 deleteFromFirebase(photo);
-            } 
+            }
         }
-
     }
 
     /**
@@ -434,12 +433,13 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         // TODO: NOT WORKING
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInAnonymously();
-        FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
         String path = photo.getPath();
+        Log.d(TAG, "path: "+path);
 
-        storageRef.child(path).delete()
+        storageRef.child("images/" + path).delete()
             .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
             .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
 
