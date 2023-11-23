@@ -301,8 +301,12 @@ public class ItemListController {
     }
 
 
-
-
+    /**
+     * Sets up tag part of filter fragment
+     */
+    public void setupFilter() {
+        Tags.getInstance().setItemList(this.itemList);
+    }
 
 
 

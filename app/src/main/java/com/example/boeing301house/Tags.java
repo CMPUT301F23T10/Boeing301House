@@ -20,25 +20,67 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * For tracking tags
+ * Singleton model class for tracking tags.
  */
-public abstract class Tags {
+public class Tags {
     /**
      * tag for logs
      */
     private static final String TAG = "TAGS";
 
+    /**
+     * Singleton instance of tag
+     */
+    private static Tags INSTANCE;
+
+
+    /**
+     * ItemList object
+     */
+    private ItemList itemList;
+
+    /**
+     * Constructor for tags
+     */
+    private Tags() {
+        // empty constructor
+    }
+
+    /**
+     * Public getter for instance of object. Checks for other instances of
+     * object to guarantee singleton status.
+     *
+     * @return Singleton Tags model
+     */
+    public static synchronized Tags getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new Tags();
+        }
+        return INSTANCE;
+    }
+
+    /**
+     * Sets ItemList reference
+     *
+     * @param itemList connection to db
+     */
+    public void setItemList(ItemList itemList) {
+//        user = connection.getUserRef(); // TODO: SWITCH TO THIS ONCE SEPARATE USERS ADDED
+        this.itemList = itemList;
+
+
+    }
 
     /**
      * Temporary brute force method for keeping track of tags
-     * @param itemList {@link ItemList} object
+     *
      * @return list of tags
      */
-    public static ArrayList<String> getTagsFromItemList(ItemList itemList) {
+    public ArrayList<String> getTagsFromItemList() {
         ArrayList<String> tags = new ArrayList<>();
 
-        for (Item item: itemList.getRawList()) {
-            for (String tag: item.getTags()) {
+        for (Item item : this.itemList.getRawList()) {
+            for (String tag : item.getTags()) {
                 if (!tags.contains(tag)) {
                     tags.add(tag);
                 }
@@ -47,21 +89,4 @@ public abstract class Tags {
 
         return tags;
     }
-
-
-//    /**
-//     * Remove multiple tags
-//     * @param tags
-//     */
-//    public void removeTags(ArrayList<String> tags) {
-//        for (String tag: tags) {
-//            removeTag(tag, null);
-//        }
-//    }
-//
-//    public void tagMultiDelete(ArrayList<Item> items) {
-//        for (Item item: items) {
-//            removeTags(item.getTags());
-//        }
-//    }
 }

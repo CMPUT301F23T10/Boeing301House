@@ -198,6 +198,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         itemListFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                controller.setupFilter();
                 new FilterFragment().show(getSupportFragmentManager(), "FILTER");
             }
         });
