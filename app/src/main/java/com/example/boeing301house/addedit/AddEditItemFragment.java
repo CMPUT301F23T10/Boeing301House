@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,13 +28,17 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+//import com.bumptech.glide.Glide;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
 import com.example.boeing301house.scraping.SearchUIRunnable;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
@@ -43,13 +46,10 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
-import com.google.mlkit.vision.barcode.BarcodeScanning;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.common.InputImage;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -58,12 +58,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
+import org.checkerframework.checker.units.qual.A;
 
 
 /**
@@ -71,7 +70,10 @@ import org.apache.commons.io.FileUtils;
  * Observer pattern used
  */
 public class AddEditItemFragment extends Fragment {
+    private boolean isAwaiting = false;
     private static final String TAG = "ADD_EDIT_FRAG";
+    private AddEditInputHelper helper;
+    private AddEditController controller;
     /**
      * Current item being added/edited
      */
@@ -123,6 +125,7 @@ public class AddEditItemFragment extends Fragment {
     private Long newDate = null;
 
     private ArrayList<String> newTags;
+    private ArrayList<Uri> newUrls;
 
     /**
      * New SN
@@ -144,8 +147,6 @@ public class AddEditItemFragment extends Fragment {
      */
     private ArrayList<Uri> uri;
 
-    private boolean isAwaiting = false;
-
     private Uri newURI;
 
     private File imgPath;
@@ -156,12 +157,10 @@ public class AddEditItemFragment extends Fragment {
     private static final int WRITE_PERMISSIONS = 103; // FOR API < 32
     private static final int GALLERY_REQUEST = 110;
     private static final int CAMERA_REQUEST = 111;
-//    private static final int SCAN_BARCODE_REQUEST = 112;
-//    private static final int SCAN_SN_REQUEST = 113;
 
 
-    FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
-    StorageReference storageRef = storage.getReference();
+    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
+    private StorageReference storageRef = storage.getReference();
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -175,13 +174,11 @@ public class AddEditItemFragment extends Fragment {
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();
-
-
         void onConfirmPressed(Item updatedItem);
     }
 
     // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
-    // handle passing through an expense object to fragment from activity
+    // handle passing through an item object to fragment from activity
 
     /**
      * This function creates an instance of the fragment and passes an {@link Item} to it.
@@ -190,12 +187,12 @@ public class AddEditItemFragment extends Fragment {
      * @param isAdd boolean (true if adding, false if editing)
      * @return fragment instance
      */
-    public static AddEditItemFragment newInstance(Item item, boolean isAdd, String[] uriStrings) {
+    public static AddEditItemFragment newInstance(Item item, boolean isAdd) {
         AddEditItemFragment fragment = new AddEditItemFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable(ITEM_KEY, item);
         bundle.putBoolean(IS_ADD, isAdd);
-        bundle.putStringArray("URIS", uriStrings);
+//        bundle.putStringArray("URIS", uriStrings); , String[] uriStrings
         fragment.setArguments(bundle);
 
         return fragment;
@@ -215,7 +212,7 @@ public class AddEditItemFragment extends Fragment {
 
         }
         else{
-            throw new RuntimeException(context.toString() + "must implement onfraglistener");
+            throw new RuntimeException(context.toString() + "must implement OnAddEditFragmentInteractionListener");
         }
     }
     // TODO: finish javadoc
@@ -250,34 +247,41 @@ public class AddEditItemFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentAddEditItemBinding.inflate(inflater, container, false); //this allows me to accsess the stuff!
+        binding = FragmentAddEditItemBinding.inflate(inflater, container, false); // view binding
         View view = binding.getRoot();
+        helper = new AddEditInputHelper(view);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously();
 
+        // creating the new file path
         imgPath = new File(requireContext().getFilesDir(), "images");
         if (!imgPath.exists()) {
             imgPath.mkdirs();
         }
 
-        uri = new ArrayList<>();
+
+        newUrls = currentItem.getPhotos();
+        uri = new ArrayList<>(newUrls); // TODO: not showing photos
         newTags = new ArrayList<>(currentItem.getTags());
 
+        controller = new AddEditController(view, uri, newTags);
+
         imgRecyclerView = binding.addEditImageRecycler;
-        imgAdapter = new AddEditImageAdapter(uri);
+        imgAdapter = new AddEditImageAdapter(uri, requireContext());
 
         imgAdapter.setOnClickListener(new ImageSelectListener() {
             @Override
-            public void onItemClicked(int position) {
+            public void onItemClicked(int position)  {
                 // updating firebase when we delete an image
-                updateFirebaseImages(false, (Integer) position);
+
+                updateFirebaseImages(false, (Integer) position, false);
+
                 uri.remove(position);
+                newUrls.remove(position);
                 imgAdapter.notifyDataSetChanged();
             }
         });
 
-        // GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 4);
-        // LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        // layoutManager.setOrientation(RecyclerView.HORIZONTAL);
-        // imgRecyclerView.setLayoutManager(layoutManager);
         imgRecyclerView.setAdapter(imgAdapter);
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -286,18 +290,8 @@ public class AddEditItemFragment extends Fragment {
         }
 
 
-//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_MEDIA_IMAGES)) {
-//
-//        }
-
-
-        binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: add functionality and check over
-                listener.onCancel();
-                // deleteFrag();
-            }
+        binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(v -> {
+            listener.onCancel();
         });
 
 
@@ -305,21 +299,6 @@ public class AddEditItemFragment extends Fragment {
             // TODO: allow backing from fragment to fragment
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                /*
-                if (item.getItemId() == R.id.itemAddEditTag) {
-                    Toast.makeText(getActivity(), String.format(Locale.CANADA,"WIP/INCOMPLETE"),
-                            Toast.LENGTH_SHORT).show(); // for testing
-                    Fragment tagsFragment = TagsFragment.newInstance(currentItem);
-                    getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.itemAddEditContent, tagsFragment, "UPDATE_TO_TAG")
-                            .addToBackStack(null)
-                            .commit();
-
-                    return true;
-
-                } else
-
-                 */
                 if (item.getItemId() == R.id.itemAddEditPhotoButton) {
                     // add camera functionality
                     View menuItemView = view.findViewById(item.getItemId());
@@ -386,9 +365,6 @@ public class AddEditItemFragment extends Fragment {
         });
 
         //this sets the current text of the edit expense fragment to the current expense name, cost, date and summary
-//        View view = inflater.inflate(R.layout.add_edit_item_fragment, container, false);
-//        EditText editCost = view.findViewById(R.id.editCost);
-//        editCost.setText(currentItem.getCostString());
         binding.updateValue.setHint(String.format("Cost: $%s", currentItem.getValueString()));
         binding.updateMake.setHint(String.format("Make: %s", currentItem.getMake()));
         binding.updateModel.setHint(String.format("Model: %s", currentItem.getModel()));
@@ -406,80 +382,40 @@ public class AddEditItemFragment extends Fragment {
 
         binding.updateTags.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                return;
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { return; }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                return;
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { return; }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.length() > 0) {
-                    if (s.charAt(s.length() - 1) == ' ' || s.charAt(s.length() - 1) == '\n') {
-                        if (s.length() > 1 && (!newTags.contains(s.toString().trim()))) {
-                            newTags.add(s.toString().trim());
-                            addChip(s.toString().trim());
-                        }
-                        s.clear();
-                    }
-                }
-
-            }
-        });
-
-        // create instance of material date picker builder
-        //  creating datepicker
-        MaterialDatePicker.Builder<Long> materialDateBuilder = MaterialDatePicker.Builder.datePicker();
-
-        // create constraint for date picker (only let user choose dates on and before current"
-        CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
-
-        // define properties/title for material date picker
-        materialDateBuilder.setTitleText("Date Acquired: ");
-        materialDateBuilder.setCalendarConstraints(dateConstraint); // apply date constraint
-        materialDateBuilder.setSelection(Calendar.getInstance().getTimeInMillis());
-        // instantiate date picker
-        final MaterialDatePicker<Long> materialDatePicker = materialDateBuilder.build();
-
-        final TimeZone local = Calendar.getInstance().getTimeZone(); // local timezone
-
-        binding.updateDate.getEditText().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER");
-
+                controller.addTag(s, AddEditItemFragment.this::addChip);
 
             }
         });
 
 
-        // material date picker behaviours
-        materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-            @Override
-            public void onPositiveButtonClick(Long selection) {
-                // since material design picker date is in UTC
-                long offset = local.getOffset(selection);
-                long localDate = selection - offset; // account for timezone difference
-                String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(localDate);
-                binding.updateDate.getEditText().setText(dateString);
-                newDate = localDate;
-            }
-        });
+        // cancel dialog
+        MaterialDatePicker<Long> materialDatePicker = helper.getDatePicker(selection -> {
+            final TimeZone local = Calendar.getInstance().getTimeZone(); // local timezone
+            long offset = local.getOffset(selection);
+            long localDate = selection - offset; // account for timezone difference
+            String dateString = new SimpleDateFormat("MM/dd/yyyy", Locale.CANADA).format(localDate);
+            binding.updateDate.getEditText().setText(dateString);
+            newDate = localDate;
+        }, DialogInterface::cancel);
 
-        materialDatePicker.addOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                dialog.cancel(); // cancel dialog
-            }
-        });
+        binding.updateDate.getEditText().setOnClickListener(v -> materialDatePicker.show(getActivity().getSupportFragmentManager(), "MATERIAL_DATE_PICKER"));
+
 
 
         binding.updateItemConfirm.setOnClickListener(new View.OnClickListener() { //when clicked confirm button
             @Override
             public void onClick(View view) {
+                if (isAwaiting) {
+                    helper.makeSnackbar("WAITING FOR FIREBASE");
+                    return;
+                }
                 newMake = binding.updateMake.getEditText().getText().toString();
                 newModel = binding.updateModel.getEditText().getText().toString();
                 String newValueString = binding.updateValue.getEditText().getText().toString();
@@ -494,9 +430,9 @@ public class AddEditItemFragment extends Fragment {
 
                 if (isAdd)
                 {
-                    if(!checkFields()) {
+                    if(!helper.checkFields()) {
                         newValue = Double.parseDouble(newValueString);
-
+                        Log.d(TAG, "EXIT");
                         // setting the current item with the new fields
                         currentItem.setComment(newComment);
                         currentItem.setMake(newMake);
@@ -569,45 +505,38 @@ public class AddEditItemFragment extends Fragment {
         binding = null;
     }
 
+
     /**
-     * Checks if any required fields were left blank, if any of them were left blank
-     * it alerts the user.
-     * @return boolean
+     * Fill chip group w/ item tags (for initializing)
      */
-    private boolean checkFields() {
-        boolean isError = false;
-        // reset errors
-        binding.updateModel.setError("");
-        binding.updateMake.setError("");
-        binding.updateValue.setError("");
-        binding.updateDate.setError("");
-
-        Long currentDate = Calendar.getInstance(Locale.CANADA).getTimeInMillis();
-
-        if (Objects.requireNonNull(binding.updateModel.getEditText()).length() == 0) {
-            binding.updateModel.setError("This field is required");
-            isError = true;
+    public void fillChipGroup() {
+        for (int i = 0; i < newTags.size(); i++) {
+            final String name = newTags.get(i);
+            addChip(name);
         }
-        if (Objects.requireNonNull(binding.updateMake.getEditText()).length() == 0) {
-            binding.updateMake.setError("This field is required");
-            isError = true;
-        }
-        if (Objects.requireNonNull(binding.updateValue.getEditText()).length() == 0) {
-            binding.updateValue.setError("This field is required");
-            isError = true;
-        }
-        if (Objects.requireNonNull(binding.updateDate.getEditText()).length() == 0) {
-            binding.updateDate.setError("This field is required");
-            isError = true;
-        }
-//        } else if (newDate > currentDate) {
-//            binding.updateDate.setError("Invalid Date");
-//            isError = true;
-//        }
-
-        return isError;
     }
 
+
+    /**
+     * Add chip to chip group
+     * @param tag tag to add
+     */
+    private void addChip(String tag) {
+        final String name = tag;
+        final Chip newChip = new Chip(requireContext());
+        newChip.setText(name);
+        newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
+        newChip.setCloseIconVisible(true);
+        newChip.setContentDescription("chip"+name);
+        newChip.setCloseIconContentDescription("close"+name); // for ui testing
+        newChip.setOnCloseIconClickListener(v -> {
+            newTags.remove(name);
+            binding.itemAddEditChipGroup.removeView(newChip);
+        });
+
+        binding.itemAddEditChipGroup.addView(newChip);
+
+    }
 
     /**
      * ActivityResult for img from gallery
@@ -634,7 +563,7 @@ public class AddEditItemFragment extends Fragment {
                     String imgURI = data.getClipData().getItemAt(i).getUri().toString();
 //                    Log.d("CAMERA_TEST", imgURI);
                     // adding from gallery
-                    updateFirebaseImages(true, null);
+                    updateFirebaseImages(true, null, true);
 
                 }
                 imgAdapter.notifyDataSetChanged();
@@ -644,7 +573,7 @@ public class AddEditItemFragment extends Fragment {
 //                Log.d("CAMERA_TEST", imgURI);
                 uri.add(imgURI);
                 // adding from gallery
-                updateFirebaseImages(true, null);
+                updateFirebaseImages(true, null, true);
 
             }
             imgAdapter.notifyDataSetChanged();
@@ -655,7 +584,7 @@ public class AddEditItemFragment extends Fragment {
             imgAdapter.notifyDataSetChanged();
 
             // adding a image from camera
-            updateFirebaseImages(true, null);
+            updateFirebaseImages(true, null, false);
 
         } else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) { // TODO: CONVERT TO SCANNER INTENT
             if (data.getExtras() != null) {
@@ -697,10 +626,6 @@ public class AddEditItemFragment extends Fragment {
             return true;
 
         }
-//        else {
-//            openGallery();
-//            return true;
-//        }
     }
 
     /**
@@ -730,10 +655,6 @@ public class AddEditItemFragment extends Fragment {
                 openScanner(requestCode);
                 return true;
             }
-//            else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST) {
-//                openScanner(requestCode);
-//                return true;
-//            }
             if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT <= Build.VERSION_CODES.S_V2) {
                 ActivityCompat.requestPermissions(requireActivity(), new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, WRITE_PERMISSIONS);
@@ -749,53 +670,6 @@ public class AddEditItemFragment extends Fragment {
 
 
     /**
-     * Fill chip group w/ item tags (for initializing)
-     */
-    public void fillChipGroup() {
-        for (int i = 0; i < newTags.size(); i++) {
-            final String name = newTags.get(i);
-            final Chip newChip = new Chip(requireContext());
-            newChip.setText(name);
-            newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
-            newChip.setCloseIconEnabled(true);
-            newChip.setContentDescription("chip"+name);
-            newChip.setCloseIconContentDescription("close"+name); // for ui testing
-            newChip.setOnCloseIconClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    newTags.remove(name);
-                    binding.itemAddEditChipGroup.removeView(newChip);
-                }
-            });
-
-            binding.itemAddEditChipGroup.addView(newChip);
-        }
-    }
-
-
-    /**
-     * Add chip to chip group
-     * @param tag tag to add
-     */
-    private void addChip(String tag) {
-        final String name = tag;
-        final Chip newChip = new Chip(requireContext());
-        newChip.setText(name);
-        newChip.setCloseIconResource(R.drawable.ic_close_button_24dp);
-        newChip.setCloseIconEnabled(true);
-        newChip.setOnCloseIconClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                newTags.remove(name);
-                binding.itemAddEditChipGroup.removeView(newChip);
-            }
-        });
-
-        binding.itemAddEditChipGroup.addView(newChip);
-
-    }
-
-    /**
      * Open camera (overloaded function for use w/ scanning)
      */
     public void openCamera(Integer requestCode) {
@@ -804,11 +678,6 @@ public class AddEditItemFragment extends Fragment {
         if (requestCode == CAMERA_REQUEST) {
             // https://developer.android.com/reference/android/support/v4/content/FileProvider.html
             // store img at new path and remember URI
-//            imgPath = new File(requireContext().getFilesDir(), "images");
-//            if (!imgPath.exists()) {
-//                imgPath.mkdirs();
-//            }
-            // creating the new file path
             File newFile = new File(imgPath, System.currentTimeMillis() + ".jpg");
             newURI = FileProvider.getUriForFile(requireContext(), "com.example.boeing301house", newFile);
 
@@ -825,13 +694,46 @@ public class AddEditItemFragment extends Fragment {
      * @param adding Boolean to check if were adding a image
      * @param position Integer of the position in the URI array list
      */
-    private void updateFirebaseImages(boolean adding, Integer position) {
+    private void updateFirebaseImages(boolean adding, Integer position, Boolean fromGallery) {
         // adding is true and position is null means were adding
-        if (adding == true && position == null) {
+        if (adding && position == null) {
+            isAwaiting = true;
             Uri fileUri = newURI;
-            StorageReference ref = storageRef.child("images/" + fileUri.getLastPathSegment());
+            StorageReference ref = null;
+            // if were adding from gallery, add the time to the reference so we can distinguish between adding the same photo multiple times
+            if (fromGallery == true) {
+                ref = storageRef.child("images/" + System.currentTimeMillis() + fileUri.getLastPathSegment());
+            }
+            // else if not from gallery then its just the uri
+            else if (fromGallery == false) {
+                ref = storageRef.child("images/" + fileUri.getLastPathSegment());
+            }
             UploadTask uploadTask = ref.putFile(fileUri);
             Log.d("PHOTO_UPLOADED", "updateFirebaseImages: WORKED");
+            StorageReference finalRef = ref;
+            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    Log.d(TAG, "URL");
+                    return finalRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        newUrls.add(downloadUri);
+                        controller.addPhotos(currentItem, newUrls);
+                        Log.d(TAG, "GOT URL");
+                    } else {
+                        helper.makeSnackbar("FAILED TO ADD TO FIREBASE");
+                    }
+                    isAwaiting = false;
+                }
+            });
 
             // Register observers to listen for when the download is done or if it fails
             uploadTask.addOnFailureListener(exception -> {
@@ -840,12 +742,14 @@ public class AddEditItemFragment extends Fragment {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     // message for succesful upload
-                    Log.d("PHOTO_ADDED", "onSuccess: YESSSS");
+                    Log.d(TAG, "Photo added");
                 }
             });
+
+
         }
         // else if were deleting an existing image
-        else if (position != null) {
+        else if (position != null && isAdd) {
             // getting the position
             String result = uri.get(position).getPath();
             int cut = result.lastIndexOf('/'); // formating the string
@@ -911,7 +815,7 @@ public class AddEditItemFragment extends Fragment {
                 });
 
                 if (binding != null) {
-                    getActivity().runOnUiThread(searchRunnable);
+                    requireActivity().runOnUiThread(searchRunnable);
                 }
             }
         });

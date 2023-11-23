@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -27,11 +26,12 @@ import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
-import com.example.boeing301house.ItemViewActivity;
+import com.example.boeing301house.itemview.ItemViewActivity;
 import com.example.boeing301house.R;
 import com.example.boeing301house.UserProfileActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -45,7 +45,7 @@ import java.util.Locale;
  */
 public class ItemListActivity extends ActivityBase implements AddEditItemFragment.OnAddEditFragmentInteractionListener, FilterFragment.OnFilterFragmentInteractionListener, SortFragment.OnSortFragmentInteractionListener, MultiTagFragment.OnTagInteractionListener {
 
-
+    private ActionMode contextualMode;
     private RecyclerView itemListRecyclerView;
     //    private FloatingActionButton addButton;
     private ItemRecyclerAdapter itemAdapter;
@@ -99,6 +99,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
         //sets up item list
         DBConnection dbConnection = new DBConnection(getApplicationContext());
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously(); // TODO: move to dbconn
 
         itemListRecyclerView = findViewById(R.id.itemList); // binds the city list to the xml file
         // add divider lines
@@ -374,6 +376,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
          */
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            contextualMode = mode;
             findViewById(R.id.itemListSFBar).setVisibility(View.GONE); // temp
             mode.getMenuInflater().inflate(R.menu.ab_contextual_multiselect, menu);
             int n = controller.itemsSelectedSize();
@@ -414,7 +417,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             else if (item.getItemId() == R.id.itemMultiselectTag) {
 //                makeSnackbar("TAGS");
                 new MultiTagFragment().show(getSupportFragmentManager(), "MULTITAG");
-                mode.finish(); // TODO: fix
+
                 return true;
             }
             return false;
@@ -551,6 +554,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     public void onTagOKPressed(ArrayList<String> tags, boolean success) {
         if (success) {
             controller.multiAddTag(tags);
+            contextualMode.finish();
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.boeing301house.itemlist;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import com.example.boeing301house.Item;
 import com.example.boeing301house.ItemBuilder;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldPath;
@@ -17,6 +19,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,6 +140,7 @@ public class ItemList {
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
         itemData.put("Tags",item.getTags());
+        itemData.put("Photos", item.getPhotos());
 
 
 //        updateItemListView();
@@ -178,6 +183,7 @@ public class ItemList {
                         Log.d("Firestore", "Item successfully deleted!");
                         if (completeListener != null) {
                             completeListener.onComplete(item, true);
+                            removeFirebaseImages(item);
                         }
                     }
                 })
@@ -229,6 +235,7 @@ public class ItemList {
         itemData.put("Desc", item.getDescription());
         itemData.put("Comment", item.getComment());
         itemData.put("Tags", item.getTags());
+        itemData.put("Photos", item.getPhotos());
 
 
         // Get the document reference for the item
@@ -328,7 +335,8 @@ public class ItemList {
                     Double value = doc.getDouble("Est Value");
                     String desc = doc.getString("Desc");
                     String comment = doc.getString("Comment");
-                    ArrayList<String> tags = (ArrayList<String>)doc.get("Tags");
+                    ArrayList<String> tags = (ArrayList<String>) doc.get("Tags");
+                    ArrayList<String> photos = (ArrayList<String>) doc.get("Photos");
                     String id = doc.getId();
                     // TODO: tags and images
 
@@ -344,6 +352,7 @@ public class ItemList {
                             .addDescription(desc)
                             .addComment(comment)
                             .addTag(tags)
+                            .addPhotos(photos)
                             .build();
 
                     itemList.add(item);
@@ -499,8 +508,24 @@ public class ItemList {
         returnList.addAll(itemList);
     }
 
+    /**
+     * Remove images (associated with item) from firebase
+     * @param item item being deleted
+     */
+    public void removeFirebaseImages(Item item) {
+        ArrayList<Uri> photos = item.getPhotos();
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        for (Uri photo: photos) {
+            String path = photo.getLastPathSegment();
+            storageRef.child(path).delete()
+                .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
+                .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
 
 
+        }
+    }
 
 
 
