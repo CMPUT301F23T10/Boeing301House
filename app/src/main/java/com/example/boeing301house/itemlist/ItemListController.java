@@ -42,8 +42,8 @@ public class ItemListController {
         connection = new DBConnection(activity.getApplicationContext());
 //        itemList = new ItemList(connection);
 
-        Tags tags = Tags.getInstance();
-        tags.setConnection(connection);
+//        Tags tags = Tags.getInstance();
+//        tags.setConnection(connection);
 
         itemsRef = db.collection("items");
         itemList = new ItemList(itemsRef); // TODO: SWITCH TO DBCONN ONCE USER

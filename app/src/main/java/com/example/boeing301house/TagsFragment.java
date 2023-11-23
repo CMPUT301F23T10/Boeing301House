@@ -89,8 +89,9 @@ public class TagsFragment extends Fragment {
         EditText editText = binding.addTagEditText;
         // TODO: remove testing chips
 
-        Tags tags = Tags.getInstance();
-        ArrayList<String> arrayList = tags.getTags();
+//        Tags tags = Tags.getInstance();
+//        ArrayList<String> arrayList = tags.getTags();
+        ArrayList<String> arrayList = new ArrayList<>();
         ArrayList<String> selectedTags = currentItem.getTags();
 
         Random random = new Random();

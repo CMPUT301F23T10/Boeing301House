@@ -31,6 +31,7 @@ import com.example.boeing301house.R;
 import com.example.boeing301house.UserProfileActivity;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -98,6 +99,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
         //sets up item list
         DBConnection dbConnection = new DBConnection(getApplicationContext());
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously(); // TODO: move to dbconn
 
         itemListRecyclerView = findViewById(R.id.itemList); // binds the city list to the xml file
         // add divider lines

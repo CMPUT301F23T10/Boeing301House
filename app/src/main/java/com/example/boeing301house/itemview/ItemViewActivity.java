@@ -436,10 +436,10 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
-        String path = photo.getPath();
+        String path = photo.getLastPathSegment();
         Log.d(TAG, "path: "+path);
 
-        storageRef.child("images/" + path).delete()
+        storageRef.child(path).delete()
             .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
             .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
 

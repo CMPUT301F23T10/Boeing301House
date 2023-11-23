@@ -514,12 +514,11 @@ public class ItemList {
      */
     public void removeFirebaseImages(Item item) {
         ArrayList<Uri> photos = item.getPhotos();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInAnonymously();
-        FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         for (Uri photo: photos) {
-            String path = photo.getPath();
+            String path = photo.getLastPathSegment();
             storageRef.child(path).delete()
                 .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
                 .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
