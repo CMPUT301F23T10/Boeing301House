@@ -45,16 +45,7 @@
         android:textColor="@color/colorItemCellText"
         />
 
-    <TextView
-        android:id="@+id/itemDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/itemDescription"
-        android:layout_margin="3dp"
-        android:text="mm/dd/yyyy"
-        style="@style/TextAppearance.Material3.LabelSmall"
-        android:textColor="@color/colorItemCellText" />
+
 
 
     <TextView
@@ -72,14 +63,26 @@
         android:translationX="0dp" />
 
     <TextView
+        android:id="@+id/itemDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/itemModel"
+        app:layout_constraintStart_toStartOf="@id/itemCost"
+        android:textColor="@color/colorItemCellText"
+        style="@style/TextAppearance.Material3.LabelMedium"
+        android:text="mm/dd/yyyy"
+        />
+
+    <TextView
         android:id="@+id/itemSN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/itemCost"
         app:layout_constraintStart_toStartOf="@id/itemCost"
-        android:text="SN: XXXXXXXXX"
         android:textColor="@color/colorItemCellText"
         style="@style/TextAppearance.Material3.LabelMedium"
+        android:text="SN: XXXXXXXXX"
+        android:visibility="gone"
         />
 
     <TextView
@@ -93,20 +96,21 @@
         style="@style/TextAppearance.Material3.LabelMedium"
         android:layout_marginTop="2dp"
         android:text="comment"
+        android:visibility="gone"
 
         />
 
     <TextView
         android:id="@+id/itemTags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="35dp"
         app:layout_constraintStart_toStartOf="@id/itemSN"
-        app:layout_constraintTop_toBottomOf="@id/itemDescription"
+        app:layout_constraintTop_toBottomOf="@id/itemModel"
+        android:textColor="@color/colorItemCellText"
+        android:textStyle="italic"
+        style="@style/TextAppearance.Material3.LabelMedium"
         android:layout_marginTop="2dp"
         android:text="tag1, tag2, ..."
-        style="@style/TextAppearance.Material3.LabelSmall"
-        android:textColor="@color/colorItemCellText"
-        android:visibility="gone"
         />
 
 
