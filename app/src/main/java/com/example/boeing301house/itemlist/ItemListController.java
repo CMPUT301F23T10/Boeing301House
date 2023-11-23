@@ -40,13 +40,13 @@ public class ItemListController {
 
 //        // USING USER SPECIFIC ITEM LIST
         connection = new DBConnection(activity.getApplicationContext());
-//        itemList = new ItemList(connection);
+        itemList = new ItemList(connection);
 
 //        Tags tags = Tags.getInstance();
 //        tags.setConnection(connection);
 
-        itemsRef = db.collection("items");
-        itemList = new ItemList(itemsRef); // TODO: SWITCH TO DBCONN ONCE USER
+//        itemsRef = db.collection("items");
+//        itemList = new ItemList(itemsRef); // TODO: SWITCH TO DBCONN ONCE USER
 
         itemAdapter = new ItemRecyclerAdapter(itemList.get());
         selectedItems = new ArrayList<>();
@@ -301,8 +301,12 @@ public class ItemListController {
     }
 
 
-
-
+    /**
+     * Sets up tag part of filter fragment
+     */
+    public void setupFilter() {
+        Tags.getInstance().setItemList(this.itemList);
+    }
 
 
 

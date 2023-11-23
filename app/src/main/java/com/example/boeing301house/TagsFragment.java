@@ -95,12 +95,12 @@ public class TagsFragment extends Fragment {
         ArrayList<String> selectedTags = currentItem.getTags();
 
         Random random = new Random();
-        for (String s: arrayList) {
-            Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
-            chip.setText(s);
-            chip.setId(random.nextInt());
-            chipGroup.addView(chip);
-        }
+//        for (String s: arrayList) {
+//            Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
+//            chip.setText(s);
+//            chip.setId(random.nextInt());
+//            chipGroup.addView(chip);
+//        }
 
         chipGroup.setOnCheckedStateChangeListener(new ChipGroup.OnCheckedStateChangeListener() {
             @Override
@@ -149,10 +149,11 @@ public class TagsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(!editText.getText().toString().isEmpty()){
-                    Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
-                    chip.setText(editText.getText().toString());
-                    chip.setId(random.nextInt());
-                    chipGroup.addView(chip);
+                    return;
+//                    Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
+//                    chip.setText(editText.getText().toString());
+//                    chip.setId(random.nextInt());
+//                    chipGroup.addView(chip);
 //                    tag.addTag(editText.getText().toString(), new OnCompleteListener<String>() {
 //                        @Override
 //                        public void onComplete(String item, boolean success) {

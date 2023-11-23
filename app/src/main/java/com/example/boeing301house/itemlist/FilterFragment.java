@@ -11,10 +11,14 @@ import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
+import com.example.boeing301house.Tags;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -90,6 +94,10 @@ public class FilterFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.fragment_filter, null);
 
+        ChipGroup filterChipGroup = view.findViewById(R.id.filterChipGroup);
+        ArrayList<String> tags = Tags.getInstance().getTagsFromItemList();
+        ArrayList<String> selectedTags = new ArrayList<>();
+        // TODO: fill + onclick func
 
         CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
         final TimeZone local = Calendar.getInstance().getTimeZone();
@@ -153,6 +161,7 @@ public class FilterFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         listener.onFilterOKPressed(dateStart, dateEnd);
+                        listener.onFilterOKPressed(selectedTags);
                     }
                 }).create();
 
