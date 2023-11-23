@@ -63,19 +63,5 @@ public class AddEdit {
         this.tags.remove(name);
     }
 
-    public void updateFirebaseImages(boolean adding, Integer position) {
-        auth = FirebaseAuth.getInstance();
-        auth.signInAnonymously();
-        // code
-    }
-
-    public void updateImagesToItem(Item item, ArrayList<Uri> newUrls) {
-
-        HashMap<String, ArrayList<Uri>> data = new HashMap<>();
-        data.put("Photos", newUrls);
-
-        db.collection("items").document(item.getItemID())
-                .set(data);
-    }
 
 }
