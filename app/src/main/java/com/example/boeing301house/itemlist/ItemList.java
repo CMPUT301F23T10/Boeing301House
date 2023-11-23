@@ -522,8 +522,7 @@ public class ItemList {
             storageRef.child(path).delete()
                 .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
                 .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
-
-
+            
         }
     }
 

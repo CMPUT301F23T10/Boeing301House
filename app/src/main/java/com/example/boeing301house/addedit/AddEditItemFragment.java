@@ -125,7 +125,8 @@ public class AddEditItemFragment extends Fragment {
     private Long newDate = null;
 
     private ArrayList<String> newTags;
-    private ArrayList<Uri> newUrls;
+    private ArrayList<Uri> newUrls; // update urls for item
+    private ArrayList<Uri> addedPhotos; // ALL photos added to firebase in current session
 
     /**
      * New SN
@@ -174,7 +175,7 @@ public class AddEditItemFragment extends Fragment {
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();
-        void onConfirmPressed(Item updatedItem);
+        void onConfirmPressed(Item updatedItem, @Nullable ArrayList<Uri> addedPhotos);
     }
 
     // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
@@ -263,6 +264,7 @@ public class AddEditItemFragment extends Fragment {
         newUrls = currentItem.getPhotos();
         uri = new ArrayList<>(newUrls); // TODO: not showing photos
         newTags = new ArrayList<>(currentItem.getTags());
+        addedPhotos = new ArrayList<>();
 
         controller = new AddEditController(view, uri, newTags);
 
@@ -450,7 +452,7 @@ public class AddEditItemFragment extends Fragment {
                             throw new RuntimeException(e);
                         }
 
-                        listener.onConfirmPressed(currentItem); // transfers the new data to main
+                        listener.onConfirmPressed(currentItem, null); // transfers the new data to main
                     }
 
                 } else {
@@ -487,7 +489,7 @@ public class AddEditItemFragment extends Fragment {
                     currentItem.setSN(newSN);
                     currentItem.setDescription(newDescription);
                     currentItem.setTags(newTags);
-                    listener.onConfirmPressed(currentItem);
+                    listener.onConfirmPressed(currentItem, addedPhotos);
 
                 }
 
@@ -726,6 +728,7 @@ public class AddEditItemFragment extends Fragment {
                     if (task.isSuccessful()) {
                         Uri downloadUri = task.getResult();
                         newUrls.add(downloadUri);
+                        addedPhotos.add(downloadUri);
                         controller.addPhotos(currentItem, newUrls);
                         Log.d(TAG, "GOT URL");
                     } else {
