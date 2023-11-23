@@ -70,6 +70,7 @@ import org.checkerframework.checker.units.qual.A;
  * Observer pattern used
  */
 public class AddEditItemFragment extends Fragment {
+    private boolean isAwaiting = false;
     private static final String TAG = "ADD_EDIT_FRAG";
     private AddEditInputHelper helper;
     private AddEditController controller;
@@ -158,8 +159,8 @@ public class AddEditItemFragment extends Fragment {
     private static final int CAMERA_REQUEST = 111;
 
 
-    FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
-    StorageReference storageRef = storage.getReference();
+    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
+    private StorageReference storageRef = storage.getReference();
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -249,6 +250,8 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); // view binding
         View view = binding.getRoot();
         helper = new AddEditInputHelper(view);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously();
 
         // creating the new file path
         imgPath = new File(requireContext().getFilesDir(), "images");
@@ -409,6 +412,10 @@ public class AddEditItemFragment extends Fragment {
         binding.updateItemConfirm.setOnClickListener(new View.OnClickListener() { //when clicked confirm button
             @Override
             public void onClick(View view) {
+                if (isAwaiting) {
+                    helper.makeSnackbar("WAITING FOR FIREBASE");
+                    return;
+                }
                 newMake = binding.updateMake.getEditText().getText().toString();
                 newModel = binding.updateModel.getEditText().getText().toString();
                 String newValueString = binding.updateValue.getEditText().getText().toString();
@@ -688,15 +695,13 @@ public class AddEditItemFragment extends Fragment {
      * @param position Integer of the position in the URI array list
      */
     private void updateFirebaseImages(boolean adding, Integer position) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInAnonymously();
         // adding is true and position is null means were adding
         if (adding && position == null) {
+            isAwaiting = true;
             Uri fileUri = newURI;
             StorageReference ref = storageRef.child("images/" + fileUri.getLastPathSegment());
             UploadTask uploadTask = ref.putFile(fileUri);
             Log.d("PHOTO_UPLOADED", "updateFirebaseImages: WORKED");
-
             Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -714,7 +719,10 @@ public class AddEditItemFragment extends Fragment {
                         newUrls.add(downloadUri);
                         controller.addPhotos(currentItem, newUrls);
                         Log.d(TAG, "GOT URL");
+                    } else {
+                        helper.makeSnackbar("FAILED TO ADD TO FIREBASE");
                     }
+                    isAwaiting = false;
                 }
             });
 

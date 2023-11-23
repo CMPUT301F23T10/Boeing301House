@@ -8,6 +8,7 @@ import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
@@ -96,7 +97,14 @@ public class AddEditInputHelper {
         return materialDatePicker;
     }
 
+    public void makeSnackbar(String text) {
+        Snackbar snackbar = Snackbar.make(view.findViewById(R.id.itemAddEditContent), text, Snackbar.LENGTH_SHORT);
+        snackbar.setAction("DISMISS", v -> {
+            snackbar.dismiss();
+        });
+        snackbar.show();
 
+    }
 
 
 }
