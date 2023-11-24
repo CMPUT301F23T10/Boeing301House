@@ -13,6 +13,7 @@ import androidx.fragment.app.DialogFragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
@@ -28,7 +29,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
 
 /**
@@ -98,6 +101,25 @@ public class FilterFragment extends DialogFragment {
         ArrayList<String> tags = Tags.getInstance().getTagsFromItemList();
         ArrayList<String> selectedTags = new ArrayList<>();
         // TODO: fill + onclick func
+        Random random = new Random();
+        for (String s: tags) {
+            Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
+            chip.setText(s);
+            chip.setId(random.nextInt());
+            filterChipGroup.addView(chip);
+        }
+        filterChipGroup.setOnCheckedStateChangeListener(new ChipGroup.OnCheckedStateChangeListener() {
+            @Override
+            public void onCheckedChanged(@NonNull ChipGroup group, @NonNull List<Integer> checkedIds) {
+                StringBuilder stringBuilder = new StringBuilder();
+                selectedTags.clear();
+                for (int i: checkedIds) {
+                    Chip chip = getActivity().findViewById(i);
+                    stringBuilder.append(", ").append(chip.getText());
+                    selectedTags.add((String)chip.getText());
+                }
+            }
+        });
 
         CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
         final TimeZone local = Calendar.getInstance().getTimeZone();
@@ -119,7 +141,6 @@ public class FilterFragment extends DialogFragment {
 
 
         TextInputLayout dateRange = view.findViewById(R.id.filterDateRange);
-
         dateRange.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
