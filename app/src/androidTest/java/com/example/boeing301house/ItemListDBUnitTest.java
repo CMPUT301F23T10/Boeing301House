@@ -56,9 +56,10 @@ public class ItemListDBUnitTest {
     @Before
     public void before() {
         FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext());
-//        MockDBConnection connection = new MockDBConnection();
+        MockDBConnection connection = new MockDBConnection();
+        connection.setUUID(null);
         itemListEx = new ItemList(FirebaseFirestore.getInstance().collection("TEST_ITEM_LIST_EXISTING"));
-        itemListDef = new ItemList(FirebaseFirestore.getInstance().collection("TEST_ITEM_LIST"));
+        itemListDef = new ItemList(connection);
         db = FirebaseFirestore.getInstance();
 //        itemListDef = new ItemList(db);
 
@@ -102,7 +103,7 @@ public class ItemListDBUnitTest {
     }
 
     /**
-     * Test if list reads existing firestore data on first call
+     * Test if list reads existing firestore data on first call. Might not work first launch due to lag
      * @throws InterruptedException wait for async operations to finish
      */
     @Test

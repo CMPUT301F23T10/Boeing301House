@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.bumptech.glide.Glide;
+import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
@@ -151,7 +152,7 @@ public class AddEditItemFragment extends Fragment {
     private Uri newURI;
 
     private File imgPath;
-
+    private DBConnection connection;
 
     private static final int READ_PERMISSIONS = 101;
     private static final int CAMERA_PERMISSIONS = 102;
@@ -251,8 +252,10 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); // view binding
         View view = binding.getRoot();
         helper = new AddEditInputHelper(view);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInAnonymously();
+        connection = new DBConnection(requireActivity().getApplicationContext());
+
+//        FirebaseAuth auth = FirebaseAuth.getInstance();
+//        auth.signInAnonymously();
 
         // creating the new file path
         imgPath = new File(requireContext().getFilesDir(), "images");
@@ -696,19 +699,19 @@ public class AddEditItemFragment extends Fragment {
      * @param adding Boolean to check if were adding a image
      * @param position Integer of the position in the URI array list
      */
-    private void updateFirebaseImages(boolean adding, Integer position, Boolean fromGallery) {
+    private void updateFirebaseImages(boolean adding, Integer position, Boolean isGallery) {
         // adding is true and position is null means were adding
         if (adding && position == null) {
             isAwaiting = true;
             Uri fileUri = newURI;
             StorageReference ref = null;
             // if were adding from gallery, add the time to the reference so we can distinguish between adding the same photo multiple times
-            if (fromGallery == true) {
-                ref = storageRef.child("images/" + System.currentTimeMillis() + fileUri.getLastPathSegment());
+            if (isGallery == true) {
+                ref = connection.getStorage().child("" + System.currentTimeMillis() + fileUri.getLastPathSegment());
             }
             // else if not from gallery then its just the uri
-            else if (fromGallery == false) {
-                ref = storageRef.child("images/" + fileUri.getLastPathSegment());
+            else if (isGallery == false) {
+                ref = connection.getStorage().child("" + fileUri.getLastPathSegment());
             }
             UploadTask uploadTask = ref.putFile(fileUri);
             Log.d("PHOTO_UPLOADED", "updateFirebaseImages: WORKED");
