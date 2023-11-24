@@ -51,6 +51,7 @@ public class DBConnection {
     public DBConnection(Context context) {
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously(); // TODO make actual sign in w/ users
 //        this.user = auth.getCurrentUser();
         /*this.auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
             @Override
@@ -62,6 +63,7 @@ public class DBConnection {
 
         setUUID(context);
         storeUUID(context);
+        setStorage();
 //        setUser();
         Log.d(TAG, "UUID: " + this.uuid);
 
@@ -210,9 +212,25 @@ public class DBConnection {
     }
 
     /**
+     * Getter for firebase storage reference
+     * @return
+     */
+    public StorageReference getStorage() {
+        return storage;
+    }
+
+    /**
+     * Getter for firebase storage reference path
+     * @return
+     */
+    public String getPath() {
+        return ("images/" + uuid);
+    }
+
+    /**
      * @param image image to be uploaded to firebase
      */
-    private void uploadImage(Uri image) {
+    public void uploadImage(Uri image) {
 
         return;
     }
@@ -220,7 +238,7 @@ public class DBConnection {
     /**
      * @param image image to be deleted from firebase
      */
-    private void deleteImage(Uri image) {
+    public void deleteImage(Uri image) {
         return;
     }
 
