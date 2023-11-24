@@ -32,6 +32,9 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 dependencies {
@@ -84,12 +87,25 @@ dependencies {
 
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito:mockito-core:3.+")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("com.google.firebase:testlab-instr-lib:0.2")
-    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0-alpha03")
-    androidTestImplementation("androidx.test:rules:1.4.0")
+    androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0-alpha05")
+    androidTestImplementation("androidx.test:rules:1.5.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1") {
+        exclude(module = "support-annotations")
+        exclude(module = "support-v4")
+        exclude(module = "support-v13")
+        exclude(module = "appcompat-v7")
+        exclude(module = "recyclerview-v7")
+        exclude(module = "protobuf-lite")
+
+    }
+
+
+
+
+
     
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation ("commons-io:commons-io:2.11.0")
