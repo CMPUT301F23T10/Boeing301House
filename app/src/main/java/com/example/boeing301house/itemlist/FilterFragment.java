@@ -100,26 +100,24 @@ public class FilterFragment extends DialogFragment {
         ChipGroup filterChipGroup = view.findViewById(R.id.filterChipGroup);
         ArrayList<String> tags = Tags.getInstance().getTagsFromItemList();
         ArrayList<String> selectedTags = new ArrayList<>();
-        // TODO: fill + onclick func
         Random random = new Random();
         for (String s: tags) {
-            Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
+            final Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
             chip.setText(s);
             chip.setId(random.nextInt());
             filterChipGroup.addView(chip);
-        }
-        filterChipGroup.setOnCheckedStateChangeListener(new ChipGroup.OnCheckedStateChangeListener() {
-            @Override
-            public void onCheckedChanged(@NonNull ChipGroup group, @NonNull List<Integer> checkedIds) {
-                StringBuilder stringBuilder = new StringBuilder();
-                selectedTags.clear();
-                for (int i: checkedIds) {
-                    Chip chip = getActivity().findViewById(i);
-                    stringBuilder.append(", ").append(chip.getText());
-                    selectedTags.add((String)chip.getText());
+
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(v.isSelected()) {
+                        selectedTags.remove(s);
+                    } else {
+                        selectedTags.add(s);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
         final TimeZone local = Calendar.getInstance().getTimeZone();
