@@ -72,7 +72,6 @@ public class AddEditUITest {
      */
     @Test
     public void testAddPhoto() throws InterruptedException, UiObjectNotFoundException {
-        final int VOLUME_DOWN_BUTTON = 25;
         final int THREAD_TIMEOUT = 250;
         final String CAMERA_BUTTON_SHUTTER = "com.android.camera2:id/shutter_button";
         final String CAMERA_BUTTON_DONE = "com.android.camera2:id/done_button";
