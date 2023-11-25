@@ -72,12 +72,12 @@ public class AddEditUITest {
             Manifest.permission.CAMERA);
 
     /**
-     * Test add and delete photo from add edit
+     * Test add and delete photo from add edit (from camera, not gallery)
      * @throws InterruptedException
      * @throws UiObjectNotFoundException
      */
     @Test
-    public void testAddPhoto() throws InterruptedException, UiObjectNotFoundException {
+    public void testAddPhotoFromCamera() throws InterruptedException, UiObjectNotFoundException {
 
         onView(withId(R.id.addButton)).perform(click());
 
@@ -90,6 +90,8 @@ public class AddEditUITest {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         UiDevice device = UiDevice.getInstance(instrumentation);
         String[] cameraButtons = {CAMERA_BUTTON_SHUTTER, CAMERA_BUTTON_DONE};
+        //takes photo
+
 
         executeUiAutomatorActions(device, cameraButtons, (long) THREAD_TIMEOUT);
 
@@ -101,8 +103,8 @@ public class AddEditUITest {
         Thread.sleep(THREAD_TIMEOUT);
         onView(withContentDescription("image0")).check(matches(isDisplayed()));
         Thread.sleep(THREAD_TIMEOUT);
-        onView(withContentDescription("image0")).perform(click());
-        onView(withContentDescription("image0")).check(doesNotExist());
+        onView(withContentDescription("image0")).perform(click()); //tests deleting
+        onView(withContentDescription("image0")).check(doesNotExist()); //verifies that the picture is gone
 
 
     }
@@ -114,11 +116,13 @@ public class AddEditUITest {
      * @throws UiObjectNotFoundException if camera buttons not there
      * @throws InterruptedException for delay
      */
+
+    @Rule
+    public ActivityScenarioRule<ItemListActivity> scenario2 = new ActivityScenarioRule<ItemListActivity>(ItemListActivity.class);
     @Test
-    public void testAdd() throws UiObjectNotFoundException, InterruptedException {
+    public void testAddFromGallery() throws UiObjectNotFoundException, InterruptedException {
 
-
-        onView(withText("SampleModel1")).check(doesNotExist());
+        onView(withText("SampleModel2")).check(doesNotExist());
 
         onView(withId(R.id.addButton)).perform(click());
 
@@ -135,24 +139,39 @@ public class AddEditUITest {
 
         onView(withId(R.id.tagEditText)).perform(typeText("tag1 tag2"), closeSoftKeyboard());
 
-
-
-        // add image
         onView(withContentDescription("image0")).check(doesNotExist());
 
         onView(withId(R.id.itemAddEditPhotoButton)).perform((click()));
-        onView(withText("Add From Camera")).perform(click());
-        Thread.sleep(THREAD_TIMEOUT);
+        onView(withText("Add From Gallery")).perform(click());
 
+
+
+
+
+
+
+
+
+
+
+    //THE PROBLEM: cant get espresso or uiautomator to click the first item in a gallery.
+        //it is not a recyclerview or list view and has no id, so I have tried using uiautomator
+        //I have tried using x and y coordinates from y = 50 -> 500 in increments of 50, at x = 10
+
+        //I am also getting this error, which I cannot resolve or understand:
+        //          No activities in stage RESUMED. Did you forget to launch the activity. (test.getActivity() or similar)?
+
+
+        //click on first picture in gallery
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         UiDevice device = UiDevice.getInstance(instrumentation);
-        String[] cameraButtons = {CAMERA_BUTTON_SHUTTER, CAMERA_BUTTON_DONE};
-
-        executeUiAutomatorActions(device, cameraButtons, (long) THREAD_TIMEOUT);
-
-
 
         Thread.sleep(THREAD_TIMEOUT);
+
+        device.click(10, 300);
+
+        //check if image is added
+
         UiScrollable addEditView = new UiScrollable(new UiSelector().scrollable(true));
         addEditView.scrollForward();
         Thread.sleep(THREAD_TIMEOUT);
@@ -165,7 +184,13 @@ public class AddEditUITest {
 
         onView(withText("SampleModel1")).check(matches(isDisplayed()));
 
+/*
 
+
+
+
+
+        //for deleting stuff added
         onView(withId(R.id.itemList))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
@@ -174,7 +199,7 @@ public class AddEditUITest {
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
         onView(withText("SampleModel1")).check(doesNotExist());
 
-
+*/
 
     }
 

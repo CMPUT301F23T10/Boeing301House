@@ -79,7 +79,6 @@ public class dannyUItest {
 //        onData(equalTo("Sample Make1")).perform(longClick());
 //        onData(equalTo("Sample Make2")).perform(click());
 
-
         onView(withText("Sample Model1")).check(matches(isDisplayed()));
         onView(withText("Sample Model2")).check(matches(isDisplayed()));
 
