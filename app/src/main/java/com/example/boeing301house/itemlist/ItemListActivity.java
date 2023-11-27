@@ -158,7 +158,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     else { // deselecting
                         // view.setBackgroundResource(R.drawable.bg_ripple_default); // visually deselect
 //                        view.setBackgroundColor(0);
-                        view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.itemCellColor));
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.colorItemCell));
 
                     }
 
