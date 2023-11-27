@@ -16,6 +16,7 @@ import java.net.URL;
  * <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html">...</a>
  * <a href="https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/java/lang/Runnable.html">...</a>
  * <a href="https://medium.com/@yossisegev/understanding-activity-runonuithread-e102d388fe93">...</a>
+ * TODO: CONVERT TO JSOUP
  */
 public class GoogleSearchThread extends Thread {
     /**
