@@ -27,6 +27,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 
 import android.Manifest;
 import android.app.Instrumentation;
+import android.content.Context;
+import android.content.Intent;
+import android.os.RemoteException;
 
 import androidx.test.espresso.action.ViewActions;
 //import androidx.test.espresso.contrib.PickerActions;
@@ -41,6 +44,7 @@ import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
 import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObject2;
 import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiScrollable;
 import androidx.test.uiautomator.UiSelector;
@@ -55,7 +59,7 @@ import org.junit.runner.RunWith;
 import java.util.regex.Pattern;
 
 /**
- * TESTED ON PIXEL 7
+ * TESTS INTENDED FOR PIXEL 7
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -77,7 +81,7 @@ public class AddEditUITest {
      * @throws UiObjectNotFoundException
      */
     @Test
-    public void testAddPhoto() throws InterruptedException, UiObjectNotFoundException {
+    public void testAddDeletePhoto() throws InterruptedException, UiObjectNotFoundException {
 
         onView(withId(R.id.addButton)).perform(click());
 
@@ -103,6 +107,89 @@ public class AddEditUITest {
         Thread.sleep(THREAD_TIMEOUT);
         onView(withContentDescription("image0")).perform(click());
         onView(withContentDescription("image0")).check(doesNotExist());
+
+
+    }
+
+    /**
+     * Test add and delete photo from gallery from add edit
+     * @throws InterruptedException for sleep
+     * @throws UiObjectNotFoundException if ui element not found
+     */
+    @Test
+    public void testAddDeleteGalleryPhoto() throws InterruptedException, UiObjectNotFoundException {
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        UiDevice device = UiDevice.getInstance(instrumentation);
+        device.pressHome();
+
+        UiObject2 camera = device.findObject(By.text("Camera"));
+
+        camera.clickAndWait(Until.newWindow(), 1000);
+        final int VOLUME_DOWN = 25;
+        // take 2 photos
+        synchronized (device) {
+            device.pressKeyCode(VOLUME_DOWN);
+            device.pressKeyCode(VOLUME_DOWN);
+
+            device.pressHome();
+        }
+
+
+        final String pkg = "com.example.boeing301house";
+
+        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(pkg);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+
+        device.wait(Until.hasObject(By.pkg(pkg)), 2000);
+
+
+        synchronized (device) {
+            device.findObject(By.text("Boeing301House"));
+
+            onView(withId(R.id.addButton)).perform(click());
+
+            onView(withId(R.id.itemAddEditPhotoButton)).perform((click()));
+            onView(withContentDescription("image0")).check(doesNotExist());
+            onView(withContentDescription("image1")).check(doesNotExist());
+
+            onView(withText("Add From Gallery")).perform(click());
+
+//            UiObject2 photo = device.findObject(By.descContains("jpeg"));
+//            UiObject2 photo = device.findObject(By.clazz("android.widget.ImageView").descContains("jpeg"));
+//            device.wait(Until.hasObject(By.clazz("android.widget.ImageView").descContains("jpeg")), 3000);
+
+
+//            photo.click();
+
+            device.click(180, 840); // PHOTO 1
+            device.wait(THREAD_TIMEOUT);
+            device.click(550, 853); // PHOTO 2
+            device.wait(THREAD_TIMEOUT);
+
+
+            device.findObject(By.textContains("Add"))
+                    .clickAndWait(Until.newWindow(), 1000);
+
+            UiScrollable addEditView = new UiScrollable(new UiSelector().scrollable(true));
+            addEditView.scrollForward();
+            Thread.sleep(THREAD_TIMEOUT);
+            onView(withContentDescription("image0")).check(matches(isDisplayed()));
+            onView(withContentDescription("image1")).check(matches(isDisplayed()));
+
+            onView(withContentDescription("image1")).perform(click());
+            onView(withContentDescription("image1")).check(doesNotExist());
+
+            onView(withContentDescription("image0")).perform(click());
+            onView(withContentDescription("image0")).check(doesNotExist());
+
+        }
+
+
+
+
+
 
 
     }

@@ -102,9 +102,10 @@ public class FilterFragment extends DialogFragment {
         ArrayList<String> selectedTags = new ArrayList<>();
         Random random = new Random();
         for (String s: tags) {
-            final Chip chip = (Chip) LayoutInflater.from(getActivity()).inflate(R.layout.chip_layout,null);
+            final Chip chip = (Chip) getLayoutInflater().inflate(R.layout.chip_layout,null);
             chip.setText(s);
             chip.setId(random.nextInt());
+
             filterChipGroup.addView(chip);
 
             chip.setOnClickListener(new View.OnClickListener() {

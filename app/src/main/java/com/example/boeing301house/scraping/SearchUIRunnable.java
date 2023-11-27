@@ -9,6 +9,7 @@ import org.json.JSONObject;
 /**
  * Runnable for runOnUiThread. Used for searches.
  * <a href="https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/java/lang/Runnable.html">...</a>
+ * TODO: CONVERT TO JSOUP
  */
 public class SearchUIRunnable implements Runnable {
     /**
