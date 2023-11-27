@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorTitleBar">#282828</color>
+    <color name="colorBottomBar">#575757</color>
+    <color name="colorButton">#007563</color>
+    <color name="colorHighlight">#007563</color>
+    <color name="colorFilterButton">#dff1f0</color>
+    <color name="colorSortButton">#dff1f0</color>
+    <color name="colorComment">#006554</color>
+    <color name="colorDelete">#DD3028</color>
+    <color name="colorScanButtonOn">#56CCFB</color>
+    <color name="required">#DD3028</color>
+    <color name="textBoxColor">#008572</color>
+    <color name="colorItemCellText">#afded8</color>
+    <color name="colorTransparent">#00000000</color>
+    <color name="colorItemViewText">#DFF1F0</color>
+    <color name="itemAddEditBackground">#004939</color>
+    <color name="iconColorMain">#dff1f0</color>
+    <color name="itemCellColor">#181818</color>
+
+    <color name="colorBackground">#006554</color>
+</resources>

@@ -56,7 +56,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         } else {
 //            holder.view.setBackgroundResource(R.drawable.bg_ripple_default);
 //            holder.view.setBackgroundColor(0);
-            holder.view.setBackgroundTintList(ContextCompat.getColorStateList(holder.view.getContext(), R.color.white));
+            holder.view.setBackgroundTintList(ContextCompat.getColorStateList(holder.view.getContext(), R.color.itemCellColor));
         }
 
         //updates all the information from given item to the item cell, to be displayed in the main listView

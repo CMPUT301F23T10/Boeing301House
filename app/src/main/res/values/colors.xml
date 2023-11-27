@@ -16,6 +16,10 @@
     <color name="colorItemCellText">#008572</color>
     <color name="colorItemChipBG">#afded8</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="colorItemViewText">#004939</color>
+    <color name="itemAddEditBackground">#FFFFFF</color>
+    <color name="iconColorMain">#FF000000</color>
+    <color name="itemCellColor">#FFFF</color>
 
 
     <!--  might not use  -->

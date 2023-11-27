@@ -163,6 +163,7 @@ public class AddEditItemFragment extends Fragment {
 
     private FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
     private StorageReference storageRef = storage.getReference();
+    private int imgCount = 0;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -565,9 +566,10 @@ public class AddEditItemFragment extends Fragment {
                 for (int i = 0; i < x; i++) {
                     newURI = data.getClipData().getItemAt(i).getUri();
                     uri.add(data.getClipData().getItemAt(i).getUri());
-                    String imgURI = data.getClipData().getItemAt(i).getUri().toString();
+//                    String imgURI = data.getClipData().getItemAt(i).getUri().toString();
 //                    Log.d("CAMERA_TEST", imgURI);
                     // adding from gallery
+                    imgCount += 1;
                     updateFirebaseImages(true, null, true);
 
                 }
@@ -577,6 +579,7 @@ public class AddEditItemFragment extends Fragment {
                 newURI = imgURI;
 //                Log.d("CAMERA_TEST", imgURI);
                 uri.add(imgURI);
+                imgCount += 1;
                 // adding from gallery
                 updateFirebaseImages(true, null, true);
 
@@ -588,6 +591,7 @@ public class AddEditItemFragment extends Fragment {
             uri.add(newURI);
             imgAdapter.notifyDataSetChanged();
 
+            imgCount += 1;
             // adding a image from camera
             updateFirebaseImages(true, null, false);
 
@@ -737,7 +741,10 @@ public class AddEditItemFragment extends Fragment {
                     } else {
                         helper.makeSnackbar("FAILED TO ADD TO FIREBASE");
                     }
-                    isAwaiting = false;
+                    imgCount -= 1;
+                    if (imgCount == 0) {
+                        isAwaiting = false;
+                    }
                 }
             });
 

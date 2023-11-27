@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".addedit.AddEditItemFragment"
-    android:background="@color/white"
+    android:background="@color/itemAddEditBackground"
     android:clickable="true"
     android:focusable="true"
     android:id="@+id/itemAddEditContent"
