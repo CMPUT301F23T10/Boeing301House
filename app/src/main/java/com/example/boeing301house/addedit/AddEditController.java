@@ -132,4 +132,13 @@ public class AddEditController {
     public ArrayList<Uri> getAddedPhotos() {
         return addedPhotos;
     }
+
+    /**
+     * Remove newly added photos (when backing out)
+     */
+    public void removeAddedPhotos() {
+        for (Uri photo: addedPhotos) {
+            addEditModel.deleteFirebaseImage(photo);
+        }
+    }
 }

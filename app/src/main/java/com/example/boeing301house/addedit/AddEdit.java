@@ -142,4 +142,25 @@ public class AddEdit {
 
         }
     }
+
+
+    /**
+     * Delete image from firebase
+     * @param photo photo uri
+     */
+    public void deleteFirebaseImage(Uri photo) {
+        String result = photo.getPath();
+        int cut = result.lastIndexOf('/'); // formating the string
+        if (cut != -1) {
+            result = result.substring(cut + 1);
+            storage.child(result)
+                    .delete().addOnSuccessListener(aVoid ->
+                            Log.d(TAG, "PHOTO DELETED")).
+                    addOnFailureListener(exception -> {
+                        // Uh-oh, an error occurred!
+                        Log.e(TAG, "FAILED TO DELETE");
+                    });
+
+        }
+    }
 }

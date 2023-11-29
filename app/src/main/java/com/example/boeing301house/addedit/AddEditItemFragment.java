@@ -249,7 +249,7 @@ public class AddEditItemFragment extends Fragment {
         controller = new AddEditController(view, currentItem.getPhotos(), newTags, isAdd);
 
         imgRecyclerView = binding.addEditImageRecycler;
-        
+
         imgRecyclerView.setAdapter(controller.getImgAdapter());
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -259,6 +259,7 @@ public class AddEditItemFragment extends Fragment {
 
 
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(v -> {
+            controller.removeAddedPhotos();
             listener.onCancel();
         });
 
