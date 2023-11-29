@@ -1,6 +1,5 @@
 package com.example.boeing301house;
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -14,7 +13,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import android.Manifest;
 import android.app.Instrumentation;
 import android.view.KeyEvent;
 
@@ -23,10 +21,8 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.GrantPermissionRule;
 import androidx.test.uiautomator.By;
 import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.UiObjectNotFoundException;
 
 import com.example.boeing301house.itemlist.ItemListActivity;
 
@@ -39,7 +35,7 @@ import org.junit.runner.RunWith;
 /**
  * this test class is to test all the UI components of the list
  */
-public class ListTestUITest {
+public class ItemListUITest {
         private final int THREAD_TIMEOUT = 250;
         @Rule
         public ActivityScenarioRule<ItemListActivity> scenario = new ActivityScenarioRule<ItemListActivity>(ItemListActivity.class);
