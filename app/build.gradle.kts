@@ -81,6 +81,8 @@ dependencies {
     implementation("com.google.mlkit:text-recognition:16.0.0")
     implementation("com.google.mlkit:object-detection:17.0.0")
 
+    implementation("org.jsoup:jsoup:1.17.1") // scraping
+
 
 
 

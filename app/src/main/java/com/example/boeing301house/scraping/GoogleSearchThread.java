@@ -2,6 +2,11 @@ package com.example.boeing301house.scraping;
 
 import android.util.Log;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,31 +17,23 @@ import java.net.URL;
 /**
  * Google custom search engine model class (dedicated thread).
  * Used for webscraping.
- * <a href="https://developers.google.com/custom-search/v1/using_rest">...</a>
+ * <a href="https://jsoup.org/">...</a>
+ * <a href="https://serpdog.io/blog/web-scraping-google-search-results-with-java/">...</a>
  * <a href="https://docs.oracle.com/javase/8/docs/api/java/lang/Thread.html">...</a>
  * <a href="https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/java/lang/Runnable.html">...</a>
  * <a href="https://medium.com/@yossisegev/understanding-activity-runonuithread-e102d388fe93">...</a>
- * TODO: CONVERT TO JSOUP
+ *
  */
 public class GoogleSearchThread extends Thread {
     /**
      * Tag for logging
      */
     private static final String TAG = "SEARCH_THREAD";
-    /**
-     * GCSE API key (dont steal pls)
-     */
-    private static final String API_KEY = "AIzaSyAau6Ay5GxfMQOxKIFaGr_XHp2sptelQ48";
-
-    /**
-     * GCSE search engine id (dont steal pls)
-     */
-    private static final String CSID = "d1cfe1fb5bb524ddd";
 
     /**
      * Result listener
      */
-    private OnSearchResultListener listener;
+    private OnSearchResultListener<Element> listener;
 
     /**
      * Barcode used in search
@@ -44,18 +41,17 @@ public class GoogleSearchThread extends Thread {
     private String barcode;
 
     /**
-     * Search result data
+     * Google search agents
      */
-    private String result;
+    private static final String[] userAgents = {"Mozilla/5.0 (Windows NT 10.0; Win64; X64) AppleWebKit/537.36 (KHTML, Like Gecko) Chrome/74.0.3729.169 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, Like Gecko) Chrome/72.0.3626.121 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; Win64; X64) AppleWebKit/537.36 (KHTML, Like Gecko) Chrome/74.0.3729.157 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; Win64; X64) AppleWebKit/537.36 (KHTML, Like Gecko) Chrome/96.0.4664.110 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; Win64; X64) AppleWebKit/537.36 (KHTML, Like Gecko) Chrome/96.0.4664.45 Safari/537.36", "Mozilla/5.0 (Windows NT 10.0; Win64; X64) AppleWebKit/537.36 (KHTML, Like Gecko) Chrome/97.0.4692.71 Safari/537.36"};
 
     /**
      * Constructor for search thread, pre-execute operations
      * @param listener New {@link OnSearchResultListener} listener
      */
-    public GoogleSearchThread(String searchTerm, OnSearchResultListener listener) {
+    public GoogleSearchThread(String searchTerm, OnSearchResultListener<Element> listener) {
         this.listener = listener;
         this.barcode = searchTerm;
-//        this.result = result;
     }
 
     /**
@@ -65,46 +61,25 @@ public class GoogleSearchThread extends Thread {
     public void run() {
         if (barcode != null) {
             Log.d(TAG, "BARCODE FOUND");
+        } else {
+            Log.d(TAG, "NO BARCODE");
         }
-        Log.d(TAG, "NO BARCODE");
-
         try {
-            // construct url
-            URL url = new URL("https://www.googleapis.com/customsearch/v1?q=" + barcode + "&key=" + API_KEY + "&cx=" + CSID);
-            // open connection
-            // https://developer.android.com/reference/java/net/HttpURLConnection
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            int choice = (int) (Math.random() * userAgents.length);
+            Document doc = Jsoup.connect("https://www.google.com/search?q=" + barcode).userAgent(userAgents[choice]).get(); // search url
 
-            try {
-                InputStream in = connection.getInputStream(); // get data from http response
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in)); // read from search result
-                StringBuilder result = new StringBuilder();
-                String line;
-                Log.d(TAG, "READING.....");
-
-                do {
-                    line = reader.readLine();
-
-                    result.append(line); // add all lines in search result
-                } while (line != null);
-                Log.d(TAG, "DONE READING");
-                Log.d(TAG, "DONE READING: " + result.toString());
-                this.result = result.toString();
-                listener.OnSearchResult(this.result);
-
-            } catch (IOException e) {
-                // throw new RuntimeException(e);
-                Log.e(TAG, "ERROR FETCHING DATA: " + e);
-                this.result = null;
+            Elements links = doc.select("div.g"); // google groups results in divs with g class
+            if (links.isEmpty()) {
                 listener.OnSearchResult(null);
-
-            } finally {
-                Log.d(TAG, "DISCONNECTING");
-                connection.disconnect();
+                return;
             }
+
+            Element link = links.first();
+
+            listener.OnSearchResult(link);
+
         } catch (IOException e) {
             Log.e(TAG, "ERROR FETCHING DATA: " + e);
-            this.result = null;
             listener.OnSearchResult(null);
 //            throw new RuntimeException(e);
         }
