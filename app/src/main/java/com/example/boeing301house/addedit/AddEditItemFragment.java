@@ -163,6 +163,7 @@ public class AddEditItemFragment extends Fragment {
 
     private FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
     private StorageReference storageRef = storage.getReference();
+    private int imgCount = 0;
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -561,13 +562,13 @@ public class AddEditItemFragment extends Fragment {
         if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
-
                 for (int i = 0; i < x; i++) {
                     newURI = data.getClipData().getItemAt(i).getUri();
                     uri.add(data.getClipData().getItemAt(i).getUri());
-                    String imgURI = data.getClipData().getItemAt(i).getUri().toString();
+//                    String imgURI = data.getClipData().getItemAt(i).getUri().toString();
 //                    Log.d("CAMERA_TEST", imgURI);
                     // adding from gallery
+                    imgCount += 1;
                     updateFirebaseImages(true, null, true);
 
                 }
@@ -577,6 +578,7 @@ public class AddEditItemFragment extends Fragment {
                 newURI = imgURI;
 //                Log.d("CAMERA_TEST", imgURI);
                 uri.add(imgURI);
+                imgCount += 1;
                 // adding from gallery
                 updateFirebaseImages(true, null, true);
 
@@ -588,6 +590,7 @@ public class AddEditItemFragment extends Fragment {
             uri.add(newURI);
             imgAdapter.notifyDataSetChanged();
 
+            imgCount += 1;
             // adding a image from camera
             updateFirebaseImages(true, null, false);
 
@@ -732,12 +735,15 @@ public class AddEditItemFragment extends Fragment {
                         Uri downloadUri = task.getResult();
                         newUrls.add(downloadUri);
                         addedPhotos.add(downloadUri);
-                        controller.addPhotos(currentItem, newUrls);
+//                        controller.addPhotos(currentItem, newUrls);
                         Log.d(TAG, "GOT URL");
                     } else {
                         helper.makeSnackbar("FAILED TO ADD TO FIREBASE");
                     }
-                    isAwaiting = false;
+                    imgCount -= 1;
+                    if (imgCount == 0) {
+                        isAwaiting = false;
+                    }
                 }
             });
 
@@ -810,7 +816,7 @@ public class AddEditItemFragment extends Fragment {
         GoogleSearchThread thread = new GoogleSearchThread(barcode, result -> {
             if (result != null) {
                 SearchUIRunnable searchRunnable = new SearchUIRunnable(result, title -> {
-                    if (binding != null)
+                    if (binding != null) {
                         if (title != null) {
                             snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("PROCESSED").show();
                             binding.updateDesc.getEditText().setText(title);
@@ -818,6 +824,7 @@ public class AddEditItemFragment extends Fragment {
                             snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("NO INFO FOUND").show();
                             binding.updateDesc.getEditText().setText(barcode);
                         }
+                    }
                 });
 
                 if (binding != null) {

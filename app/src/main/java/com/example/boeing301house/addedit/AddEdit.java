@@ -2,13 +2,22 @@ package com.example.boeing301house.addedit;
 
 import android.net.Uri;
 import android.text.Editable;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
+import com.example.boeing301house.itemlist.OnCompleteListener;
+import com.google.android.gms.tasks.Continuation;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,19 +31,18 @@ public class AddEdit {
     FirebaseStorage storage;
     FirebaseAuth auth;
 
-    FirebaseFirestore db;
+    DBConnection connection;
 
     /**
      * Constructor
      * @param urls list of urls
      * @param tags list of tags
      */
-    public AddEdit(ArrayList<Uri> urls, ArrayList<String> tags) {
+    public AddEdit(ArrayList<Uri> urls, ArrayList<String> tags, DBConnection connection) {
         this.urls = urls;
         this.tags = tags;
         // TODO: dbconn
-        db = FirebaseFirestore.getInstance();
-
+        this.connection = connection;
     }
 
 
@@ -63,5 +71,8 @@ public class AddEdit {
         this.tags.remove(name);
     }
 
-
+    // TODO: FINISH
+    public void updateFirebaseImages(OnCompleteListener<Uri> listener, ArrayList<Uri> photoUrls) {
+        return;
+    }
 }

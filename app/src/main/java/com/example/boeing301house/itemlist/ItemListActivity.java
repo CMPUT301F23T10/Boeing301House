@@ -120,7 +120,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
                     isSelectMultiple = true;
 //                    view.setBackgroundResource(R.color.colorHighlight); // visually select
-                    view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.colorHighlight));
+                    view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.colorHighlight));
 //                    view.setBackgroundResource(R.drawable.bg_ripple_selected);
 
                     // contextual app bar
@@ -153,12 +153,13 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                 } else { // select multiple + delete multiple functionality
                     if (controller.onMultiSelect(itemRef)) { // if selecting
 //                        view.setBackgroundResource(R.color.colorHighlight); // visually select
-                        view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.colorHighlight));
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.colorHighlight));
                     }
                     else { // deselecting
                         // view.setBackgroundResource(R.drawable.bg_ripple_default); // visually deselect
 //                        view.setBackgroundColor(0);
-                        view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.white));
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.colorItemCell));
+
                     }
 
 
