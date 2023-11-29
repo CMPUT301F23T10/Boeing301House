@@ -42,6 +42,7 @@ public class TagsUnitTest {
     public void before(){
         FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext());
         db = new MockDBConnection();
+        db.setUUID(null);
         itemList = new ItemList(db);
         tags = Tags.getInstance();
     }

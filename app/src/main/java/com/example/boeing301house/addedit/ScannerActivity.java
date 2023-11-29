@@ -330,6 +330,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     }
 
     /**
+     * TODO: FIX
      * Binds barcode analyzer + image analysis to camera
      * @param imageAnalysis
      */
