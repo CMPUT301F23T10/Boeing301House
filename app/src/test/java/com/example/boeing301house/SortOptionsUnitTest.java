@@ -10,6 +10,9 @@ import org.junit.Test;
  */
 public class SortOptionsUnitTest {
 
+    /**
+     * Test default values + reset
+     */
     @Test
     public void testDefault() {
         SortOptions sortOptions = SortOptions.getInstance();
@@ -21,6 +24,9 @@ public class SortOptionsUnitTest {
         Assert.assertEquals("Date Added", sortOptions.getType());
     }
 
+    /**
+     * Test order setting and getting
+     */
     @Test
     public void testOrder() {
         SortOptions sortOptions = SortOptions.getInstance();
@@ -31,7 +37,9 @@ public class SortOptionsUnitTest {
         Assert.assertEquals("ASC", sortOptions.getOrder());
     }
 
-
+    /**
+     * Test type setting and getting
+     */
     @Test
     public void testType() {
         SortOptions sortOptions = SortOptions.getInstance();
