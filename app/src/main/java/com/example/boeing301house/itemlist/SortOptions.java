@@ -70,13 +70,12 @@ public class SortOptions {
     }
 
     /**
-     * Getter for index of sort type
-     * @return index of sort type
+     * Reset sort type and order to default values
      */
-    public int getTypePosition() {
-        return typeToPos.get(currentType);
+    public void resetSort() {
+        currentOrder = "ASC";
+        currentType = "Date Added";
     }
-
 
 
 }
