@@ -5,6 +5,7 @@
     <color name="colorBottomBar">#565656</color>
     <color name="colorButton">#007563</color>
     <color name="colorHighlight">#007563</color>
+    <color name="colorScan">#DFF1F0</color>
     <color name="colorFilterButton">#dff1f0</color>
     <color name="colorSortButton">#dff1f0</color>
     <color name="colorComment">#006554</color>

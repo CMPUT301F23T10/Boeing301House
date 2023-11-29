@@ -374,7 +374,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 //                                            drawRect(R.color.colorHighlight); // TODO: FIX (async, make canvas here)
                                         Canvas canvas = holder.lockCanvas();
                                         if (canvas != null) {
-                                            drawRect(getColor(R.color.colorHighlight), canvas);
+                                            drawRect(getColor(R.color.colorScan), canvas);
                                             holder.unlockCanvasAndPost(canvas);
                                         }
 
@@ -471,7 +471,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Canvas canvas = holder.lockCanvas();
-        drawRect(getColor(R.color.colorHighlight), canvas);
+        drawRect(getColor(R.color.colorScan), canvas);
         holder.unlockCanvasAndPost(canvas);
 
     }
