@@ -18,7 +18,7 @@ import java.net.URL;
 // TODO: maybe just do on threads
 /**
  * <b> REFERENCE USE ONLY, MODEL CLASS DEPRECATED </b> <br>
- * <b> SWITCHED TO THREAD via {@link GoogleSearchThread}, {@link SearchUIRunnable} </b> <br>
+ * <b> SWITCHED TO THREAD + JSOUP via {@link GoogleSearchThread}, {@link SearchUIRunnable} </b> <br>
  * Google custom search engine model class.
  * Used for webscraping.
  * <a href="https://developers.google.com/custom-search/v1/using_rest">...</a>
