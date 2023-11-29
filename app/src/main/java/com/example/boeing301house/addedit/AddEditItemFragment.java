@@ -527,24 +527,13 @@ public class AddEditItemFragment extends Fragment {
                 int x = data.getClipData().getItemCount();
                 for (int i = 0; i < x; i++) {
                     newURI = data.getClipData().getItemAt(i).getUri();
-//                    uri.add(data.getClipData().getItemAt(i).getUri());
                     controller.addPhotos(newURI, true);
-//                    String imgURI = data.getClipData().getItemAt(i).getUri().toString();
-//                    Log.d("CAMERA_TEST", imgURI);
-                    // adding from gallery
-//                    imgCount += 1;
-//                    updateFirebaseImages(true, null, true);
 
                 }
 
             } else if (data.getData() != null) {
                 Uri imgURI = data.getData();
                 controller.addPhotos(imgURI, true);
-//                Log.d("CAMERA_TEST", imgURI);
-//                uri.add(imgURI);
-//                imgCount += 1;
-//                 adding from gallery
-//                updateFirebaseImages(true, null, true);
 
             }
 
