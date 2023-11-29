@@ -26,12 +26,12 @@ import java.util.HashMap;
  * Model class for AddEdit
  */
 public class AddEdit {
-    ArrayList<Uri> urls;
-    ArrayList<String> tags;
-    FirebaseStorage storage;
-    FirebaseAuth auth;
+    private static final String TAG = "ADD_EDIT_MODEL";
+    private ArrayList<Uri> urls;
+    private ArrayList<String> tags;
+    private StorageReference storage;
 
-    DBConnection connection;
+    private DBConnection connection;
 
     /**
      * Constructor
@@ -39,10 +39,11 @@ public class AddEdit {
      * @param tags list of tags
      */
     public AddEdit(ArrayList<Uri> urls, ArrayList<String> tags, DBConnection connection) {
+        this.connection = connection;
         this.urls = urls;
         this.tags = tags;
         // TODO: dbconn
-        this.connection = connection;
+        storage = connection.getStorage();
     }
 
 
@@ -72,7 +73,73 @@ public class AddEdit {
     }
 
     // TODO: FINISH
-    public void updateFirebaseImages(OnCompleteListener<Uri> listener, ArrayList<Uri> photoUrls) {
-        return;
+    public void addFirebaseImages(OnCompleteListener<Uri> listener, Uri photoUri, boolean isGallery) {
+        StorageReference ref = null;
+
+        if (isGallery) {
+            ref = storage.child("" + System.currentTimeMillis() + photoUri.getLastPathSegment());
+        } else {
+            ref = storage.child("" + photoUri.getLastPathSegment());
+        }
+        UploadTask uploadTask = ref.putFile(photoUri);
+        Log.d(TAG, "PHOTO UPLOADING");
+
+        final StorageReference finalRef = ref;
+
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                Log.d(TAG, "URL");
+                return finalRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new com.google.android.gms.tasks.OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Uri downloadUri = task.getResult();
+                    listener.onComplete(downloadUri, true);
+
+                    Log.d(TAG, "GOT URL");
+                } else {
+                    listener.onComplete(null, false);
+                }
+
+            }
+        });
+
+        uploadTask.addOnFailureListener(exception -> {
+            return;
+        }).addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // message for succesful upload
+                Log.d(TAG, "Photo added");
+            }
+        });
+
+    }
+
+    /**
+     * Delete image from firebase
+     * @param uris list of uris
+     * @param position array position
+     */
+    public void deleteFirebaseImage(ArrayList<Uri> uris, int position) {
+        String result = uris.get(position).getPath();
+        int cut = result.lastIndexOf('/'); // formating the string
+        if (cut != -1) {
+            result = result.substring(cut + 1);
+            storage.child(result)
+                    .delete().addOnSuccessListener(aVoid ->
+                        Log.d(TAG, "PHOTO DELETED")).
+                    addOnFailureListener(exception -> {
+                        // Uh-oh, an error occurred!
+                        Log.e(TAG, "FAILED TO DELETE");
+                    });
+
+        }
     }
 }
