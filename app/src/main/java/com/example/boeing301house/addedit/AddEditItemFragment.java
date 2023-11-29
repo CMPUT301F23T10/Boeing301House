@@ -265,7 +265,6 @@ public class AddEditItemFragment extends Fragment {
 
 
         binding.itemAddEditMaterialToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            // TODO: allow backing from fragment to fragment
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.itemAddEditPhotoButton) {
@@ -409,7 +408,6 @@ public class AddEditItemFragment extends Fragment {
                         currentItem.setDate(newDate);
                         currentItem.setValue(newValue);
                         currentItem.setSN(newSN);
-                        Log.d("TAG TEST", "Size: " + newTags.size());
                         currentItem.setDescription(newDescription);
                         currentItem.setTags(newTags);
 

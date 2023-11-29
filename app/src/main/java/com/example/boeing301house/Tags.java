@@ -78,8 +78,13 @@ public class Tags {
      */
     public ArrayList<String> getTagsFromItemList() {
         ArrayList<String> tags = new ArrayList<>();
-
-        for (Item item : this.itemList.getRawList()) {
+        ArrayList<Item> rawList;
+        if (this.itemList != null) {
+            rawList = this.itemList.getRawList();
+        } else {
+            rawList = new ArrayList<>();
+        }
+        for (Item item : rawList) {
             for (String tag : item.getTags()) {
                 if (!tags.contains(tag)) {
                     tags.add(tag);
