@@ -6,16 +6,22 @@
     <color name="colorBottomBar">#007563</color>
     <color name="colorButton">#AFDED8</color>
     <color name="colorHighlight">#DFF1F0</color>
+    <color name="colorScan">#DFF1F0</color>
     <color name="colorFilterButton">#7AC8BF</color>
     <color name="colorSortButton">#7AC8BF</color>
     <color name="colorComment">#006554</color>
     <color name="colorDelete">#DD3028</color>
     <color name="colorScanButtonOn">#56CCFB</color>
-    <color name="required">#DD3028</color>
-    <color name="textBoxColor">#DFF1F0</color>
+    <color name="colorRequired">#DD3028</color>
+    <color name="colorTextBox">#DFF1F0</color>
     <color name="colorItemCellText">#008572</color>
     <color name="colorItemChipBG">#afded8</color>
     <color name="colorTransparent">#00000000</color>
+    <color name="colorItemViewText">#004939</color>
+    <color name="colorItemAddEditBackground">#FFFFFF</color>
+    <color name="colorIconMain">#FF000000</color>
+    <color name="colorItemCell">#FFFF</color>
+    <color name="colorItemListSFMenu">#00A293</color>
 
 
     <!--  might not use  -->

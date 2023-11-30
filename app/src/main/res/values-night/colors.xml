@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#afded8</color>
+    <color name="colorTitleBar">#181818</color>
+    <color name="colorBottomBar">#565656</color>
+    <color name="colorButton">#007563</color>
+    <color name="colorHighlight">#007563</color>
+    <color name="colorScan">#DFF1F0</color>
+    <color name="colorFilterButton">#dff1f0</color>
+    <color name="colorSortButton">#dff1f0</color>
+    <color name="colorComment">#006554</color>
+    <color name="colorDelete">#DD3028</color>
+    <color name="colorScanButtonOn">#56CCFB</color>
+    <color name="colorRequired">#DD3028</color>
+    <color name="colorTextBox">#383838</color>
+    <color name="colorItemCellText">#afded8</color>
+    <color name="colorTransparent">#00000000</color>
+    <color name="colorItemViewText">#afded8</color>
+    <color name="colorItemAddEditBackground">#181818</color>
+    <color name="colorIconMain">#afded8</color>
+    <color name="colorItemCell">#181818</color>
+    <color name="colorItemListSFMenu">#afded8</color>
+
+    <color name="colorBackground">#383838</color>
+</resources>

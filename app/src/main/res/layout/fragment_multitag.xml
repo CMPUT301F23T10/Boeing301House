@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/updateMultiTag"
         style="?attr/textInputFilledStyle"
-        app:boxBackgroundColor="@color/textBoxColor"
+        app:boxBackgroundColor="@color/colorTextBox"
         android:hint="Add Tags"
 
         >

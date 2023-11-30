@@ -2,6 +2,7 @@ package com.example.boeing301house.itemlist;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -119,7 +120,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
                     isSelectMultiple = true;
 //                    view.setBackgroundResource(R.color.colorHighlight); // visually select
-                    view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.colorHighlight));
+                    view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.colorHighlight));
 //                    view.setBackgroundResource(R.drawable.bg_ripple_selected);
 
                     // contextual app bar
@@ -152,12 +153,13 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                 } else { // select multiple + delete multiple functionality
                     if (controller.onMultiSelect(itemRef)) { // if selecting
 //                        view.setBackgroundResource(R.color.colorHighlight); // visually select
-                        view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.colorHighlight));
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.colorHighlight));
                     }
                     else { // deselecting
                         // view.setBackgroundResource(R.drawable.bg_ripple_default); // visually deselect
 //                        view.setBackgroundColor(0);
-                        view.setBackgroundTintList(ContextCompat.getColorStateList(getApplicationContext(), R.color.white));
+                        view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.colorItemCell));
+
                     }
 
 
@@ -197,6 +199,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         itemListFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                controller.setupFilter();
                 new FilterFragment().show(getSupportFragmentManager(), "FILTER");
             }
         });
@@ -290,7 +293,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
      * @param updatedItem is the newly updated item from the AddEditItem fragment
      */
     @Override
-    public void onConfirmPressed(Item updatedItem) {
+    public void onConfirmPressed(Item updatedItem, ArrayList<Uri> addedPhotos) {
         exitAddEditFragment();
         addButton.show();
         controller.add(updatedItem);

@@ -50,7 +50,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
-        View view = inflater.inflate(R.layout.image_carousel_item, parent, false);
+        View view = inflater.inflate(R.layout.image_carousel_cell, parent, false);
 
 
         return new ViewHolder(view);

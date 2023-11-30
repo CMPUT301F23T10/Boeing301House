@@ -58,6 +58,7 @@
                 android:layout_marginRight="10dp"
                 android:text="SN: XXXXXXXXXXXX"
                 android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+                android:textColor="@color/colorItemViewText"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -77,6 +78,7 @@
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/itemViewSN"
+                android:textColor="@color/colorItemViewText"
 
                 >
 
@@ -90,7 +92,9 @@
                 android:layout_marginRight="10dp"
                 android:text="Make"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
-                app:layout_constraintTop_toBottomOf="@id/itemViewModel">
+                app:layout_constraintTop_toBottomOf="@id/itemViewModel"
+                android:textColor="@color/colorItemViewText"
+                >
 
             </TextView>
 
@@ -118,7 +122,8 @@
                 android:text="Desc: "
                 android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 android:textSize="14sp"
-                app:layout_constraintTop_toBottomOf="@id/itemViewDate">
+                app:layout_constraintTop_toBottomOf="@id/itemViewDate"
+                android:textColor="@color/colorItemViewText">
 
             </TextView>
 

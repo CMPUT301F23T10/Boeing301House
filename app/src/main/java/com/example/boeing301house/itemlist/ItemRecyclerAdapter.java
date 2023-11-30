@@ -56,7 +56,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         } else {
 //            holder.view.setBackgroundResource(R.drawable.bg_ripple_default);
 //            holder.view.setBackgroundColor(0);
-            holder.view.setBackgroundTintList(ContextCompat.getColorStateList(holder.view.getContext(), R.color.white));
+            holder.view.setBackgroundTintList(ContextCompat.getColorStateList(holder.view.getContext(), R.color.colorItemCell));
         }
 
         //updates all the information from given item to the item cell, to be displayed in the main listView
@@ -72,16 +72,22 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
             holder.itemModel.setText(item.getModel());
         }
 
-        if (item.getSN().length() > 10) {
-            holder.itemSN.setText(String.format(Locale.CANADA, "SN: %.7s...", item.getSN()));
-        } else {
-            holder.itemSN.setText(String.format(Locale.CANADA, "SN: %s", item.getSN()));
-        }
+//        if (item.getSN().length() > 10) {
+//            holder.itemSN.setText(String.format(Locale.CANADA, "SN: %.7s...", item.getSN()));
+//        } else {
+//            holder.itemSN.setText(String.format(Locale.CANADA, "SN: %s", item.getSN()));
+//        }
 
-        if (item.getComment().length() > 17) {
-            holder.itemComment.setText(String.format(Locale.CANADA, "%.14s...", item.getComment()));
+//        if (item.getComment().length() > 17) {
+//            holder.itemComment.setText(String.format(Locale.CANADA, "%.14s...", item.getComment()));
+//        } else {
+//            holder.itemComment.setText(item.getComment());
+//        }
+        String tags = String.join(", ", item.getTags());
+        if (tags.length() > 17) {
+            holder.itemTags.setText(String.format(Locale.CANADA, "%.14s...", tags));
         } else {
-            holder.itemComment.setText(item.getComment());
+            holder.itemTags.setText(tags);
         }
 
         if (item.getDescription().length() > 86) {
@@ -150,11 +156,12 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         //finds all the widgets in item cell
         public TextView itemCost;
         public TextView itemDate;
-        public TextView itemSN;
-        public TextView itemComment;
+//        public TextView itemSN;
+//        public TextView itemComment;
         public TextView itemDesc;
         public TextView itemModel;
         public TextView itemMake;
+        public TextView itemTags;
         public View view;
 
         /**
@@ -167,8 +174,9 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
             itemCost = view.findViewById(R.id.itemCost); // 12 digits max displayed
             itemDate = view.findViewById(R.id.itemDate);
-            itemSN = view.findViewById(R.id.itemSN);
-            itemComment = view.findViewById(R.id.itemComment); // 17 max char displayed
+//            itemSN = view.findViewById(R.id.itemSN);
+//            itemComment = view.findViewById(R.id.itemComment); // 17 max char displayed
+            itemTags = view.findViewById(R.id.itemTags); // 17 max char displayed
             itemDesc = view.findViewById(R.id.itemDescription); // 86 max char displayed
             itemModel = view.findViewById(R.id.itemModel); // 16 max char displayed
             itemMake = view.findViewById(R.id.itemMake); // 25 max char displayed

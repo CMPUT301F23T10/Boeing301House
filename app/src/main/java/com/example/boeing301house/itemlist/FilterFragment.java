@@ -11,10 +11,15 @@ import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
+import com.example.boeing301house.Tags;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -24,7 +29,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
 
 /**
@@ -90,6 +97,28 @@ public class FilterFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.fragment_filter, null);
 
+        ChipGroup filterChipGroup = view.findViewById(R.id.filterChipGroup);
+        ArrayList<String> tags = Tags.getInstance().getTagsFromItemList();
+        ArrayList<String> selectedTags = new ArrayList<>();
+        Random random = new Random();
+        for (String s: tags) {
+            final Chip chip = (Chip) getLayoutInflater().inflate(R.layout.chip_layout,null);
+            chip.setText(s);
+            chip.setId(random.nextInt());
+
+            filterChipGroup.addView(chip);
+
+            chip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(v.isSelected()) {
+                        selectedTags.remove(s);
+                    } else {
+                        selectedTags.add(s);
+                    }
+                }
+            });
+        }
 
         CalendarConstraints dateConstraint = new CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now()).build();
         final TimeZone local = Calendar.getInstance().getTimeZone();
@@ -111,7 +140,6 @@ public class FilterFragment extends DialogFragment {
 
 
         TextInputLayout dateRange = view.findViewById(R.id.filterDateRange);
-
         dateRange.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,6 +181,7 @@ public class FilterFragment extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
                         listener.onFilterOKPressed(dateStart, dateEnd);
+                        listener.onFilterOKPressed(selectedTags);
                     }
                 }).create();
 

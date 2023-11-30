@@ -29,6 +29,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.bumptech.glide.Glide;
+import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
@@ -70,7 +71,6 @@ import org.checkerframework.checker.units.qual.A;
  * Observer pattern used
  */
 public class AddEditItemFragment extends Fragment {
-    private boolean isAwaiting = false;
     private static final String TAG = "ADD_EDIT_FRAG";
     private AddEditInputHelper helper;
     private AddEditController controller;
@@ -125,7 +125,7 @@ public class AddEditItemFragment extends Fragment {
     private Long newDate = null;
 
     private ArrayList<String> newTags;
-    private ArrayList<Uri> newUrls;
+//    private ArrayList<Uri> addedPhotos; // ALL photos added to firebase in current session
 
     /**
      * New SN
@@ -137,30 +137,15 @@ public class AddEditItemFragment extends Fragment {
      */
     private RecyclerView imgRecyclerView;
 
-    /**
-     * Adapter for RecyclerView
-     */
-    private AddEditImageAdapter imgAdapter;
-
-    /**
-     * ArrayList of uris
-     */
-    private ArrayList<Uri> uri;
-
     private Uri newURI;
 
     private File imgPath;
-
 
     private static final int READ_PERMISSIONS = 101;
     private static final int CAMERA_PERMISSIONS = 102;
     private static final int WRITE_PERMISSIONS = 103; // FOR API < 32
     private static final int GALLERY_REQUEST = 110;
     private static final int CAMERA_REQUEST = 111;
-
-
-    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com");
-    private StorageReference storageRef = storage.getReference();
 
     /**
      * listener for addedit interaction (sends results back to caller)
@@ -174,7 +159,7 @@ public class AddEditItemFragment extends Fragment {
      */
     public interface OnAddEditFragmentInteractionListener {
         void onCancel();
-        void onConfirmPressed(Item updatedItem);
+        void onConfirmPressed(Item updatedItem, @Nullable ArrayList<Uri> addedPhotos);
     }
 
     // https://stackoverflow.com/questions/9931993/passing-an-object-from-an-activity-to-a-fragment
@@ -250,8 +235,7 @@ public class AddEditItemFragment extends Fragment {
         binding = FragmentAddEditItemBinding.inflate(inflater, container, false); // view binding
         View view = binding.getRoot();
         helper = new AddEditInputHelper(view);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signInAnonymously();
+
 
         // creating the new file path
         imgPath = new File(requireContext().getFilesDir(), "images");
@@ -259,30 +243,14 @@ public class AddEditItemFragment extends Fragment {
             imgPath.mkdirs();
         }
 
-
-        newUrls = currentItem.getPhotos();
-        uri = new ArrayList<>(newUrls); // TODO: not showing photos
         newTags = new ArrayList<>(currentItem.getTags());
 
-        controller = new AddEditController(view, uri, newTags);
+
+        controller = new AddEditController(view, currentItem.getPhotos(), newTags, isAdd);
 
         imgRecyclerView = binding.addEditImageRecycler;
-        imgAdapter = new AddEditImageAdapter(uri, requireContext());
 
-        imgAdapter.setOnClickListener(new ImageSelectListener() {
-            @Override
-            public void onItemClicked(int position)  {
-                // updating firebase when we delete an image
-
-                updateFirebaseImages(false, (Integer) position, false);
-
-                uri.remove(position);
-                newUrls.remove(position);
-                imgAdapter.notifyDataSetChanged();
-            }
-        });
-
-        imgRecyclerView.setAdapter(imgAdapter);
+        imgRecyclerView.setAdapter(controller.getImgAdapter());
 
         if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -291,12 +259,12 @@ public class AddEditItemFragment extends Fragment {
 
 
         binding.itemAddEditMaterialToolBar.setNavigationOnClickListener(v -> {
+            controller.removeAddedPhotos();
             listener.onCancel();
         });
 
 
         binding.itemAddEditMaterialToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            // TODO: allow backing from fragment to fragment
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.itemAddEditPhotoButton) {
@@ -412,7 +380,7 @@ public class AddEditItemFragment extends Fragment {
         binding.updateItemConfirm.setOnClickListener(new View.OnClickListener() { //when clicked confirm button
             @Override
             public void onClick(View view) {
-                if (isAwaiting) {
+                if (controller.isAwaiting()) {
                     helper.makeSnackbar("WAITING FOR FIREBASE");
                     return;
                 }
@@ -440,7 +408,6 @@ public class AddEditItemFragment extends Fragment {
                         currentItem.setDate(newDate);
                         currentItem.setValue(newValue);
                         currentItem.setSN(newSN);
-                        Log.d("TAG TEST", "Size: " + newTags.size());
                         currentItem.setDescription(newDescription);
                         currentItem.setTags(newTags);
 
@@ -450,7 +417,7 @@ public class AddEditItemFragment extends Fragment {
                             throw new RuntimeException(e);
                         }
 
-                        listener.onConfirmPressed(currentItem); // transfers the new data to main
+                        listener.onConfirmPressed(currentItem, null); // transfers the new data to main
                     }
 
                 } else {
@@ -487,7 +454,7 @@ public class AddEditItemFragment extends Fragment {
                     currentItem.setSN(newSN);
                     currentItem.setDescription(newDescription);
                     currentItem.setTags(newTags);
-                    listener.onConfirmPressed(currentItem);
+                    listener.onConfirmPressed(currentItem, controller.getAddedPhotos());
 
                 }
 
@@ -556,35 +523,27 @@ public class AddEditItemFragment extends Fragment {
         if (requestCode == GALLERY_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data.getClipData() != null) {
                 int x = data.getClipData().getItemCount();
-
                 for (int i = 0; i < x; i++) {
                     newURI = data.getClipData().getItemAt(i).getUri();
-                    uri.add(data.getClipData().getItemAt(i).getUri());
-                    String imgURI = data.getClipData().getItemAt(i).getUri().toString();
-//                    Log.d("CAMERA_TEST", imgURI);
-                    // adding from gallery
-                    updateFirebaseImages(true, null, true);
+                    controller.addPhotos(newURI, true);
 
                 }
-                imgAdapter.notifyDataSetChanged();
+
             } else if (data.getData() != null) {
                 Uri imgURI = data.getData();
-                newURI = imgURI;
-//                Log.d("CAMERA_TEST", imgURI);
-                uri.add(imgURI);
-                // adding from gallery
-                updateFirebaseImages(true, null, true);
+                controller.addPhotos(imgURI, true);
 
             }
-            imgAdapter.notifyDataSetChanged();
+
         } else if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             Log.d("CAMERA_TEST", newURI.toString());
 
-            uri.add(newURI);
-            imgAdapter.notifyDataSetChanged();
+            controller.addPhotos(newURI, false);
 
-            // adding a image from camera
-            updateFirebaseImages(true, null, false);
+
+//            imgCount += 1;
+//            // adding a image from camera
+//            updateFirebaseImages(true, null, false);
 
         } else if (requestCode == ScannerActivity.SCAN_BARCODE_REQUEST && resultCode == Activity.RESULT_OK) { // TODO: CONVERT TO SCANNER INTENT
             if (data.getExtras() != null) {
@@ -690,89 +649,6 @@ public class AddEditItemFragment extends Fragment {
     }
 
     /**
-     * Updates firebase and stores the image when a image is added and deletes the image from firebase upon deleting too.
-     * @param adding Boolean to check if were adding a image
-     * @param position Integer of the position in the URI array list
-     */
-    private void updateFirebaseImages(boolean adding, Integer position, Boolean fromGallery) {
-        // adding is true and position is null means were adding
-        if (adding && position == null) {
-            isAwaiting = true;
-            Uri fileUri = newURI;
-            StorageReference ref = null;
-            // if were adding from gallery, add the time to the reference so we can distinguish between adding the same photo multiple times
-            if (fromGallery == true) {
-                ref = storageRef.child("images/" + System.currentTimeMillis() + fileUri.getLastPathSegment());
-            }
-            // else if not from gallery then its just the uri
-            else if (fromGallery == false) {
-                ref = storageRef.child("images/" + fileUri.getLastPathSegment());
-            }
-            UploadTask uploadTask = ref.putFile(fileUri);
-            Log.d("PHOTO_UPLOADED", "updateFirebaseImages: WORKED");
-            StorageReference finalRef = ref;
-            Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                @Override
-                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                    if (!task.isSuccessful()) {
-                        throw task.getException();
-                    }
-                    Log.d(TAG, "URL");
-                    return finalRef.getDownloadUrl();
-                }
-            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        Uri downloadUri = task.getResult();
-                        newUrls.add(downloadUri);
-                        controller.addPhotos(currentItem, newUrls);
-                        Log.d(TAG, "GOT URL");
-                    } else {
-                        helper.makeSnackbar("FAILED TO ADD TO FIREBASE");
-                    }
-                    isAwaiting = false;
-                }
-            });
-
-            // Register observers to listen for when the download is done or if it fails
-            uploadTask.addOnFailureListener(exception -> {
-                return;
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // message for succesful upload
-                    Log.d(TAG, "Photo added");
-                }
-            });
-
-
-        }
-        // else if were deleting an existing image
-        else if (position != null && isAdd) {
-            // getting the position
-            String result = uri.get(position).getPath();
-            int cut = result.lastIndexOf('/'); // formating the string
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-                storageRef.child("images/" + result).
-                // Delete the file
-                delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("PHOTO_DELETED", "onSuccess: DELETED");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Uh-oh, an error occurred!
-                    }
-                });
-            }
-        }
-    }
-
-    /**
      * Deletes folder directory on the phone and children too
      * @param directory
      */
@@ -804,7 +680,7 @@ public class AddEditItemFragment extends Fragment {
         GoogleSearchThread thread = new GoogleSearchThread(barcode, result -> {
             if (result != null) {
                 SearchUIRunnable searchRunnable = new SearchUIRunnable(result, title -> {
-                    if (binding != null)
+                    if (binding != null) {
                         if (title != null) {
                             snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("PROCESSED").show();
                             binding.updateDesc.getEditText().setText(title);
@@ -812,6 +688,7 @@ public class AddEditItemFragment extends Fragment {
                             snackbar.setDuration(Snackbar.LENGTH_SHORT).setText("NO INFO FOUND").show();
                             binding.updateDesc.getEditText().setText(barcode);
                         }
+                    }
                 });
 
                 if (binding != null) {

@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".addedit.AddEditItemFragment"
-    android:background="@color/white"
+    android:background="@color/colorItemAddEditBackground"
     android:clickable="true"
     android:focusable="true"
     android:id="@+id/itemAddEditContent"
@@ -60,10 +60,10 @@
                 android:id="@+id/updateMake"
                 android:hint="Make"
                 app:helperText="@string/required_field_text"
-                app:helperTextTextColor="@color/required"
+                app:helperTextTextColor="@color/colorRequired"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
-                app:boxBackgroundColor="@color/textBoxColor"
+                app:boxBackgroundColor="@color/colorTextBox"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -86,10 +86,10 @@
                 android:id="@+id/updateModel"
                 android:hint="Model"
                 app:helperText="@string/required_field_text"
-                app:helperTextTextColor="@color/required"
+                app:helperTextTextColor="@color/colorRequired"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
-                app:boxBackgroundColor="@color/textBoxColor"
+                app:boxBackgroundColor="@color/colorTextBox"
 
                 >
 
@@ -113,10 +113,10 @@
                 android:id="@+id/updateValue"
                 android:hint="Estimated Value"
                 app:helperText="@string/required_field_text"
-                app:helperTextTextColor="@color/required"
+                app:helperTextTextColor="@color/colorRequired"
                 app:errorEnabled="true"
                 style="?attr/textInputFilledStyle"
-                app:boxBackgroundColor="@color/textBoxColor"
+                app:boxBackgroundColor="@color/colorTextBox"
 
                 >
 
@@ -141,7 +141,7 @@
                 android:id="@+id/updateSN"
                 android:hint="Serial Number"
                 style="?attr/textInputFilledStyle"
-                app:boxBackgroundColor="@color/textBoxColor"
+                app:boxBackgroundColor="@color/colorTextBox"
                 android:paddingBottom="20dp"
                 >
 
@@ -165,7 +165,7 @@
                 android:id="@+id/updateDesc"
                 android:hint="Description"
                 style="?attr/textInputFilledStyle"
-                app:boxBackgroundColor="@color/textBoxColor"
+                app:boxBackgroundColor="@color/colorTextBox"
                 android:paddingBottom="20dp"
 
                 >
@@ -189,7 +189,7 @@
                 android:id="@+id/updateComment"
                 android:hint="Comment"
                 style="?attr/textInputFilledStyle"
-                app:boxBackgroundColor="@color/textBoxColor"
+                app:boxBackgroundColor="@color/colorTextBox"
                 android:paddingBottom="20dp"
                 >
 
@@ -212,9 +212,9 @@
                 android:id="@+id/updateDate"
                 android:hint="mm/dd/yyyy"
                 app:helperText="*mm/dd/yyyy"
-                app:helperTextTextColor="@color/required"
+                app:helperTextTextColor="@color/colorRequired"
                 style="?attr/textInputFilledStyle"
-                app:boxBackgroundColor="@color/textBoxColor"
+                app:boxBackgroundColor="@color/colorTextBox"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -239,9 +239,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/updateTags"
-                app:helperTextTextColor="@color/required"
+                app:helperTextTextColor="@color/colorRequired"
                 style="?attr/textInputFilledStyle"
-                app:boxBackgroundColor="@color/textBoxColor"
+                app:boxBackgroundColor="@color/colorTextBox"
                 android:hint="Add Tag"
                 >
 

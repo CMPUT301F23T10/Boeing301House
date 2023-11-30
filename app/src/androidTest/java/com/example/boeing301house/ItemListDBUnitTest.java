@@ -56,9 +56,10 @@ public class ItemListDBUnitTest {
     @Before
     public void before() {
         FirebaseApp.initializeApp(ApplicationProvider.getApplicationContext());
-//        MockDBConnection connection = new MockDBConnection();
+        MockDBConnection connection = new MockDBConnection();
+        connection.setUUID(null);
         itemListEx = new ItemList(FirebaseFirestore.getInstance().collection("TEST_ITEM_LIST_EXISTING"));
-        itemListDef = new ItemList(FirebaseFirestore.getInstance().collection("TEST_ITEM_LIST"));
+        itemListDef = new ItemList(connection);
         db = FirebaseFirestore.getInstance();
 //        itemListDef = new ItemList(db);
 
@@ -77,6 +78,7 @@ public class ItemListDBUnitTest {
                 .addDescription("asdads")
                 .addID("123")
                 .addMake("SAD")
+                .addTag("tag1")
                 .addModel("SADDSD")
                 .addValue(12)
                 .build();
@@ -88,12 +90,16 @@ public class ItemListDBUnitTest {
      * @return new item
      */
     private Item mockItem2() {
+        ArrayList<String> tags = new ArrayList<>();
+        tags.add("tag2");
+        tags.add("tag3");
         Item item = new ItemBuilder()
                 .addComment("comment 2")
                 .addDate(1231311)
                 .addDescription("desc 2")
                 .addID("124")
                 .addMake("SAD")
+                .addTag(tags)
                 .addModel("SADDSD")
                 .addValue(22)
                 .build();
@@ -102,7 +108,7 @@ public class ItemListDBUnitTest {
     }
 
     /**
-     * Test if list reads existing firestore data on first call
+     * Test if list reads existing firestore data on first call. Might not work first launch due to lag
      * @throws InterruptedException wait for async operations to finish
      */
     @Test
@@ -347,6 +353,7 @@ public class ItemListDBUnitTest {
                 itemListEx.get().get(0).getValue() < itemListEx.get().get(2).getValue()
         );
 
+
     }
 
     /**
@@ -476,6 +483,48 @@ public class ItemListDBUnitTest {
     }
 
     /**
+     * Test sorting by Tags
+     * @throws InterruptedException wait for async operations to finish
+     */
+    @Test
+    public void testSortTag() throws InterruptedException {
+        final String TAG = "TEST_SORT_TAG";
+
+        assertEquals(0, itemListDef.getRawList().size());
+        itemListDef.add(mockItem1(), null);
+        itemListDef.add(mockItem2(), null);
+
+
+        CountDownLatch latch = new CountDownLatch(1);
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+
+        Log.d(TAG, "SORTING (DESC)......");
+
+        itemListDef.sort("Tags", "DESC");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+
+        Log.d(TAG, "0: " + itemListDef.get().get(0).getTags().get(0) + "\n1: "
+        + itemListDef.get().get(1).getTags().get(0));
+
+        assertTrue(StringUtils.compare(
+                itemListDef.get().get(0).getTags().get(0),
+                itemListDef.get().get(1).getTags().get(0)) > 0);
+
+        itemListDef.sort("Tags", "ASC");
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+        assertTrue(StringUtils.compare(
+                itemListDef.get().get(0).getTags().get(0),
+                itemListDef.get().get(1).getTags().get(0)) < 0);
+
+        itemListDef.remove(1, null);
+        itemListDef.remove(0, null);
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+
+        assertEquals(0, itemListDef.getRawList().size());
+
+    }
+
+    /**
      * Test local filtering by date
      * @throws InterruptedException wait for async operations to finish
      */
@@ -550,6 +599,59 @@ public class ItemListDBUnitTest {
         itemListEx.clearFilter();
 
 
+
+    }
+
+    /**
+     * Test filtering by tags
+     * @throws InterruptedException wait for async operations to finish
+     */
+    @Test
+    public void testFilterTags() throws InterruptedException {
+        final String TAG = "TEST_FILTER_TAG";
+
+        assertEquals(0, itemListDef.getRawList().size());
+        itemListDef.add(mockItem1(), null);
+        itemListDef.add(mockItem2(), null);
+
+
+        CountDownLatch latch = new CountDownLatch(1);
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+
+        Log.d(TAG, "FILTERING (tag1)......");
+
+        ArrayList<String> tags = new ArrayList<>();
+        tags.add("tag1");
+        itemListDef.filterTag(tags);
+
+        Log.d(TAG, "FILTERED LIST SIZE: " + itemListDef.get().size());
+
+        assertEquals(2, itemListDef.getRawList().size());
+        assertEquals(1, itemListDef.get().size());
+        assertEquals(mockItem1().getItemID(), itemListDef.get().get(0).getItemID());
+
+
+        Log.d(TAG, "FILTERING (tag2)......");
+        tags.clear();
+        tags.add("tag2");
+        itemListDef.filterTag(tags);
+        assertEquals(2, itemListDef.getRawList().size());
+        assertEquals(1, itemListDef.get().size());
+        assertEquals(mockItem2().getItemID(), itemListDef.get().get(0).getItemID());
+
+        Log.d(TAG, "FILTERING (tag1, tag2)......");
+        tags.clear();
+        tags.add("tag2");
+        tags.add("tag1");
+        itemListDef.filterTag(tags);
+        assertEquals(2, itemListDef.getRawList().size());
+        assertEquals(0, itemListDef.get().size());
+
+        itemListDef.remove(1, null);
+        itemListDef.remove(0, null);
+        latch.await(TIMEOUT, TimeUnit.SECONDS);
+
+        assertEquals(0, itemListDef.getRawList().size());
 
     }
 
