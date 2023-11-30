@@ -130,7 +130,7 @@ public class AddEdit {
     }
 
     /**
-     * Delete image from firebase
+     * Delete image from firebase when add and editing a item
      * @param uris list of uris
      * @param position array position
      */
@@ -152,7 +152,7 @@ public class AddEdit {
 
 
     /**
-     * Delete image from firebase
+     * Delete image from firebase from newly added photos. Executed when backing out.
      * @param photo photo uri
      */
     public void deleteFirebaseImage(Uri photo) {
