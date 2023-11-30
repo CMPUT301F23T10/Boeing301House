@@ -27,7 +27,7 @@ public class AddEditController {
 
     /**
      * Constructor for controller
-     * @param view
+     * @param view root view
      */
     public AddEditController(View view, ArrayList<Uri> newUrl, ArrayList<String> newTags, boolean isAdd) {
         isAwaiting = false;
@@ -61,8 +61,8 @@ public class AddEditController {
 
     /**
      * Add tag
-     * @param s
-     * @param listener
+     * @param s editable (user input)
+     * @param listener success listener
      */
     public void addTag(Editable s, OnSuccessListener listener) {
         addEditModel.addTag(s, listener);
@@ -109,7 +109,7 @@ public class AddEditController {
 
     /**
      * Delete photo from firebase
-     * @param position
+     * @param position position of photo in array
      */
     public void deletePhotos(int position) {
         if (this.isAdd) {
@@ -121,6 +121,10 @@ public class AddEditController {
 
     }
 
+    /**
+     * Checks if waiting for firebase process
+     * @return isAwaiting true if waiting, false otherwise
+     */
     public boolean isAwaiting() {
         return isAwaiting;
     }

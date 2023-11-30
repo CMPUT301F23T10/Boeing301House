@@ -68,6 +68,10 @@ public class AddEdit {
         }
     }
 
+    /**
+     * Remove tag from array
+     * @param name name of tag to be removed
+     */
     public void removeTag(String name) {
         this.tags.remove(name);
     }
