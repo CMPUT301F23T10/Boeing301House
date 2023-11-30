@@ -42,6 +42,10 @@ public class GoogleCSTask extends AsyncTask<String, Void, String> {
 
     private OnSearchResultListener listener;
 
+    /**
+     * Constructor for GoogleCSTask
+     * @param listener search result listener
+     */
     public GoogleCSTask(OnSearchResultListener listener) {
         this.listener = listener;
     }

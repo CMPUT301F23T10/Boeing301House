@@ -65,6 +65,10 @@ public class Item implements Parcelable {
 
     // TODO: finish java doc
 
+    /**
+     * Constructor for parcelable
+     * @param in input
+     */
     protected Item(Parcel in) {
         make = in.readString();
         model = in.readString();
@@ -79,6 +83,9 @@ public class Item implements Parcelable {
         photos = in.createTypedArrayList(Uri.CREATOR);
     }
 
+    /**
+     * Creator method for parcelable
+     */
     public static final Creator<Item> CREATOR = new Creator<Item>() {
         @Override
         public Item createFromParcel(Parcel in) {
@@ -93,7 +100,7 @@ public class Item implements Parcelable {
 
     /**
      * Getter for {@link Item} make
-     * @return
+     * @return {@link Item}'s make
      */
     public String getMake() {
         return make;
@@ -101,7 +108,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} make
-     * @param make
+     * @param make {@link Item}'s make
      *
      */
     public void setMake(String make) {
@@ -119,7 +126,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} model
-     * @param model
+     * @param model {@link Item}'s model
      */
     public void setModel(String model) {
         this.model = model;
@@ -135,7 +142,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} value
-     * @param value
+     * @param value {@link Item}'s value
      *
      */
     public void setValue(double value) {
@@ -152,7 +159,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} description
-     * @param description
+     * @param description {@link Item}'s make
      */
     public void setDescription(String description) {
         this.description = description;
@@ -186,7 +193,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} date
-     * @param date
+     * @param date {@link Item}'s date
      */
     public void setDate(long date) {
         this.date = date;
@@ -203,7 +210,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} SN
-     * @param SN
+     * @param SN {@link Item}'s SN
      */
     public void setSN(String SN) {
         this.SN = SN;
@@ -211,7 +218,7 @@ public class Item implements Parcelable {
 
     /**
      * Getter for {@link Item} comment
-     * @return
+     * @return {@link Item}'s comment
      */
     public String getComment() {
         return comment;
@@ -219,7 +226,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} comment
-     * @param comment
+     * @param comment {@link Item}'s comment
      */
     public void setComment(String comment) {
         this.comment = comment;
@@ -251,7 +258,7 @@ public class Item implements Parcelable {
 
     /**
      * Setter for {@link Item} ID
-     * @param id
+     * @param id {@link Item}'s id
      */
     public void setItemID(String id) {
         this.id = id;
@@ -302,7 +309,7 @@ public class Item implements Parcelable {
 
     /**
      * Add tags to multiple item
-     * @param tags list of tags
+     * @param tags list of tags for {@link Item}
      */
     public void addTags(ArrayList<String> tags, boolean isMulti) {
         if (!isMulti) {

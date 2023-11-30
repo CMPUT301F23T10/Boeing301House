@@ -13,6 +13,9 @@ import com.google.android.material.chip.Chip;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Controller class for AddEdit
+ */
 public class AddEditController {
     private View view;
     private AddEditImageAdapter imgAdapter;
@@ -28,6 +31,8 @@ public class AddEditController {
     /**
      * Constructor for controller
      * @param view root view
+     * @param newUrl uri array for new urls (urls to be added to item)
+     * @param isAdd true if adding an item, false if editing an item
      */
     public AddEditController(View view, ArrayList<Uri> newUrl, ArrayList<String> newTags, boolean isAdd) {
         isAwaiting = false;
@@ -68,6 +73,11 @@ public class AddEditController {
         addEditModel.addTag(s, listener);
     }
 
+    /**
+     * TODO: FINISH
+     * Removes tag from item
+     * @param name tag name
+     */
     public void removeTag(String name) {
         addEditModel.removeTag(name);
     }
@@ -131,7 +141,7 @@ public class AddEditController {
 
     /**
      * Getter for added photos
-     * @return
+     * @return addedPhotos (photos added to firebase during this current AddEdit)
      */
     public ArrayList<Uri> getAddedPhotos() {
         return addedPhotos;

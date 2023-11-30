@@ -54,7 +54,17 @@ public class FilterFragment extends DialogFragment {
      * Listener object for when user wants to filter {@link Item}. Uses Observer pattern.
      */
     public interface OnFilterFragmentInteractionListener {
+        /**
+         * When filtering with dates
+         * @param dateStart start date
+         * @param dateEnd end date
+         */
         void onFilterOKPressed(long dateStart, long dateEnd);
+
+        /**
+         * When filtering with tags
+         * @param tags list of tags
+         */
         void onFilterOKPressed(ArrayList<String> tags);
 
     }
@@ -72,7 +82,7 @@ public class FilterFragment extends DialogFragment {
 
     /**
      * Initialization
-     * @param context
+     * @param context app context
      * @throws RuntimeException if no listener
      */
     @Override
@@ -86,11 +96,11 @@ public class FilterFragment extends DialogFragment {
     }
 
     /**
-     *
+     * Called when creating dialog
      * @param savedInstanceState The last saved instance state of the Fragment,
      * or null if this is a freshly created Fragment.
      *
-     * @return
+     * @return created dialog
      */
     @NonNull
     @Override

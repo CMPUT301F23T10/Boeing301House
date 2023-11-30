@@ -177,7 +177,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     /**
      * Capture cropped image
      * @return cropped bitmap
-     * @noinspection UnnecessaryLocalVariable
      */
     public Bitmap capture() {
         Bitmap fullBitmap = viewFinder.getBitmap();

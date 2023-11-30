@@ -37,6 +37,7 @@ public class AddEdit {
      * Constructor
      * @param urls list of urls
      * @param tags list of tags
+     * @param connection DBConnection instance
      */
     public AddEdit(ArrayList<Uri> urls, ArrayList<String> tags, DBConnection connection) {
         this.connection = connection;
@@ -76,7 +77,12 @@ public class AddEdit {
         this.tags.remove(name);
     }
 
-    // TODO: FINISH
+    /**
+     * Adds image to firebase
+     * @param listener complete listener, handle what to do after completion
+     * @param photoUri uri of photo
+     * @param isGallery true if photo from gallery, false otherwise
+     */
     public void addFirebaseImages(OnCompleteListener<Uri> listener, Uri photoUri, boolean isGallery) {
         StorageReference ref = null;
 

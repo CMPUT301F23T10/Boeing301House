@@ -32,6 +32,7 @@ public class ItemListController {
     /**
      * No arg constructor for controller
      * Called on startup, data setup
+     * @param activity parent activity (ItemListActivity)
      */
     public ItemListController(Activity activity) {
         this.activity = (ActivityBase) activity; // downcast
@@ -101,6 +102,7 @@ public class ItemListController {
     /**
      * Calculates total estimated value of all items (including those filtered out)
      * Uses listener callback to update in view
+     * @param listener listener for when operation is completed
      */
     public void calculateTotal(OnCompleteListener<Double> listener) {
         double total = itemList.getTotal();

@@ -158,7 +158,16 @@ public class AddEditItemFragment extends Fragment {
      * Listener object for Adding/Editing {@link Item}. Uses Observer pattern.
      */
     public interface OnAddEditFragmentInteractionListener {
+        /**
+         * When AddEdit action cancelled
+         */
         void onCancel();
+
+        /**
+         * When AddEdit action confirmed
+         * @param updatedItem updated {@link Item} object
+         * @param addedPhotos list of newly added photos
+         */
         void onConfirmPressed(Item updatedItem, @Nullable ArrayList<Uri> addedPhotos);
     }
 
@@ -630,6 +639,7 @@ public class AddEditItemFragment extends Fragment {
 
     /**
      * Open camera (overloaded function for use w/ scanning)
+     * @param requestCode request code for intent
      */
     public void openCamera(Integer requestCode) {
         Intent intent = new Intent();
@@ -658,6 +668,7 @@ public class AddEditItemFragment extends Fragment {
     }
     /**
      * Open custom camera for scanning
+     * @param requestCode request code for intent
      */
     public void openScanner(int requestCode) {
         Intent intent = new Intent(getActivity(), ScannerActivity.class);

@@ -38,7 +38,7 @@ public class ItemBuilder {
 
     /**
      * Builder method for declaring the id of an {@link Item}
-     * @param id
+     * @param id {@link Item}'s id
      * @return this ItemBuilder object
      */
     public ItemBuilder addID(String id) {
@@ -49,7 +49,7 @@ public class ItemBuilder {
 
     /**
      * Builder method for declaring make of an {@link Item}
-     * @param make
+     * @param make {@link Item}'s make
      * @return this ItemBuilder object
      */
     public ItemBuilder addMake(String make) {
@@ -60,7 +60,7 @@ public class ItemBuilder {
 
     /**
      * Builder method for declaring model of an {@link Item}
-     * @param model
+     * @param model {@link Item}'s model
      * @return this ItemBuilder object
      */
     public ItemBuilder addModel(String model) {
@@ -71,7 +71,7 @@ public class ItemBuilder {
 
     /**
      * Builder method for declaring serial number of an {@link Item}
-     * @param SN
+     * @param SN {@link Item}'s SN
      * @return this ItemBuilder object
      */
     public ItemBuilder addSN(String SN) {
@@ -82,7 +82,7 @@ public class ItemBuilder {
 
     /**
      * Builder method for adding a description to an {@link Item}
-     * @param desc
+     * @param desc {@link Item}'s desc
      * @return this ItemBuilder object
      */
     public ItemBuilder addDescription(String desc) {
@@ -93,7 +93,7 @@ public class ItemBuilder {
 
     /**
      * Builder method for adding comments to an {@link Item}
-     * @param comment
+     * @param comment {@link Item}'s comment
      * @return this ItemBuilder object
      */
     public ItemBuilder addComment(String comment) {

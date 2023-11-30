@@ -90,6 +90,10 @@ public class ItemList {
 
     }
 
+    /**
+     * Set listener for firebase updates
+     * @param listener
+     */
     public void setDBListener(OnCompleteListener<ArrayList<Item>> listener) {
         this.dblistener = listener;
     }
@@ -172,6 +176,7 @@ public class ItemList {
     /**
      * Remove {@link Item} object from list by reference
      * @param item item to be removed
+     * @param completeListener listener for when firebase operations are complete
      */
     public void remove(@NonNull Item item, @Nullable OnCompleteListener<Item> completeListener) {
 //        this.itemList.remove(item);
@@ -202,6 +207,7 @@ public class ItemList {
     /**
      * Remove {@link Item} object from list by position
      * @param i position of item in list
+     * @param completeListener listener for when firebase operations are complete
      */
     public void remove(int i, @Nullable OnCompleteListener<Item> completeListener) {
         Item item = this.itemList.get(i);
@@ -215,6 +221,7 @@ public class ItemList {
      * Replace {@link Item} at specified position in list of items with given {@link Item} object
      * @param i index of {@link Item} to be replaced
      * @param item {@link Item} used to replace
+     * @param completeListener listener for when firebase operations are complete
      */
     public void set(int i, Item item, @Nullable OnCompleteListener<Item> completeListener) {
         itemList.set(i, item);
@@ -224,6 +231,7 @@ public class ItemList {
     /**
      * Updates item in firestore if it has been edited
      * @param item edited item
+     * @param completeListener listener for when firebase operations are complete
      */
     public void firestoreEdit(Item item, @Nullable OnCompleteListener<Item> completeListener) {
 //        TODO: convert to WriteBatch
@@ -451,7 +459,7 @@ public class ItemList {
 
     /**
      * Filter list of items by substring (of make and desc)
-     * @param text
+     * @param text search query text
      *
      */
     public void filterSearch(String text) {
