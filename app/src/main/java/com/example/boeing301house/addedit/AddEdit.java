@@ -8,19 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.boeing301house.DBConnection;
-import com.example.boeing301house.Item;
 import com.example.boeing301house.itemlist.OnCompleteListener;
 import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Model class for AddEdit
@@ -78,7 +72,7 @@ public class AddEdit {
     }
 
     /**
-     * Adds image to firebase
+     * Adds images from camera app or gallery to firebase
      * @param listener complete listener, handle what to do after completion
      * @param photoUri uri of photo
      * @param isGallery true if photo from gallery, false otherwise
@@ -86,9 +80,12 @@ public class AddEdit {
     public void addFirebaseImages(OnCompleteListener<Uri> listener, Uri photoUri, boolean isGallery) {
         StorageReference ref = null;
 
+        // if were adding from gallery, add the current time to the name to avoid duplicates
         if (isGallery) {
             ref = storage.child("" + System.currentTimeMillis() + photoUri.getLastPathSegment());
-        } else {
+        }
+        // else its from the camera app, we can just use the uri
+        else {
             ref = storage.child("" + photoUri.getLastPathSegment());
         }
         UploadTask uploadTask = ref.putFile(photoUri);
@@ -139,7 +136,7 @@ public class AddEdit {
      */
     public void deleteFirebaseImage(ArrayList<Uri> uris, int position) {
         String result = uris.get(position).getPath();
-        int cut = result.lastIndexOf('/'); // formating the string
+        int cut = result.lastIndexOf('/'); // formatting the string
         if (cut != -1) {
             result = result.substring(cut + 1);
             storage.child(result)
@@ -160,7 +157,7 @@ public class AddEdit {
      */
     public void deleteFirebaseImage(Uri photo) {
         String result = photo.getPath();
-        int cut = result.lastIndexOf('/'); // formating the string
+        int cut = result.lastIndexOf('/'); // formatting the string
         if (cut != -1) {
             result = result.substring(cut + 1);
             storage.child(result)
