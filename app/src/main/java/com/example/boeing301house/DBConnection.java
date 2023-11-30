@@ -37,7 +37,10 @@ public class DBConnection {
     private FirebaseFirestore db;
     private StorageReference storage;
 
-    protected String firstStart;
+//    protected String firstStart;
+    /**
+     * uuid for connection/instance
+     */
     protected String uuid;
 
     private FirebaseAuth auth;
@@ -213,7 +216,7 @@ public class DBConnection {
 
     /**
      * Getter for firebase storage reference
-     * @return
+     * @return {@link StorageReference} associated with user's images
      */
     public StorageReference getStorage() {
         return storage;
@@ -221,7 +224,7 @@ public class DBConnection {
 
     /**
      * Getter for firebase storage reference path
-     * @return
+     * @return user image path
      */
     public String getPath() {
         return ("images/" + uuid);

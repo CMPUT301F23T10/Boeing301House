@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.example.boeing301house.R;
 
+/**
+ * Activity for viewing selected image
+ */
 public class FullscreenImageActivity extends AppCompatActivity {
 
     @Override

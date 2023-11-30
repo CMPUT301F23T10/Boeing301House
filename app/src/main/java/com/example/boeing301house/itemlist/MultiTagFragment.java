@@ -35,6 +35,11 @@ public class MultiTagFragment extends DialogFragment {
      * Response listener
      */
     public interface OnTagInteractionListener {
+        /**
+         * listener for adding tags to multiple items
+         * @param tags tags to be added
+         * @param success true if successful, false otherwise
+         */
         void onTagOKPressed(ArrayList<String> tags, boolean success);
     }
 

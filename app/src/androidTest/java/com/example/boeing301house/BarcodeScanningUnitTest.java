@@ -34,7 +34,7 @@ public class BarcodeScanningUnitTest {
 
     /**
      * Test scanned barcode
-     * @throws InterruptedException
+     * @throws InterruptedException for waiting for async operations to complete
      */
     @Test
     @UiThreadTest

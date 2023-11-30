@@ -541,8 +541,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
     /**
      * Handles sort behavior
-     * @param sortMethod
-     * @param sortOrder
+     * @param sortMethod method to sort by
+     * @param sortOrder order to sort by
      */
     @Override
     public void onSortOKPressed(String sortMethod, String sortOrder) {

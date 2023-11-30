@@ -67,9 +67,15 @@ public class AddEditUITest {
     private final int THREAD_TIMEOUT = 250;
     private final String CAMERA_BUTTON_SHUTTER = "com.android.camera2:id/shutter_button";
     private final String CAMERA_BUTTON_DONE = "com.android.camera2:id/done_button";
+    /**
+     * Launch activity
+     */
     @Rule
     public ActivityScenarioRule<ItemListActivity> scenario = new ActivityScenarioRule<ItemListActivity>(ItemListActivity.class);
 
+    /**
+     * Grant permissions for using camera and gallery
+     */
     @Rule
     public GrantPermissionRule photoRule = GrantPermissionRule.grant(
             Manifest.permission.READ_MEDIA_IMAGES,
@@ -77,8 +83,8 @@ public class AddEditUITest {
 
     /**
      * Test add and delete photo from add edit
-     * @throws InterruptedException
-     * @throws UiObjectNotFoundException
+     * @throws InterruptedException for waiting
+     * @throws UiObjectNotFoundException if UiObject not available
      */
     @Test
     public void testAddDeletePhoto() throws InterruptedException, UiObjectNotFoundException {
@@ -287,7 +293,12 @@ public class AddEditUITest {
 
 
 
-    // from https://github.com/material-components/material-components-android/blob/master/tests/javatests/com/google/android/material/datepicker/MaterialDatePickerTestUtils.java
+
+    /**
+     * Select day (1-31) from material day picker
+     * from <a href="https://github.com/material-components/material-components-android/blob/master/tests/javatests/com/google/android/material/datepicker/MaterialDatePickerTestUtils.java">...</a>
+     * @param day day to be selected
+     */
     public static void clickDialogVisibleDay(int day) {
         onView(
                 allOf(

@@ -24,7 +24,10 @@ public class AddEditInputHelper {
 
     View view;
 
-
+    /**
+     * Constructor for helper class
+     * @param view root view
+     */
     public AddEditInputHelper(View view) {
         this.view = view;
     }
@@ -72,7 +75,7 @@ public class AddEditInputHelper {
      * Creates a material date picker for add edit fragment
      * @param positiveListener listener for positive action
      * @param cancelListener listener for cancel action
-     * @return
+     * @return instance of material date picker object
      */
     public MaterialDatePicker<Long> getDatePicker(MaterialPickerOnPositiveButtonClickListener<Long> positiveListener, DialogInterface.OnCancelListener cancelListener) {
         // create instance of material date picker builder
@@ -97,6 +100,10 @@ public class AddEditInputHelper {
         return materialDatePicker;
     }
 
+    /**
+     * Creates snackbar with given text
+     * @param text snackbar text
+     */
     public void makeSnackbar(String text) {
         Snackbar snackbar = Snackbar.make(view.findViewById(R.id.itemAddEditContent), text, Snackbar.LENGTH_SHORT);
         snackbar.setAction("DISMISS", v -> {
