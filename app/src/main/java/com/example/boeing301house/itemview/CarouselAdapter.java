@@ -44,7 +44,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
-     * @return
+     * @return new ViewHolder object
      */
     @NonNull
     @Override
@@ -85,8 +85,19 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
         this.onItemClickListener = onItemClickListener;
     }
 
+    /**
+     * Custom ViewHolder object for carousel
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * ImageView element
+         */
         public ImageView imageView;
+
+        /**
+         * Constructor for carousel ViewHolder
+         * @param view root view
+         */
         public ViewHolder(@NonNull View view) {
             super(view);
             imageView = view.findViewById(R.id.carouselImageView);

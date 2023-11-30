@@ -30,6 +30,7 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<AddEditImageAdapte
     /**
      * Constructor
      * @param uriArrayList list of uris
+     * @param context app/activity/fragment context
      */
     public AddEditImageAdapter(ArrayList<Uri> uriArrayList, Context context) {
         this.uriArrayList = uriArrayList;
@@ -38,7 +39,7 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<AddEditImageAdapte
 
     /**
      * Set on click listener
-     * @param listener
+     * @param listener on click listener for image
      */
     public void setOnClickListener(ImageSelectListener listener) {
         this.listener = listener;
@@ -77,8 +78,15 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<AddEditImageAdapte
      * Custom ViewHolder class
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
+        /**
+         * ImageView element
+         */
         public ImageView imageView;
 
+        /**
+         * Constructor for custom ViewHolder
+         * @param itemView root view
+         */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 

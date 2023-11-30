@@ -47,6 +47,7 @@ public class GoogleSearchThread extends Thread {
 
     /**
      * Constructor for search thread, pre-execute operations
+     * @param searchTerm what to search for (barcode)
      * @param listener New {@link OnSearchResultListener} listener
      */
     public GoogleSearchThread(String searchTerm, OnSearchResultListener<Element> listener) {
