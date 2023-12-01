@@ -3,4 +3,3 @@
 Android app for Inventory management. <br>
 Uses Material3, Firestore, and MLKit. <br>
 RECOMMENDED API > 32. MIN API = 27. <br>
-CURRENTLY DAILY 100 MAX BARCODE SEARCHES
