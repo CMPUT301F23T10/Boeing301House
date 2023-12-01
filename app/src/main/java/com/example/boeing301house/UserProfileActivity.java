@@ -48,6 +48,9 @@ public class UserProfileActivity extends AppCompatActivity {
         MaterialToolbar topbar = findViewById(R.id.UserProfileTopBar);
         setSupportActionBar(topbar);
 
+        TextView uuidTextView = findViewById(R.id.userIDTextView);
+
+
         userName = findViewById(R.id.userNameTextView);
         editUsernameBtn = findViewById(R.id.editUserNameButton);
 
@@ -56,7 +59,7 @@ public class UserProfileActivity extends AppCompatActivity {
         if (pref.getString("username", null) != null) {
             userName.setText(pref.getString("username", null));
         }
-
+        uuidTextView.setText(pref.getString("UUID", "uuid"));
         editUsernameBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -49,10 +49,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/addButton"
-        android:backgroundTint="@color/colorHighlight"
 
         app:srcCompat = "@drawable/ic_add_button_24dp"
-
+        android:backgroundTint="@color/colorAddButton"
+        android:tint="@color/black"
         app:layout_anchor="@id/itemListTotalBar"
         app:layout_anchorGravity="bottom|right"
         android:contentDescription="Add item"
