@@ -118,6 +118,7 @@ public class AddEditUITest {
     }
 
     /**
+     * <b> ENSURE CAMERA APP AVAILABLE ON HOMESCREEN </b>
      * Test add and delete photo from gallery from add edit
      * @throws InterruptedException for sleep
      * @throws UiObjectNotFoundException if ui element not found

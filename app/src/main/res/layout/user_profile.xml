@@ -51,6 +51,19 @@
         </ImageButton>
 
         <TextView
+            android:id="@+id/userIDTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="uuid"
+            android:textAppearance="@style/TextAppearance.Material3.LabelMedium"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+        </TextView>
+
+        <TextView
             android:id="@+id/userNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
