@@ -345,7 +345,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
     // TODO: finish javadocs
     /**
-     *
+     * When a user presses the cancel button, this calls function to exit the fragment
      */
     @Override
     public void onCancel() {
@@ -356,7 +356,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
     // TODO: finish javadocs
     /**
-     *
+     * Removes the fragment from the transaction, returns the user to main screen
      */
     private void exitAddEditFragment() {
         Fragment fragment = getSupportFragmentManager().findFragmentByTag("LIST_TO_ADD");
@@ -440,6 +440,12 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         }
     };
 
+    /**
+     * Delete confimation dialog allows the user to confirm their deletion of an item. The
+     * user can either confirm or cancel.
+     * @param mode
+     * @return
+     */
     private boolean deleteConfirmationDialog(ActionMode mode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Confirm Delete");
@@ -502,7 +508,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             searchView.setQueryHint("Search by Description or Make");
 
 
-            //THIS IS WHERE THE SEARCHING THROUGH THE LIST IS HANDLED!!!
+            // THIS IS WHERE THE SEARCHING THROUGH THE LIST IS HANDLED!!!
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) { //when user submits search
