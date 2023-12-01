@@ -506,7 +506,8 @@ public class AddEditItemFragment extends Fragment {
         newChip.setContentDescription("chip"+name);
         newChip.setCloseIconContentDescription("close"+name); // for ui testing
         newChip.setOnCloseIconClickListener(v -> {
-            newTags.remove(name);
+//            newTags.remove(name);
+            controller.removeTag(name);
             binding.itemAddEditChipGroup.removeView(newChip);
         });
 
