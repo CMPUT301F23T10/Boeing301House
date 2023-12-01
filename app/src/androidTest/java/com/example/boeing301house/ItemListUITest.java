@@ -56,7 +56,7 @@ public class ItemListUITest {
          * Test adding and deleting tags
          *
          */
-        /*
+
         @Test
         public void testAddAndDeleteTags(){
             Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
@@ -97,7 +97,7 @@ public class ItemListUITest {
             onView(withText("TagExampleObject")).perform(longClick());
             onView(withId(R.id.itemMultiselectDelete)).perform(click());
         }
-        */
+
 
 
 
@@ -105,10 +105,9 @@ public class ItemListUITest {
      * This test is for filtering by the added tags to an item
      * This test will NOT verify adding/deleting tags, as it is tested in the testAddAndDeleteTags() Test
      */
+
     @Test
     public void testSortByTags() throws InterruptedException {
-
-        int TIMEOUT = 5;
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
         UiDevice device = UiDevice.getInstance(instrumentation);
 
@@ -188,6 +187,92 @@ public class ItemListUITest {
         onView(withText("Sample Model1")).perform(longClick());
         onView(withText("Sample Model2")).perform(longClick());
         onView(withId(R.id.itemMultiselectDelete)).perform(click());
+    }
+
+
+
+    /**
+     * This test is just to make sure filtering by tags works properally
+     * We use two objects here so we can make sure we are including and excluding the right items
+     */
+    @Test
+    public void testFilterByTags(){
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        UiDevice device = UiDevice.getInstance(instrumentation);
+
+        //this test adds two items with different tags, so we can test filtering out and in items by tags
+
+        //adds first object
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("TagExampleObject1"), ViewActions.closeSoftKeyboard());
+
+
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
+        onView(withText("OK")).perform(click());
+
+
+        //adds example test tag
+        onView(withId(R.id.tagEditText)).perform(ViewActions.typeText("BTestTag"), pressKey(KeyEvent.KEYCODE_ENTER), ViewActions.closeSoftKeyboard());
+
+        //exiting out of the add/edit screen
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+
+
+
+
+
+
+        //adds second object
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("TagExampleObject2"), ViewActions.closeSoftKeyboard());
+
+
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
+        onView(withText("OK")).perform(click());
+
+
+        //adds example test tag
+        onView(withId(R.id.tagEditText)).perform(ViewActions.typeText("ATestTag"), pressKey(KeyEvent.KEYCODE_ENTER), ViewActions.closeSoftKeyboard());
+
+        //exiting out of the add/edit screen
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+        //now, we can filter by tags
+        onView(withId(R.id.filterButton)).perform(click());
+        onView(withText("ATestTag")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
+
+        //now we make sure that the right item remains
+        onView(withId(R.id.itemList)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withText("TagExampleObject2")).check(matches(isDisplayed()));
+
+        //if we made it here, the filter works!
+        onView(isRoot()).perform(ViewActions.pressBack());
+        //post test clean up:
+
+        //we must remove the filter so we can delete both items
+        //now, we can filter by tags
+        onView(withId(R.id.resetButton)).perform(click());
+        onView(withText("CONFIRM")).perform(click());
+
+        //delete created items
+        onView(withText("Sample Model1")).perform(longClick());
+        onView(withText("Sample Model2")).perform(longClick());
+        onView(withId(R.id.itemMultiselectDelete)).perform(click());
+
     }
     
 }
