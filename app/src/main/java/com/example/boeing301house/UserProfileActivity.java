@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
@@ -21,9 +24,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Subclass of {@link AppCompatActivity}.
@@ -32,6 +38,8 @@ import java.util.Objects;
 public class UserProfileActivity extends AppCompatActivity {
     TextView userName;
     MaterialButton editUsernameBtn;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +51,8 @@ public class UserProfileActivity extends AppCompatActivity {
         userName = findViewById(R.id.userNameTextView);
         editUsernameBtn = findViewById(R.id.editUserNameButton);
 
-        SharedPreferences pref = getSharedPreferences("mypref", MODE_PRIVATE);
+        pref = getSharedPreferences("mypref", MODE_PRIVATE);
+        editor = pref.edit();
         if (pref.getString("username", null) != null) {
             userName.setText(pref.getString("username", null));
         }
@@ -90,6 +99,13 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.ab_user_profile_bar, menu);
+        pref = getSharedPreferences("mypref", MODE_PRIVATE);
+        editor = pref.edit();
+        if (Objects.equals(pref.getBoolean("light", true), false)) {
+            menu.getItem(0).setIcon(ContextCompat.getDrawable(this, R.drawable.ic_light_mode_24dp));
+        } else {
+            editor.putBoolean("light", false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -103,6 +119,19 @@ public class UserProfileActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.closeViewButton) {
             finish();
+        }
+        if (item.getItemId() == R.id.toggleThemeButton) {
+//           Log.d("USER_PROFILE", Objects.requireNonNull(pref.getString("theme", null)));
+            if (Objects.equals(pref.getBoolean("light", true), false)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_dark_mode_24dp));
+                editor.putBoolean("light", true);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                item.setIcon(ContextCompat.getDrawable(this, R.drawable.ic_light_mode_24dp));
+                editor.putBoolean("light", false);
+            }
+            editor.commit();
         }
         return super.onOptionsItemSelected(item);
     }
