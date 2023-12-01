@@ -296,21 +296,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 //        CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 //        cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
-//        DisplayMetrics displayMetrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//        Size targetResolution = new Size(viewFinder.getWidth(), displayMetrics.heightPixels);
-//        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
-//                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-////                .setTargetResolution(targetResolution
-//                .build();
-
-
-//        if (requestCode == SCAN_BARCODE_REQUEST) {
-//
-//
-//            bindBarcodeAnalyzer(imageAnalysis);
-//        }
-
 
         try {
             // unbind usecases for rebinding
@@ -328,73 +313,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     }
 
-    /**
-     * TODO: FIX
-     * Binds barcode analyzer + image analysis to camera
-     * @param imageAnalysis
-     */
-    private void bindBarcodeAnalyzer(ImageAnalysis imageAnalysis) {
-        imageAnalysis.setAnalyzer(executor, new ImageAnalysis.Analyzer() {
-            @OptIn(markerClass = ExperimentalGetImage.class)
-            @Override
-            public void analyze(@NonNull ImageProxy imageProxy) {
-                Image mediaImage = imageProxy.getImage();
-
-                if (mediaImage != null) {
-                    InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
-
-                    Bitmap bmap = imageProxy.toBitmap();
-//                    int viewHeight = bmap.getHeight();
-//                    int viewWidth = bmap.getWidth();
-
-                    BarcodeScanner barcodeScanner = BarcodeScanning.getClient();
-
-                    Task<List<Barcode>> result = barcodeScanner.process(image)
-                            .addOnSuccessListener(new OnSuccessListener<List<Barcode>>() {
-                                @Override
-                                public void onSuccess(List<Barcode> barcodes) {
-                                    for (Barcode barcode: barcodes) {
-
-                                        barcodeRect = new RectF(barcode.getBoundingBox());
-
-                                        ScanTransform transform = new ScanTransform(surfaceView, image, isFlipped);
-                                        transform.updateTransformationIfNeeded();
-                                        float x0 = transform.translateX(barcodeRect.left);
-                                        float x1 = transform.translateX(barcodeRect.right);
-                                        barcodeRect.left = (float) (min(x0, x1));
-                                        barcodeRect.right = (float) (max(x0, x1));
-                                        barcodeRect.top = (float) (transform.translateY(barcodeRect.top));
-                                        barcodeRect.bottom = (float) (transform.translateY(barcodeRect.bottom));
-
-
-
-
-
-//                                            drawRect(R.color.colorHighlight); // TODO: FIX (async, make canvas here)
-                                        Canvas canvas = holder.lockCanvas();
-                                        if (canvas != null) {
-                                            drawRect(getColor(R.color.colorScan), canvas);
-                                            holder.unlockCanvasAndPost(canvas);
-                                        }
-
-                                    }
-                                    imageProxy.close();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, "ERROR: " + e);
-                                    imageProxy.close();
-                                }
-                            });
-
-
-                }
-
-            }
-        });
-    }
     /**
      * Flip camera
      */
