@@ -84,9 +84,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ProcessCameraProvider cameraProvider;
 
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
-
-    private ObjectDetector detector; // TODO: implement
     private RectF barcodeRect = null;
 
 
@@ -108,7 +105,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     private int left;
     private int top;
 
-    private boolean needUpdateGraphicOverlayImageSourceInfo;
+
 
 
 
@@ -373,7 +370,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         }
     }
 
-    /**
+    /*
      * Callback functions for the surface Holder
      */
 
