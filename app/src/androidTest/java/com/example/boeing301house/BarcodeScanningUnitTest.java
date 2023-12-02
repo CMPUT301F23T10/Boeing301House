@@ -1,19 +1,15 @@
 package com.example.boeing301house;
 
-import android.content.Context;
 import android.util.Log;
 
 import androidx.test.annotation.UiThreadTest;
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement;
-import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.UiThreadTestRule;
 
 import com.example.boeing301house.scraping.GoogleSearchThread;
 import com.example.boeing301house.scraping.SearchUIRunnable;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -37,7 +33,6 @@ public class BarcodeScanningUnitTest {
      * @throws InterruptedException for waiting for async operations to complete
      */
     @Test
-    @UiThreadTest
     public void scanTest() throws InterruptedException {
         String barcode = "062600283542";
         GoogleSearchThread thread = new GoogleSearchThread(barcode, result -> {
