@@ -34,23 +34,9 @@ public class SortFragment extends DialogFragment {
 
     private String type;
     private String order;
-    private FragmentSortBinding binding;
     private ArrayAdapter<String> adapterItems;
 
-    private ArrayList<Item> items;
-
-    private Button ascendingButton;
-    private Button descendingButton;
-    private Button confirmButton;
-
     private SortOptions sortOptions;
-
-    /**
-     * Hashmap for converting sort order button name to the id of the button
-     */
-    private HashMap<String, Integer> orderToID;
-
-    private AutoCompleteTextView autoCompleteTextView;
 
     private OnSortFragmentInteractionListener listener;
 
@@ -106,14 +92,17 @@ public class SortFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.fragment_sort, null);
-        orderToID = new HashMap<>();
+        /**
+         * Hashmap for converting sort order button name to the id of the button
+         */
+        HashMap<String, Integer> orderToID = new HashMap<>();
         orderToID.put("ASC", R.id.Asc);
         orderToID.put("DESC", R.id.Desc);
 
         order = sortOptions.getOrder();
         type = sortOptions.getType();
 
-        autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView);
+        AutoCompleteTextView autoCompleteTextView = view.findViewById(R.id.autoCompleteTextView);
         adapterItems = new ArrayAdapter<String>(this.requireContext(), R.layout.drop_down_item, SortOptions.types);
 
         autoCompleteTextView.setAdapter(adapterItems);
@@ -127,11 +116,6 @@ public class SortFragment extends DialogFragment {
             }
         });
 
-
-
-
-        descendingButton = view.findViewById(R.id.Desc);
-        ascendingButton = view.findViewById(R.id.Asc);
 
 
         MaterialButtonToggleGroup buttonGroup = view.findViewById(R.id.sortButtonGroup);
