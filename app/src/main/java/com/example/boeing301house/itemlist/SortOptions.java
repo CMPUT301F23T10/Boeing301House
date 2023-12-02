@@ -7,7 +7,13 @@ import java.util.HashMap;
  */
 public class SortOptions {
     private static SortOptions INSTANCE;
+    /**
+     * list of possible sort options/types
+     */
     public static final String[] types = {"Date Added" , "Description ", "Date", "Value", "Make", "Tags"};
+    /**
+     * hashmap of sort option/type to position in array
+     */
     public static final HashMap<String, Integer> typeToPos = new HashMap<>();
     private String currentOrder;
     private String currentType;

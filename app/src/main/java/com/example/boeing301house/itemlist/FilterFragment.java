@@ -46,6 +46,10 @@ public class FilterFragment extends DialogFragment {
     private long dateEnd = 0;
     private ArrayList<String> tags;
     private OnFilterFragmentInteractionListener listener;
+
+    /**
+     * Empty public constructor
+     */
     public FilterFragment() {
         // Required empty public constructor
     }

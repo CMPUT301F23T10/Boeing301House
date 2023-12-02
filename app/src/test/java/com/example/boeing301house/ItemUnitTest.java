@@ -9,6 +9,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * Unit test for {@link Item} object
+ */
 public class ItemUnitTest {
     private final long date = new GregorianCalendar(2022, Calendar.NOVEMBER, 3).getTimeInMillis();
     private Item mockItem() {
@@ -23,7 +26,9 @@ public class ItemUnitTest {
         return item;
     }
 
-
+    /**
+     * Test item builder class
+     */
     @Test
     public void testItemBuilder() {
         Item builtItem = new ItemBuilder()
@@ -47,6 +52,9 @@ public class ItemUnitTest {
 
     }
 
+    /**
+     * Test {@link Item#getDateString()}
+     */
     @Test
     public void testItemDateString() {
         Item item = mockItem();
@@ -56,6 +64,9 @@ public class ItemUnitTest {
         assertEquals("09/14/2001", item.getDateString());
     }
 
+    /**
+     * Test {@link Item#getValueString()}
+     */
     @Test
     public void testItemValueString() {
         Item item = mockItem();
@@ -68,6 +79,9 @@ public class ItemUnitTest {
         assertEquals("1231421.14", item.getValueString());
     }
 
+    /**
+     * Test item selection methods
+     */
     @Test
     public void testItemSelection() {
         Item item = mockItem();
