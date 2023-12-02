@@ -370,7 +370,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         }
     }
 
-    /**
+    /*
      * Callback functions for the surface Holder
      */
 
