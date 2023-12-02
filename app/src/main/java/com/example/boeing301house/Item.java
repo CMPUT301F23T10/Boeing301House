@@ -310,6 +310,7 @@ public class Item implements Parcelable {
     /**
      * Add tags to multiple item
      * @param tags list of tags for {@link Item}
+     * @param isMulti true if multiple items (wont clear tag array)
      */
     public void addTags(ArrayList<String> tags, boolean isMulti) {
         if (!isMulti) {
@@ -322,17 +323,6 @@ public class Item implements Parcelable {
         }
     }
 
-    /**
-     * Remove tag from item
-     * @param tag tag to be removed
-     */
-    public void removeTag(String tag) {
-//        Tags tagTracker = Tags.getInstance();
-//        tagTracker.removeTag(tag, null);
-
-        tags.remove(tag);
-
-    }
 
     /**
      * Replace tags with contents of new list of tags. (Glorified resorting method if newTags referring to same list)

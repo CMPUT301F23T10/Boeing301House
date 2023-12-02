@@ -97,7 +97,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * Inflate menu items in app bar
      *
      * @param menu The options menu in which you place your items.
-     * @return
+     * @return true if menu should be displayed, false otherwise
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,7 +116,7 @@ public class UserProfileActivity extends AppCompatActivity {
      * This handles option selection in UserProfileActivity
      *
      * @param item The menu item that was selected.
-     * @return
+     * @return true if valid menu item selected, false otherwise
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

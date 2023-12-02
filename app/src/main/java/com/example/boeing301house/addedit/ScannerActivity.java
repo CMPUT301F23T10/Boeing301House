@@ -57,9 +57,12 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     private static final String TAG = "SCANNER";
 
     /**
-     * Request codes for intent
+     * Request codes for intent (SN scanning)
      */
     public static final int SCAN_SN_REQUEST = 113;
+    /**
+     * Request codes for intent (barcode scanning)
+     */
     public static final int SCAN_BARCODE_REQUEST = 112;
 
     private PreviewView viewFinder;
@@ -88,10 +91,12 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
 
     /**
-     * Result key
+     * Result key for SN scanning
      */
     public static final String RETURN_SN = "RETURN_SN";
-
+    /**
+     * Result key for barcode scanning
+     */
     public static final String RETURN_BARCODE = "RETURN_BARCODE";
 
     private int requestCode;
@@ -183,6 +188,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
     /**
      * Analyze text
+     * @param bitmap Bitmap/image of SN
      */
     public void analyzeSN(Bitmap bitmap) {
         Log.d(TAG, "START ANALYZING");
@@ -217,6 +223,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     /**
      * Analyze barcode
      * <a href="https://developers.google.com/ml-kit/vision/barcode-scanning/android">...</a>
+     * @param bitmap Bitmap/image with barcode
      */
     public void analyzeBarcode(Bitmap bitmap) {
         Log.d(TAG, "ANALYZING BARCODE");

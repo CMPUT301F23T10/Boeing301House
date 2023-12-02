@@ -58,6 +58,11 @@ public class SortFragment extends DialogFragment {
      * Response listener
      */
     public interface OnSortFragmentInteractionListener {
+        /**
+         * Called when OK pressed in SortFragment
+         * @param sortMethod sort method/type
+         * @param sortOrder sort order
+         */
         void onSortOKPressed(String sortMethod, String sortOrder);
     }
 
@@ -79,8 +84,8 @@ public class SortFragment extends DialogFragment {
     }
 
     /**
-     *
-     * @param context
+     * Called when fragment attached to context
+     * @param context app context
      */
     @Override
     public void onAttach(@NonNull Context context) {

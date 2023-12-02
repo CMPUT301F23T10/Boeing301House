@@ -154,18 +154,39 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
         //finds all the widgets in item cell
+        /**
+         * TextView showing item's cost
+         */
         public TextView itemCost;
+        /**
+         * TextView showing item's purchase date
+         */
         public TextView itemDate;
 //        public TextView itemSN;
 //        public TextView itemComment;
+        /**
+         * TextView showing item's description
+         */
         public TextView itemDesc;
+        /**
+         * TextView showing item's model
+         */
         public TextView itemModel;
+        /**
+         * TextView showing item's make
+         */
         public TextView itemMake;
+        /**
+         * TextView showing item's tags
+         */
         public TextView itemTags;
+        /**
+         * parent view
+         */
         public View view;
 
         /**
-         * Constructor
+         * Constructor for custom view holder
          * @param view cell view
          */
         public ViewHolder(@NonNull View view) {
