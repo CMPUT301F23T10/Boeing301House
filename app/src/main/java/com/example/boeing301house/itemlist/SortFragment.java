@@ -111,7 +111,7 @@ public class SortFragment extends DialogFragment {
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                 type = adapterItems.getItem(position).toString();
+                 type = adapterItems.getItem(position);
                  sortOptions.setType(type);
             }
         });
