@@ -40,7 +40,6 @@
             android:background="@drawable/roundedbutton"
             android:backgroundTint="@color/colorProfileBackground"
             android:clickable="false"
-            android:contentDescription="Add item"
             android:src="@drawable/ic_profile_button_96dp"
             app:layout_constraintBottom_toTopOf="@+id/userNameTextView"
             app:layout_constraintEnd_toEndOf="parent"
