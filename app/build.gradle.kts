@@ -54,6 +54,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("com.google.firebase:firebase-crashlytics-buildtools:2.9.9")
 
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     // CameraX core library using the camera2 implementation
     val camerax_version = "1.4.0-alpha02"

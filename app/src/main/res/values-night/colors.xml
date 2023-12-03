@@ -23,4 +23,6 @@
     <color name="colorConfirmButtonText">#FF000000</color>
     <color name="colorAddButton">#383838</color>
     <color name="colorBackground">#383838</color>
+
+    <color name="colorSplashScreen">#004939</color>
 </resources>
