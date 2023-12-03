@@ -53,9 +53,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
     private TextView subTotalText;
 
-    private Button itemListFilterButton;
-    private Button itemListSortButton;
-
     private boolean isSelectMultiple;
 
     private int pos;
@@ -72,7 +69,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     // for contextual appbar
     private ActionMode itemMultiSelectMode;
 
-    private Button resetButton;
     private AlertDialog.Builder builder;
 
     private ItemListController controller;
@@ -182,8 +178,8 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         setSupportActionBar(topbar);
 
 
-        itemListSortButton = findViewById(R.id.sortButton);
-        itemListFilterButton = findViewById(R.id.filterButton);
+        Button itemListSortButton = findViewById(R.id.sortButton);
+        Button itemListFilterButton = findViewById(R.id.filterButton);
 
 
 
@@ -247,7 +243,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             }
         });
 
-        resetButton = findViewById(R.id.resetButton);
+        Button resetButton = findViewById(R.id.resetButton);
         builder = new AlertDialog.Builder(this);
 
         resetButton.setOnClickListener(new View.OnClickListener() {

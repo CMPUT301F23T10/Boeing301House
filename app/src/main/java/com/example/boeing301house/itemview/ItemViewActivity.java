@@ -39,22 +39,7 @@ import java.util.ArrayList;
 public class ItemViewActivity extends AppCompatActivity implements AddEditItemFragment.OnAddEditFragmentInteractionListener {
     private static final String TAG = "ITEM VIEW";
     private Item selectedItem; // item user selected
-    private String SN;
-    private String model;
-    private String make;
-    private String date;
-    private String description;
-    private String comment;
-    private String estimatedValue;
 
-    private TextView tSN;
-    private TextView tModel;
-    private TextView tMake;
-    private TextView tDate;
-    private TextView tDescription;
-    private TextView tComment;
-    private TextView tEstimatedValue;
-    private RecyclerView rvImageCarousel;
     private ArrayList<Uri> initialPhotos; // for keeping track of what to delete from firebase
     private ArrayList<Uri> newPhotos; // for keeping track of what to delete from firebase
     private int pos; // position of item in list, send back during deletion
@@ -84,7 +69,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         setContentView(R.layout.activity_item_view);
 
         chipGroup = findViewById(R.id.itemViewChipGroup);
-        rvImageCarousel = findViewById(R.id.itemViewRecycler);
+        RecyclerView rvImageCarousel = findViewById(R.id.itemViewRecycler);
 
         Intent intent = getIntent();
         selectedItem = intent.getParcelableExtra("Selected Item");
@@ -136,18 +121,19 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      */
     private void updateTexts() {
         // textviews
-        tSN = findViewById(R.id.itemViewSN); // can be empty
-        tModel = findViewById(R.id.itemViewModel);
-        tMake = findViewById(R.id.itemViewMake);
-        tDate = findViewById(R.id.itemViewDate);
-        tDescription = findViewById(R.id.itemViewDesc); // can be empty
-        tComment = findViewById(R.id.itemViewComment); // can be empty
-        tEstimatedValue = findViewById(R.id.itemViewEstVal);
+        TextView tSN = findViewById(R.id.itemViewSN); // can be empty
+        TextView tModel = findViewById(R.id.itemViewModel);
+        TextView tMake = findViewById(R.id.itemViewMake);
+        TextView tDate = findViewById(R.id.itemViewDate);
+        TextView tDescription = findViewById(R.id.itemViewDesc); // can be empty
+        TextView tComment = findViewById(R.id.itemViewComment); // can be empty
+        TextView tEstimatedValue = findViewById(R.id.itemViewEstVal);
 
         // buttons
 
 
         // TODO: use spannable strings
+        String SN;
         if (StringUtils.isBlank(selectedItem.getSN())) {
             SN = "";
             tSN.setVisibility(View.GONE);
@@ -155,6 +141,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             SN = String.format("SN: %s", selectedItem.getSN());
             tSN.setVisibility(View.VISIBLE);
         }
+        String description;
         if (StringUtils.isBlank(selectedItem.getDescription())) {
             description = "";
             tDescription.setVisibility(View.GONE);
@@ -163,6 +150,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             description = String.format("Desc: %s", selectedItem.getDescription());
             tDescription.setVisibility(View.VISIBLE);
         }
+        String comment;
         if (StringUtils.isBlank(selectedItem.getComment())) {
             comment = "";
             tComment.setVisibility(View.GONE);
@@ -172,11 +160,11 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             tComment.setVisibility(View.VISIBLE);
 
         }
-        model = selectedItem.getModel();
-        make = selectedItem.getMake();
+        String model = selectedItem.getModel();
+        String make = selectedItem.getMake();
         // TODO: make "Date:" bold, rest normal
-        date = String.format("Date: %s", selectedItem.getDateString());
-        estimatedValue = String.format("EST VAL: $%s", selectedItem.getValueString());
+        String date = String.format("Date: %s", selectedItem.getDateString());
+        String estimatedValue = String.format("EST VAL: $%s", selectedItem.getValueString());
 
         // topbar.setTitle(String.format("%.5s %.8s", make, model)); // too big :(
         tSN.setText(SN);
