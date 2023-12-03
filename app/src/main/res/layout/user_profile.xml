@@ -38,7 +38,7 @@
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:background="@drawable/roundedbutton"
-            android:backgroundTint="@color/colorButton"
+            android:backgroundTint="@color/colorProfileBackground"
             android:clickable="false"
             android:contentDescription="Add item"
             android:src="@drawable/ic_profile_button_96dp"

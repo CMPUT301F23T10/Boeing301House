@@ -4,7 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="colorTitleBar">#00A293</color>
     <color name="colorBottomBar">#007563</color>
-    <color name="colorButton">#AFDED8</color>
+    <color name="colorButton">#00a293</color>
+    <color name="colorProfileBackground">#AFDED8</color>
     <color name="colorHighlight">#DFF1F0</color>
     <color name="colorScan">#DFF1F0</color>
     <color name="colorFilterButton">#7AC8BF</color>
