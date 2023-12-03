@@ -69,6 +69,10 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<AddEditImageAdapte
 
     }
 
+    /**
+     * Gets the size of the uri array list containing the images
+     * @return number of images
+     */
     @Override
     public int getItemCount() {
         return uriArrayList.size();
