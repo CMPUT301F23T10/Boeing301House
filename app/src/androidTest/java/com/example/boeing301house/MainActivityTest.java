@@ -41,8 +41,8 @@ public class MainActivityTest {
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         SharedPreferences pref = targetContext.getSharedPreferences("mypref",Context.MODE_PRIVATE);
         assertFalse(pref.getBoolean("firststart",true));
-        String userid = pref.getString("userID","");
-        assertTrue((pref.getString("userID","")!=""));
+        String userid = pref.getString("UUID","");
+        assertTrue((!pref.getString("UUID", "").equals("")));
     }
 
 }
