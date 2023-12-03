@@ -60,18 +60,18 @@ public class kevinTestFile {
     @Test
     public void filterItemResetTest(){
         onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample For Filter"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample For Filter"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(typeText("Sample For Filter"), closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(typeText("Sample For Filter"), closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(typeText("100"), closeSoftKeyboard());
         onView(withId(R.id.dateEditText)).perform(click());
         clickDialogVisibleDay(9);
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
         onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample For Reset"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample For Reset"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(typeText("Sample For Reset"), closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(typeText("Sample For Reset"), closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(typeText("100"), closeSoftKeyboard());
         onView(withId(R.id.dateEditText)).perform(click());
         clickDialogVisibleDay(2);
         onView(withText("OK")).perform(click());
