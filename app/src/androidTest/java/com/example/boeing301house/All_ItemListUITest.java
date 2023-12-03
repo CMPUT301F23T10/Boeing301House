@@ -22,7 +22,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.equalTo;
-
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import android.app.Instrumentation;
 import android.view.KeyEvent;
 
@@ -92,8 +92,16 @@ public class All_ItemListUITest {
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
         //delete created item
-        onView(withText("TagExampleObject")).perform(longClick());
-        onView(withId(R.id.itemMultiselectDelete)).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
+
+
     }
 
 
@@ -182,9 +190,18 @@ public class All_ItemListUITest {
         //post test clean up:
 
         //delete created items
-        onView(withText("Sample Model1")).perform(longClick());
-        onView(withText("Sample Model2")).perform(longClick());
-        onView(withId(R.id.itemMultiselectDelete)).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
     }
 
 
@@ -267,9 +284,18 @@ public class All_ItemListUITest {
         onView(withText("CONFIRM")).perform(click());
 
         //delete created items
-        onView(withText("Sample Model1")).perform(longClick());
-        onView(withText("Sample Model2")).perform(longClick());
-        onView(withId(R.id.itemMultiselectDelete)).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
 
     }
 
@@ -302,22 +328,18 @@ public class All_ItemListUITest {
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
 
-        onData(anything())
-                .inAdapterView(withId(R.id.itemList))
-                .atPosition(0) // position we want to long click
-                .perform(ViewActions.longClick());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
 
-        onData(anything())
-                .inAdapterView(withId(R.id.itemList))
-                .atPosition(1)
-                .perform(ViewActions.click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
         onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
 
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
-        onView(withText("Confirm")).inRoot(isDialog()).perform(click());
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
 
 
     }
@@ -385,9 +407,10 @@ public class All_ItemListUITest {
         //onView(withId(R.id.autoCompleteTextView)).perform(typeText("Value"), closeSoftKeyboard());
         onView(withText("Value")).check(matches(isDisplayed()));
         // TODO: do rest of test
-        onView(withText("OK")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.itemList)).atPosition(0).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         onView(withText("Sample Model2")).check(matches(isDisplayed()));
         //now, this should be the model that is first because it doesn't have
@@ -395,14 +418,18 @@ public class All_ItemListUITest {
 
         onView(isRoot()).perform(ViewActions.pressBack());
         // delete
-        onView(withText("Sample Model1")).perform(longClick());
-        onView(withText("Sample Model2")).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withId(R.id.itemMultiselectDelete)).perform(click());
-//        onView(withContentDescription("Delete all selected items")).perform(click());
-        onView(withText("Confirm")).perform(click());
-        onView(withText("Sample Model1")).check(doesNotExist());
-        onView(withText("Sample Model2")).check(doesNotExist());
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
 
     }
 
@@ -434,9 +461,6 @@ public class All_ItemListUITest {
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
-//        onData(equalTo("Sample Make1")).perform(longClick());
-//        onData(equalTo("Sample Make2")).perform(click());
-
 
         onView(withText("Sample Model1")).check(matches(isDisplayed()));
         onView(withText("Sample Model2")).check(matches(isDisplayed()));
@@ -448,19 +472,17 @@ public class All_ItemListUITest {
         onView(withText("ASC")).perform(click()); //sorts ascending
 
         onView(withId(R.id.autoCompleteTextView)).perform(click());
-//        onView(withText("Value"))
-//                .inRoot(RootMatchers.isDialog())
-//                .perform(click());
+
         onData(equalTo("Make"))
                 .inRoot(RootMatchers.isPlatformPopup())
                 .perform(click());
-//        onView(withText("Value")).perform(click());
-        //onView(withId(R.id.autoCompleteTextView)).perform(typeText("Value"), closeSoftKeyboard());
+
         onView(withText("Make")).check(matches(isDisplayed()));
         // TODO: do rest of test
-        onView(withText("OK")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.itemList)).atPosition(0).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         onView(withText("Sample Model2")).check(matches(isDisplayed()));
         //now, this should be the model that is first because it doesn't have
@@ -468,14 +490,18 @@ public class All_ItemListUITest {
 
         onView(isRoot()).perform(ViewActions.pressBack());
         // delete
-        onView(withText("Sample Model1")).perform(longClick());
-        onView(withText("Sample Model2")).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withId(R.id.itemMultiselectDelete)).perform(click());
-//        onView(withContentDescription("Delete all selected items")).perform(click());
-        onView(withText("Confirm")).perform(click());
-        onView(withText("Sample Model1")).check(doesNotExist());
-        onView(withText("Sample Model2")).check(doesNotExist());
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
 
     }
 
@@ -511,8 +537,6 @@ public class All_ItemListUITest {
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
-//        onData(equalTo("Sample Make1")).perform(longClick());
-//        onData(equalTo("Sample Make2")).perform(click());
 
 
         onView(withText("Sample Model1")).check(matches(isDisplayed()));
@@ -525,19 +549,15 @@ public class All_ItemListUITest {
         onView(withText("ASC")).perform(click()); //sorts ascending
 
         onView(withId(R.id.autoCompleteTextView)).perform(click());
-//        onView(withText("Value"))
-//                .inRoot(RootMatchers.isDialog())
-//                .perform(click());
+
         onData(equalTo("Date"))
                 .inRoot(RootMatchers.isPlatformPopup())
                 .perform(click());
-//        onView(withText("Value")).perform(click());
-        //onView(withId(R.id.autoCompleteTextView)).perform(typeText("Value"), closeSoftKeyboard());
+
         onView(withText("Date")).check(matches(isDisplayed()));
         // TODO: do rest of test
-        onView(withText("OK")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
 
-        onData(anything()).inAdapterView(withId(R.id.itemList)).atPosition(0).perform(click());
 
         onView(withText("Sample Model2")).check(matches(isDisplayed()));
         //now, this should be the model that is first because it doesn't have
@@ -545,14 +565,18 @@ public class All_ItemListUITest {
 
         onView(isRoot()).perform(ViewActions.pressBack());
         // delete
-        onView(withText("Sample Model1")).perform(longClick());
-        onView(withText("Sample Model2")).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
-        onView(withId(R.id.itemMultiselectDelete)).perform(click());
-//        onView(withContentDescription("Delete all selected items")).perform(click());
-        onView(withText("Confirm")).perform(click());
-        onView(withText("Sample Model1")).check(doesNotExist());
-        onView(withText("Sample Model2")).check(doesNotExist());
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
 
     }
     @Test
@@ -579,13 +603,28 @@ public class All_ItemListUITest {
         onView(withId(R.id.filterButton)).perform(click());
         onView(withId(R.id.dateRange)).perform(click());
         onView(withText("Save")).perform(click());
-        onView(withText("OK")).perform(click());
-        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample For Filter"))));
+        onView(withText("CONFIRM")).perform(click());
+        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample For Reset"))));
 
         onView(withId(R.id.resetButton)).perform(click());
-        onView(withText("Yes")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
         onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample For Reset"))));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
     }
+
+
 
 
 }

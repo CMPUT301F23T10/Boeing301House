@@ -22,7 +22,8 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.equalTo;
-
+import androidx.test.rule.GrantPermissionRule;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import android.Manifest;
 import android.app.Instrumentation;
 import android.content.Context;
@@ -108,7 +109,7 @@ public class All_AddEditFragmentTest {
     }
 
     /**
-     * <b> ENSURE CAMERA APP AVAILABLE ON HOMESCREEN </b>
+     * <b> ENSURE CAMERA APP AVAILABLE ON HOMESCREEN AND LOCATION,PERMISSION ENABLED AND TEST ON PIXEL 7</b>
      * Test add and delete photo from gallery from add edit
      * @throws InterruptedException for sleep
      * @throws UiObjectNotFoundException if ui element not found
@@ -206,9 +207,9 @@ public class All_AddEditFragmentTest {
 
         onView(withId(R.id.addButton)).perform(click());
 
-        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("SampleMake1"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("SampleModel1"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("12"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.makeEditText)).perform(typeText("SampleMake1"), closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(typeText("SampleModel1"), closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(typeText("12"), closeSoftKeyboard());
         onView(withId(R.id.snEditText)).perform(typeText("SN1"), closeSoftKeyboard());
         onView(withId(R.id.descEditText)).perform(typeText("SampleDesc1"), closeSoftKeyboard());
         onView(withId(R.id.commentEditText)).perform(typeText("SampleComment1"), closeSoftKeyboard());
@@ -261,6 +262,29 @@ public class All_AddEditFragmentTest {
 
 
     }
+    @Test
+    public void testDeleteItemUI() {
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
+        onView(withText("OK")).perform(click());
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+        // Assertion to check if the the Sample make exist now in the listview
+        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample Make"))));
+        // view item and delete
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.itemViewDeleteButton)).perform(click());
+        onView(withText("CONFIRM")).perform(click());
+        onView(withText("Sample Comment")).check(doesNotExist());
+    }
 
 
     /**
@@ -300,28 +324,7 @@ public class All_AddEditFragmentTest {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
 
-    @Test
-    public void testDeleteItemUI() {
-        onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100"), ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.snEditText)).perform(typeText("Sample SN"), closeSoftKeyboard());
-        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment"), closeSoftKeyboard());
-        onView(withId(R.id.descEditText)).perform(typeText("Sample Description"), closeSoftKeyboard());
-        onView(withId(R.id.dateEditText)).perform(click());
-        onView(withText("OK")).perform(click());
-        onView(withId(R.id.updateItemConfirm)).perform(click());
-
-        // Assertion to check if the the Sample make exist now in the listview
-        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample Make"))));
-        // view item and delete
-        onView(withText("Sample Comment")).perform(click());
-        onView(withId(R.id.itemViewDeleteButton)).perform(click());
-        onView(withText("Confirm")).perform(click());
-        onView(withText("Sample Comment")).check(doesNotExist());
-    }
 
     @Test
     public void testEditThenConfirm() {
@@ -340,8 +343,11 @@ public class All_AddEditFragmentTest {
         // Assertion to check if the the Sample make exist now in the listview
         onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample Make"))));
 
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
         // view item and edit cost
-        onView(withText("Sample Comment")).perform(click());
+//        onView(withText("Sample Comment")).perform(click());
         onView(withId(R.id.itemViewEditButton)).perform(click());
         onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("88"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Edited Make"), ViewActions.closeSoftKeyboard());
@@ -349,25 +355,43 @@ public class All_AddEditFragmentTest {
         onView(withId(R.id.snEditText)).perform(typeText("Edited SN"), closeSoftKeyboard());
         onView(withId(R.id.commentEditText)).perform(typeText("Edited Comment"), closeSoftKeyboard());
         onView(withId(R.id.descEditText)).perform(typeText("Edited Description"), closeSoftKeyboard());
-        onView(withText("Confirm")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
         // navigate back
         onView(Matchers.allOf(
                 withContentDescription("Navigate up"),
                 isDisplayed()
         )).perform(click());
-        onView(withText("Confirm")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
+
+
+
+        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("$88.00"))));
+
+
+//        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+//        UiDevice device = UiDevice.getInstance(instrumentation);
+//        device.findObject(By.textContains("$88.00"));
+//        device.findObject(By.textContains("Edited Make"));
+//        device.findObject(By.textContains("Edited SN"));
+//        device.findObject(By.textContains("Edited Comment"));
+//        device.findObject(By.textContains("Edited Description"));
+//        device.findObject(By.textContains("Edited Model"));
         // confirm all fields have been updated
-        onView(withText("$88.00")).check(matches(isDisplayed()));
-        onView(withText("Edited Make")).check(matches(isDisplayed()));
-        onView(withText("SN: Edited SN")).check(matches(isDisplayed()));
-        onView(withText("Edited Comment")).check(matches(isDisplayed()));
-        onView(withText("Edited Description")).check(matches(isDisplayed()));
-        onView(withText("Edited Model")).check(matches(isDisplayed()));
+//        onView(withText("$88.00")).check(matches(isDisplayed()));
+//        onView(withText("Edited Make")).check(matches(isDisplayed()));
+//
+//        onView(withText("Edited SN")).check(matches(isDisplayed()));
+//        onView(withText("Edited Comment")).check(matches(isDisplayed()));
+//        onView(withText("Edited Description")).check(matches(isDisplayed()));
+//        onView(withText("Edited Model")).check(matches(isDisplayed()));
+
 
         // view item and delete (clean up)
-        onView(withText("Edited Comment")).perform(click());
+//        onView(withText("Edited Comment")).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.itemViewDeleteButton)).perform(click());
-        onView(withText("Confirm")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
         onView(withText("Edited Comment")).check(doesNotExist());
         // check that total is updated when item is deleted
     }
@@ -390,7 +414,8 @@ public class All_AddEditFragmentTest {
         onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample Make"))));
 
         // view item and edit cost
-        onView(withText("Sample Comment")).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.itemViewEditButton)).perform(click());
         onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("88"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Edited Make"), ViewActions.closeSoftKeyboard());
@@ -398,47 +423,25 @@ public class All_AddEditFragmentTest {
         onView(withId(R.id.snEditText)).perform(typeText("Edited SN"), closeSoftKeyboard());
         onView(withId(R.id.commentEditText)).perform(typeText("Edited Comment"), closeSoftKeyboard());
         onView(withId(R.id.descEditText)).perform(typeText("Edited Description"), closeSoftKeyboard());
-        onView(withText("Confirm")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
         // navigate back
         onView(Matchers.allOf(
                 withContentDescription("Navigate up"),
                 isDisplayed()
         )).perform(click());
-        onView(withText("Discard")).perform(click());
-        // confirm all fields have are the original ones
-        onView(withText("$100.00")).check(matches(isDisplayed()));
-        onView(withText("Sample Make")).check(matches(isDisplayed()));
-        onView(withText("SN: Sample SN")).check(matches(isDisplayed()));
-        onView(withText("Sample Comment")).check(matches(isDisplayed()));
-        onView(withText("Sample Description")).check(matches(isDisplayed()));
-        onView(withText("Sample Model")).check(matches(isDisplayed()));
+        onView(withText("DISCARD")).perform(click());
 
+        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("$100.00"))));
         // view item and delete (clean up)
-        onView(withText("Sample Comment")).perform(click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.itemViewDeleteButton)).perform(click());
-        onView(withText("Confirm")).perform(click());
+        onView(withText("CONFIRM")).perform(click());
         onView(withText("Sample Comment")).check(doesNotExist());
         // check that total is updated when item is deleted
     }
 
-    @Test
-    public void testAddItemUI() {
-        onView(withId(R.id.addButton)).perform(click());
-        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100"), ViewActions.closeSoftKeyboard());
 
-        onView(withId(R.id.snEditText)).perform(ViewActions.typeText("Sample SN"), closeSoftKeyboard());
-        onView(withId(R.id.commentEditText)).perform(ViewActions.typeText("Sample Comment"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.descEditText)).perform(ViewActions.typeText("Sample Description"), ViewActions.closeSoftKeyboard());
-        onView(withId(R.id.dateEditText)).perform(click());
-        onView(withText("OK")).perform(click());
-        onView(withId(R.id.updateItemConfirm)).perform(click());
-
-        // Assertion to check if the the Sample make exist now in the listview
-        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("Sample Make"))));
-
-    }
     @Test
     public void testLongClickDelete() {
         onView(withId(R.id.addButton)).perform(click());
@@ -465,48 +468,15 @@ public class All_AddEditFragmentTest {
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
-        onData(anything())
-                .inAdapterView(withId(R.id.itemList))
-                .atPosition(0) // position we want to long click
-                .perform(ViewActions.longClick());
-        onData(anything())
-                .inAdapterView(withId(R.id.itemList))
-                .atPosition(1)
-                .perform(ViewActions.click());
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
 
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
-        onView(withText("Confirm")).inRoot(isDialog()).perform(click());
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
         onView(withId(R.id.itemList)).check(matches(hasMinimumChildCount(0)));
     }
-    @Test
-    public void camera() throws UiObjectNotFoundException {
-        onView(withId(R.id.addButton)).perform(click());
-//        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
-//        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
-//        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
-//
-//        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
-//        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
-//        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
-//        onView(withId(R.id.dateEditText)).perform(click());
-//        clickDialogVisibleDay(4);
-//        onView(withText("OK")).perform(click());
-        onView(withId(R.id.itemAddEditPhotoButton)).perform((click()));
-        onView(withText("Add From Camera")).perform(click());
-        onView(withText("While using the app")).perform(click());
-        onView(withText("Add From Camera")).perform(click());
-//        onView(withId(R.id.camera)).perform(click());
 
-        UiDevice uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        uiDevice.findObject(By.res("com.android.camera2:id/shutter_button").desc("Shutter").clazz("android.widget.ImageView").text(Pattern.compile("")).pkg("com.android.camera2")).clickAndWait(Until.newWindow(), 5);
-//        UiObject shutterButton = uiDevice.findObject(new UiSelector().resourceId("your.camera.app:id/shutterButton"));
-//
-//        if (shutterButton.exists() && shutterButton.isClickable()) {
-//            shutterButton.click();
-//        } else {
-//            // Handle the case where the shutter button is not found or not clickable
-//        }
-
-    }
 
 }

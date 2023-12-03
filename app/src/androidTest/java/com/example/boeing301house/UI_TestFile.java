@@ -27,6 +27,7 @@ import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import androidx.test.rule.GrantPermissionRule;
 
 import android.Manifest;
 import android.app.Instrumentation;
@@ -52,7 +53,7 @@ import androidx.test.uiautomator.UiObjectNotFoundException;
 import androidx.test.uiautomator.UiScrollable;
 import androidx.test.uiautomator.UiSelector;
 import androidx.test.uiautomator.Until;
-
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import com.example.boeing301house.itemlist.ItemList;
 import com.example.boeing301house.itemlist.ItemListActivity;
 import com.example.boeing301house.itemlist.OnCompleteListener;
