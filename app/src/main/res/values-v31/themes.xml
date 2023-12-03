@@ -1,5 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
     <style name="Base.Theme.Boeing301House" parent="Theme.Material3.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
@@ -8,10 +9,9 @@
         <item name="windowActionModeOverlay">true</item>
         <item name="actionModeCloseDrawable">@drawable/ic_close_button_24dp</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Material3.Dark.ActionBar</item>
-        <item name="android:actionModeBackground"> @color/colorTitleBar </item>
+        <item name="android:actionModeBackground">@color/colorTitleBar</item>
 
-        <item name="android:windowSplashScreenBackground"> @color/colorSplashScreen </item>
+        <item name="android:windowSplashScreenBackground">@color/colorSplashScreen</item>
 
     </style>
-    <style name="Theme.Boeing301House" parent="Base.Theme.Boeing301House" />
 </resources>

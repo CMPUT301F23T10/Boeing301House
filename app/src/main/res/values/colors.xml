@@ -25,6 +25,8 @@
     <color name="colorConfirmButtonText">#FFFF</color>
     <color name="colorAddButton">#afded8</color>
 
+    <color name="colorSplashScreen">#007563</color>
+
 
     <!--  might not use  -->
     <color name="colorBackground">#DFF1F0</color>
