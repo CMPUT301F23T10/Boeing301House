@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,28 +30,14 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.bumptech.glide.Glide;
-import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
 import com.example.boeing301house.scraping.SearchUIRunnable;
 import com.example.boeing301house.databinding.FragmentAddEditItemBinding;
-import com.google.android.gms.tasks.Continuation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.snackbar.Snackbar;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -63,7 +50,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.apache.commons.io.FileUtils;
-import org.checkerframework.checker.units.qual.A;
 
 
 /**
@@ -218,6 +204,9 @@ public class AddEditItemFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+        setEnterTransition(inflater.inflateTransition(R.transition.slide_right_animation));
+        setExitTransition(inflater.inflateTransition(R.transition.slide_right_animation));
         if (getArguments() != null) {
             currentItem = (Item) getArguments().getParcelable("item_key"); // get item from bundle
             isAdd = (boolean) getArguments().getBoolean(IS_ADD);
