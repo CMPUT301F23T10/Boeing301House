@@ -32,6 +32,7 @@ public class AddEditController {
      * Constructor for controller
      * @param view root view
      * @param newUrl uri array for new urls (urls to be added to item)
+     * @param newTags String array with tags (reference)
      * @param isAdd true if adding an item, false if editing an item
      */
     public AddEditController(View view, ArrayList<Uri> newUrl, ArrayList<String> newTags, boolean isAdd) {

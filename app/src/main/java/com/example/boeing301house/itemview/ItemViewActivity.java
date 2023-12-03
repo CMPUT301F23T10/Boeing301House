@@ -221,7 +221,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      *
      * @param menu The options menu in which you place your items.
      *
-     * @return
+     * @return true if menu should be displayed, false otherwise
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -235,7 +235,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
      * to send the data back to the ItemListActivity
      * @param item The menu item that was selected.
      *
-     * @return
+     * @return true if valid item selected, false otherwise
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -346,7 +346,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
 
     /**
      * Handle if user edits by replacing the old values to the updated values
-     * @param updatedItem
+     * @param updatedItem updated {@link Item}
      */
     @Override
     public void onConfirmPressed(Item updatedItem, ArrayList<Uri> addedPhotos) {

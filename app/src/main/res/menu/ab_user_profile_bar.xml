@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/toggleThemeButton"
+        android:title="theme"
+        app:showAsAction="always"
+        android:contentDescription="Change theme"
+        android:icon="@drawable/ic_dark_mode_24dp" android:state_selected="true">
+    </item>
+
+<!--    <item-->
+<!--        android:id="@+id/dayThemeButton"-->
+<!--        android:title="theme"-->
+<!--        app:showAsAction="always"-->
+<!--        android:contentDescription="Change theme"-->
+<!--        android:icon="@drawable/ic_light_mode_24dp" android:state_selected="false">-->
+<!--    </item>-->
 <item
     android:id="@+id/closeViewButton"
     android:title="close"
     app:showAsAction="always"
     android:contentDescription="Close view"
     android:icon="@drawable/ic_close_button_48dp">
-
 </item>
+
 
 </menu>

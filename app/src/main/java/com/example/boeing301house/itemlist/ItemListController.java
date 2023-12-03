@@ -125,6 +125,7 @@ public class ItemListController {
     /**
      * Item selection behavior
      * @param items selected item (list to simulate pass by ref)
+     * @return true if select, false otherwise
      */
     public boolean onMultiSelect(ArrayList<Item> items) {
         // TODO: finish
@@ -296,7 +297,7 @@ public class ItemListController {
     }
     /**
      * Gets Item Adapter
-     * @return
+     * @return item adapter
      */
     public ItemRecyclerAdapter getItemAdapter() {
         return itemAdapter;

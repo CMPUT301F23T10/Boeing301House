@@ -22,6 +22,8 @@
     <color name="colorIconMain">#FF000000</color>
     <color name="colorItemCell">#FFFF</color>
     <color name="colorItemListSFMenu">#00A293</color>
+    <color name="colorConfirmButtonText">#FFFF</color>
+    <color name="colorAddButton">#afded8</color>
 
 
     <!--  might not use  -->

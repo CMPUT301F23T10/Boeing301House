@@ -478,7 +478,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
      * Inflate menu items in app bar
      * @param menu The options menu in which you place your items.
      *
-     * @return
+     * @return true if menu should be shown, false otherwise
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -493,7 +493,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
      * This handles menu option selection for the main app bar in the list activity
      * @param item The menu item that was selected.
      *
-     * @return
+     * @return true if valid item selected, false otherwise
      */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

@@ -92,7 +92,7 @@ public class ItemList {
 
     /**
      * Set listener for firebase updates
-     * @param listener
+     * @param listener listener for db collection/list updates
      */
     public void setDBListener(OnCompleteListener<ArrayList<Item>> listener) {
         this.dblistener = listener;
@@ -324,7 +324,7 @@ public class ItemList {
      * Update firestore snapshot listener for list of items
      * No arg default update (for sorting)
      */
-    public void updateListener() {
+    private void updateListener() {
 //        if (listener != null) {
 //            listener.remove();
 //        }
@@ -376,14 +376,6 @@ public class ItemList {
             }
         });
         // return listener;
-    }
-
-    /**
-     * Getter for firestore snapshot listener for list of items
-     * @return listener listener object for item list
-     */
-    public ListenerRegistration getListener() {
-        return listener;
     }
 
     /**
