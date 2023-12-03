@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         final Intent intent = new Intent(MainActivity.this, ItemListActivity.class);
         // update firstart value in pref to test functionality
         if(pref.getBoolean("firststart",true)){
-            setContentView(R.layout.user_login);
+            setContentView(R.layout.user_sign_up);
             // first launch procedure below (login screen)
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean("light", true);

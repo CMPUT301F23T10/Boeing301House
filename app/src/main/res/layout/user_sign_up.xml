@@ -57,7 +57,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Login"
+                    android:text="Sign Up"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="30sp"
@@ -67,7 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="40dp"
-                    android:id="@+id/login_username"
+                    android:id="@+id/signUp_username"
                     android:background="@drawable/button_border"
                     android:drawableStart="@drawable/ic_profile_button_24dp"
                     android:drawablePadding="8dp"
@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="30dp"
-                    android:id="@+id/login_password"
+                    android:id="@+id/signUp_password"
                     android:background="@drawable/button_border"
                     android:drawableStart="@drawable/ic_lock_24dp"
                     android:drawablePadding="8dp"
@@ -89,8 +89,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="30dp"
-                    android:text="Login"
-                    android:id="@+id/login_button"
+                    android:text="Sign Up"
+                    android:id="@+id/signUp_button"
                     android:textSize="18sp"
                     app:cornerRadius = "20dp">
                 </Button>
@@ -98,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/loginRedirect"
-                    android:text="@string/not_a_user_sign_up_"
+                    android:text="Already a user? Login"
                     android:layout_gravity="center"
                     android:textColor="@color/white"
                     android:layout_marginTop="10dp"
@@ -108,19 +108,19 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:id="@+id/sign_in_button"-->
-<!--            android:text="Sign In"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            android:textSize="15dp"-->
-<!--            >-->
+        <!--        <Button-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:id="@+id/sign_in_button"-->
+        <!--            android:text="Sign In"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent"-->
+        <!--            android:textSize="15dp"-->
+        <!--            >-->
 
-<!--        </Button>-->
+        <!--        </Button>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
