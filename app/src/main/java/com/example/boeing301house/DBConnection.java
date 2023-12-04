@@ -49,6 +49,18 @@ public class DBConnection {
 
     /**
      * Connects to Firebase Firestore database
+     * @param context context of application
+     * @param isLogin login boolean
+     */
+    public DBConnection(Context context, boolean isLogin){
+        this.db = FirebaseFirestore.getInstance();
+        this.auth = FirebaseAuth.getInstance();
+        auth.signInAnonymously(); // TODO make actual sign in w/ users
+
+    }
+
+    /**
+     * Connects to Firebase Firestore database
      * @param context: context of application
      */
     public DBConnection(Context context) {
@@ -93,7 +105,21 @@ public class DBConnection {
         }
 
     }*/
-
+    /**
+     *
+     * Stores username and password in Firebase
+     * @param context: context of application.
+     * @param username: chosen username.
+     * @param password: chosen password.
+     */
+    public void storeLogin(Context context, String password, String username) {
+        CollectionReference users = db.collection("users");
+        HashMap<String, Object> userData = new HashMap<>();
+        userData.put("password", password);
+        userData.put("username", username);
+        users.document(this.uuid)
+                .set(userData);
+    }
     /**
      *
      * Stores UUID in Firebase
@@ -103,7 +129,6 @@ public class DBConnection {
         CollectionReference users = db.collection("users");
         HashMap<String, Object> userData = new HashMap<>();
         userData.put("UUID", this.uuid);
-        userData.put("password", "To be implemented");
         userData.put("Tags", new HashMap<String, Integer>());
         userData.put("Ref", "items" + uuid);
 
