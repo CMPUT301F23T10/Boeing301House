@@ -62,7 +62,16 @@ public class MultiTagFragment extends DialogFragment {
         return fragment;
     }
 
-
+    /**
+     * Called when the fragment is attached to an activity. This method ensures that the hosting
+     * activity implements the {@link OnTagInteractionListener} interface. If the activity
+     * implements the interface, the listener is initialized for communication between the fragment
+     * and the activity. If not, a {@link RuntimeException} is thrown to indicate that the hosting
+     * activity must implement the necessary interface.
+     *
+     * @param context The {@link Context} to which the fragment is attached.
+     * @throws RuntimeException if the hosting activity does not implement {@link OnTagInteractionListener}.
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -74,6 +83,14 @@ public class MultiTagFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Creates and returns a new instance of {@link Dialog}. Inflates the layout for the
+     * multi-tagging dialog and sets up the necessary UI components and event listeners.
+     *
+     * @param savedInstanceState A {@link Bundle} containing the saved state of the fragment's UI, or null
+     *                           if this is the first time it is being created.
+     * @return A new {@link Dialog} instance for the multi-tagging fragment.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

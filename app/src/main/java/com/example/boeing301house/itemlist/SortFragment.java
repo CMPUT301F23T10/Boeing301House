@@ -52,7 +52,6 @@ public class SortFragment extends DialogFragment {
         void onSortOKPressed(String sortMethod, String sortOrder);
     }
 
-
     /**
      * Required empty no arg public constructor
      */
@@ -88,6 +87,14 @@ public class SortFragment extends DialogFragment {
 
     }
 
+    /**
+     * Creates and returns a new instance of {@link Dialog}. Inflates the layout for the
+     * sorting dialog, initializes UI components, and sets up event listeners for user interactions.
+     *
+     * @param savedInstanceState A {@link Bundle} containing the saved state of the fragment's UI, or null
+     *                           if this is the first time it is being created.
+     * @return A new {@link Dialog} instance for the sorting fragment.
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {

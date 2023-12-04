@@ -115,7 +115,6 @@ public class ItemList {
         returnList.clear();
         returnList.addAll(itemList);
         return returnList;
-//        return itemList;
     }
 
     /**
@@ -127,7 +126,6 @@ public class ItemList {
         returnList.addAll(itemList);
         filter();
         return returnList;
-//        return itemList;
     }
 
     /**
@@ -246,7 +244,6 @@ public class ItemList {
         itemData.put("Tags", item.getTags());
         itemData.put("Photos", item.getPhotos());
 
-
         // Get the document reference for the item
         DocumentReference itemRef = itemsRef.document(item.getItemID());
 
@@ -325,9 +322,6 @@ public class ItemList {
      * No arg default update (for sorting)
      */
     private void updateListener() {
-//        if (listener != null) {
-//            listener.remove();
-//        }
 
         listener = itemQuery.addSnapshotListener( (snapshots, error) -> {
             if (error != null) {
@@ -365,7 +359,6 @@ public class ItemList {
                             .build();
 
                     itemList.add(item);
-
                 }
                 if (this.dblistener != null) {
                     Log.d(TAG, "dblistener");
@@ -409,10 +402,8 @@ public class ItemList {
             // TODO: finish, might be wrong
             itemQuery = itemsRef.orderBy("Tags", direction);
 
-
         } else{ //by default, sort by date added!
             itemQuery = itemsRef.orderBy(FieldPath.documentId(), direction);
-
         }
 
         this.updateListener();
@@ -523,11 +514,6 @@ public class ItemList {
             storageRef.child(path).delete()
                 .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
                 .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
-
         }
     }
-
-
-
-
 }

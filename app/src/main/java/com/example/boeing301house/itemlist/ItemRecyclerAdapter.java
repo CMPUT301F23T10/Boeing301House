@@ -101,6 +101,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
     }
 
+    /**
+     * gets the item count
+     * @return item count
+     */
     @Override
     public int getItemCount() {
         return items.size();
@@ -218,11 +222,6 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                     return longClickListener.onItemLongClick(v, getAdapterPosition());
                 }
             });
-
         }
-
-
-
     }
-
 }

@@ -165,7 +165,6 @@ public class DBConnection {
             editor.putBoolean("firststart", false); //
             editor.commit();
         }
-
     }
 
     /**
@@ -210,8 +209,6 @@ public class DBConnection {
         storage = FirebaseStorage.getInstance("gs://boeing301house.appspot.com")
                 .getReference("images")
                 .child(uuid);
-
-
     }
 
     /**
@@ -234,7 +231,6 @@ public class DBConnection {
      * @param image image to be uploaded to firebase
      */
     public void uploadImage(Uri image) {
-
         return;
     }
 

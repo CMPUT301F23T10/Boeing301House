@@ -24,6 +24,5 @@ public abstract class ActivityBase extends AppCompatActivity {
             snackbar.dismiss();
         });
         snackbar.show();
-
     }
 }
