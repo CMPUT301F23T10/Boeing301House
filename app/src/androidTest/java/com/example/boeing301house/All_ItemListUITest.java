@@ -52,8 +52,8 @@ public class All_ItemListUITest {
 
     /**
      * Test adding and deleting tags
-     *
      */
+
 
     @Test
     public void testAddAndDeleteTags(){
@@ -80,20 +80,31 @@ public class All_ItemListUITest {
         //verify that the tag is seen
         onView(withText("ATestTag")).check(matches(isDisplayed()));
 
+        //exiting out of the add/edit screen, to make sure the tag is seen in view
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+        //make sure that the tag is present in the view frag
+        onView(withId(R.id.itemList)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        //verify that the tag is on viewFrag
+        onView(withText("ATestTag")).check(matches(isDisplayed()));
+
+        //exit back to the add/edit frag
+        onView(withId(R.id.itemViewEditButton)).perform(click());
+
+        onView(withId(R.id.dateEditText)).perform(click());
+        onView(withText("OK")).perform(click());
+
         //delete the added tag (click at position: X = 300, Y = 2080)
         device.findObject(By.desc("closeATestTag")).click();
-
-        //device.click(300, 2080);    <- Deprecated, avoid if possible
-
-        //verify that the tag has been deleted
-        onView(withText("ATestTag")).check(doesNotExist());
 
         //exiting out of the add/edit screen
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
+        onView(isRoot()).perform(ViewActions.pressBack());
+
         //delete created item
-        onView(withId(R.id.itemList))
-                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+        onView(withId(R.id.itemList)).perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
         onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
 
@@ -101,16 +112,107 @@ public class All_ItemListUITest {
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
 
-
     }
 
 
+    /**
+     * This test is simply for testing multi-adds for tags
+     */
+    @Test
+    public void testMultiAddTags(){
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        UiDevice device = UiDevice.getInstance(instrumentation);
+
+        //adds first object
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("TagExampleObject1"), ViewActions.closeSoftKeyboard());
+
+
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
+        onView(withText("OK")).perform(click());
+
+
+        //exiting out of the add/edit screen
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+        //adds second object
+        onView(withId(R.id.addButton)).perform(click());
+        onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("TagExampleObject2"), ViewActions.closeSoftKeyboard());
+
+
+        onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
+
+        onView(withId(R.id.snEditText)).perform(typeText("Sample SN1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("Sample Comment1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
+        onView(withId(R.id.dateEditText)).perform(click());
+        onView(withText("OK")).perform(click());
+
+
+
+
+        //select both items to add the tags to
+        onView(withId(R.id.updateItemConfirm)).perform(click());
+
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withId(R.id.itemMultiselectTag)).perform(click());
+
+        //adds the same tag to both
+        onView(withId(R.id.multiTagEditText)).perform(typeText("SharedTag"), closeSoftKeyboard());
+        onView(withText("CONFIRM")).perform(click());
+
+        //make sure that the tag is present in the view frag
+        onView(withId(R.id.itemList)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        //verify that the tag is on viewFrag
+        onView(withText("SharedTag")).check(matches(isDisplayed()));
+
+        onView(isRoot()).perform(ViewActions.pressBack());
+
+        //now check the other item for the tag
+        //make sure that the tag is present in the view frag
+        onView(withId(R.id.itemList)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        //verify that the tag is on viewFrag
+        onView(withText("SharedTag")).check(matches(isDisplayed()));
+
+        onView(isRoot()).perform(ViewActions.pressBack());
+
+        //delete both added items
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
+
+        onView(withText("Selected 1 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+
+        onView(withText("Selected 2 Items")).check(matches(isDisplayed()));
+
+        onView(withId(R.id.itemMultiselectDelete)).perform((click()));
+        onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
+
+    }
 
 
     /**
      * This test is for filtering by the added tags to an item
      * This test will NOT verify adding/deleting tags, as it is tested in the testAddAndDeleteTags() Test
      */
+
 
     @Test
     public void testSortByTags() throws InterruptedException {
@@ -137,6 +239,7 @@ public class All_ItemListUITest {
 
         //exiting out of the add/edit screen
         onView(withId(R.id.updateItemConfirm)).perform(click());
+
 
 
 
@@ -210,6 +313,10 @@ public class All_ItemListUITest {
      * This test is just to make sure filtering by tags works properally
      * We use two objects here so we can make sure we are including and excluding the right items
      */
+
+
+
+
     @Test
     public void testFilterByTags(){
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
@@ -623,6 +730,8 @@ public class All_ItemListUITest {
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
     }
+
+
 
 
 
