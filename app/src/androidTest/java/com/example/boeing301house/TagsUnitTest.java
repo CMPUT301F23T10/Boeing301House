@@ -86,6 +86,10 @@ public class TagsUnitTest {
         return item;
     }
 
+    /**
+     * Testing getting tags
+     * @throws InterruptedException
+     */
     @Test
     public void testGetTags() throws InterruptedException {
         tags.setItemList(null);
@@ -124,6 +128,5 @@ public class TagsUnitTest {
         tags.setItemList(itemList);
         tagList = tags.getTagsFromItemList();
         Assert.assertEquals(0, tagList.size());
-
     }
 }

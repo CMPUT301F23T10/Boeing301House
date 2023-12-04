@@ -1,7 +1,6 @@
 package com.example.boeing301house;
 
 
-import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -50,14 +49,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.util.regex.Pattern;
-
 /**
  * TESTS INTENDED FOR PIXEL 7 MAKE SURE CAMERA APP IS ON THE HOME PAGE
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class All_AddEditFragmentTest {
+public class AddEditFragmentTest {
     private final int THREAD_TIMEOUT = 250;
     private final String CAMERA_BUTTON_SHUTTER = "com.android.camera2:id/shutter_button";
     private final String CAMERA_BUTTON_DONE = "com.android.camera2:id/done_button";
@@ -231,6 +228,9 @@ public class All_AddEditFragmentTest {
         onView(withText("SampleModel1")).check(doesNotExist());
     }
 
+    /**
+     * Tests deleting a item
+     */
     @Test
     public void testDeleteItemUI() {
         onView(withId(R.id.addButton)).perform(click());
@@ -288,6 +288,9 @@ public class All_AddEditFragmentTest {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
 
+    /**
+     * Tests editing a item then confirming the changes
+     */
     @Test
     public void testEditThenConfirm() {
         onView(withId(R.id.addButton)).perform(click());
@@ -339,6 +342,9 @@ public class All_AddEditFragmentTest {
         // check that total is updated when item is deleted
     }
 
+    /**
+     * Tests editing a item then discarding the change. Should return the original item.
+     */
     @Test
     public void testEditThenDiscard() {
         onView(withId(R.id.addButton)).perform(click());
@@ -385,6 +391,9 @@ public class All_AddEditFragmentTest {
     }
 
 
+    /**
+     * Tests multi select deleting of 2 items
+     */
     @Test
     public void testLongClickDelete() {
         onView(withId(R.id.addButton)).perform(click());
@@ -421,6 +430,11 @@ public class All_AddEditFragmentTest {
         onView(withId(R.id.itemList)).check(matches(hasMinimumChildCount(0)));
     }
 
+    /**
+     * Tests the large image view after adding an item and clicking the photo in the
+     * @throws InterruptedException for delay
+     * @throws UiObjectNotFoundException for camera
+     */
     @Test
     public void largeImageView() throws InterruptedException, UiObjectNotFoundException {
         onView(withText("SampleModel1")).check(doesNotExist());
@@ -472,4 +486,78 @@ public class All_AddEditFragmentTest {
         onView(withText("Sample Comment")).check(doesNotExist());
     }
 
+    /**
+     * Testing firebase by adding a item then closing/clearing the app and relaunching
+     * @throws InterruptedException for delay
+     * @throws UiObjectNotFoundException for camera
+     */
+    @Test
+    public void firebaseTest() throws InterruptedException, UiObjectNotFoundException {
+        onView(withText("SampleModel1")).check(doesNotExist());
+
+        onView(withId(R.id.addButton)).perform(click());
+
+        onView(withId(R.id.makeEditText)).perform(typeText("SampleMake1"), closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(typeText("SampleModel1"), closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(typeText("12"), closeSoftKeyboard());
+        onView(withId(R.id.snEditText)).perform(typeText("SN1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("SampleDesc1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("SampleComment1"), closeSoftKeyboard());
+        // pick date
+        onView(withId(R.id.dateEditText)).perform(click());
+        clickDialogVisibleDay(1);
+        onView(withText("OK")).perform(click());
+
+        onView(withContentDescription("image0")).check(doesNotExist());
+
+        onView(withId(R.id.itemAddEditPhotoButton)).perform((click()));
+        onView(withText("Add From Camera")).perform(click());
+        Thread.sleep(THREAD_TIMEOUT);
+
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        UiDevice device = UiDevice.getInstance(instrumentation);
+        String[] cameraButtons = {CAMERA_BUTTON_SHUTTER, CAMERA_BUTTON_DONE};
+
+        executeUiAutomatorActions(device, cameraButtons, (long) THREAD_TIMEOUT);
+
+        Thread.sleep(THREAD_TIMEOUT);
+        UiScrollable addEditView = new UiScrollable(new UiSelector().scrollable(true));
+        addEditView.scrollForward();
+        Thread.sleep(THREAD_TIMEOUT);
+        onView(withContentDescription("image0")).check(matches(isDisplayed()));
+        Thread.sleep(THREAD_TIMEOUT);
+        onView(withText("CONFIRM")).perform(click());
+
+        // assertion to check if the item is in the list view
+        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("SampleMake1"))));
+        device.pressHome(); // go home
+
+        // reopen app
+        final String pkg = "com.example.boeing301house";
+
+        Context context = InstrumentationRegistry.getInstrumentation().getContext();
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(pkg);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+
+        device.wait(Until.hasObject(By.pkg(pkg)), 5000);
+
+        // Assertion to check if the the Sample make still exist in the listview
+        onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("SampleMake1"))));
+
+        // clicking the added item
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.fullscreenImage)).check(doesNotExist());
+        onView(withContentDescription("image0")).perform(click());
+        onView(withId(R.id.fullscreenImage)).check(matches(isDisplayed()));
+
+        // deleting the item
+        onView(withId(R.id.fullscreenImage)).perform(click());
+        onView(withId(R.id.itemViewDeleteButton)).perform(click());
+        onView(withText("CONFIRM")).perform(click());
+
+        // assertion to check if the item is gone
+        onView(withText("SampleMake1")).check(doesNotExist());
+    }
 }

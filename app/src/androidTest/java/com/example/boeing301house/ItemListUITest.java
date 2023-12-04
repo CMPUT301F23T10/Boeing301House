@@ -8,7 +8,6 @@ import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.pressKey;
 import static androidx.test.espresso.action.ViewActions.typeText;
-import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
@@ -43,7 +42,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class All_ItemListUITest {
+public class ItemListUITest {
     private final int THREAD_TIMEOUT = 250;
     @Rule
     public ActivityScenarioRule<ItemListActivity> scenario = new ActivityScenarioRule<ItemListActivity>(ItemListActivity.class);
@@ -364,6 +363,9 @@ public class All_ItemListUITest {
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
     }
 
+    /**
+     * Testing multiselect of items
+     */
     @Test
     public void testMultiSelect() {
         onView(withId(R.id.addButton)).perform(click());
@@ -407,7 +409,10 @@ public class All_ItemListUITest {
 
     }
 
-
+    /**
+     * dialog visible for date
+     * @param day
+     */
     // from https://github.com/material-components/material-components-android/blob/master/tests/javatests/com/google/android/material/datepicker/MaterialDatePickerTestUtils.java
     public static void clickDialogVisibleDay(int day) {
         onView(
@@ -418,9 +423,13 @@ public class All_ItemListUITest {
                 .perform(click());
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
+
+    /**
+     * Test sorting by value
+     */
     @Test
-    public void testsortByValue() {
-        //this tests adds 2 sample objects, then sorts them by value
+    public void testSortByValue() {
+        // this tests adds 2 sample objects, then sorts them by value
         onView(withId(R.id.addButton)).perform(click());
         onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
@@ -446,28 +455,20 @@ public class All_ItemListUITest {
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
-//        onData(equalTo("Sample Make1")).perform(longClick());
-//        onData(equalTo("Sample Make2")).perform(click());
-
-
         onView(withText("Sample Model1")).check(matches(isDisplayed()));
         onView(withText("Sample Model2")).check(matches(isDisplayed()));
 
-        //this adds the first item (of the least value).
+        // this adds the first item (of the least value).
 
-        //now, we must click the sort button, and sort by ascending value (this should swap the order of these objects)
+        // now, we must click the sort button, and sort by ascending value (this should swap the order of these objects)
         onView(withId(R.id.sortButton)).perform(click());
         onView(withText("ASC")).perform(click()); //sorts ascending
 
         onView(withId(R.id.autoCompleteTextView)).perform(click());
-//        onView(withText("Value"))
-//                .inRoot(RootMatchers.isDialog())
-//                .perform(click());
+
         onData(equalTo("Value"))
                 .inRoot(RootMatchers.isPlatformPopup())
                 .perform(click());
-//        onView(withText("Value")).perform(click());
-        //onView(withId(R.id.autoCompleteTextView)).perform(typeText("Value"), closeSoftKeyboard());
         onView(withText("Value")).check(matches(isDisplayed()));
         // TODO: do rest of test
         onView(withText("CONFIRM")).perform(click());
@@ -476,7 +477,7 @@ public class All_ItemListUITest {
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         onView(withText("Sample Model2")).check(matches(isDisplayed()));
-        //now, this should be the model that is first because it doesn't have
+        // now, this should be the model that is first because it doesn't have
 
 
         onView(isRoot()).perform(ViewActions.pressBack());
@@ -495,8 +496,11 @@ public class All_ItemListUITest {
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
     }
 
+    /**
+     * Test sorting by make
+     */
     @Test
-    public void testsortByMake() {
+    public void testSortByMake() {
         //this tests adds 2 sample objects, then sorts them by value
         onView(withId(R.id.addButton)).perform(click());
         onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
@@ -567,8 +571,11 @@ public class All_ItemListUITest {
 
     }
 
+    /**
+     * Test sort by date
+     */
     @Test
-    public void testsortByDate() {
+    public void testSortByDate() {
         //this tests adds 2 sample objects, then sorts them by value
         onView(withId(R.id.addButton)).perform(click());
         onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("Sample Make1"), ViewActions.closeSoftKeyboard());
@@ -640,6 +647,9 @@ public class All_ItemListUITest {
 
     }
 
+    /**
+     * Tests filtering then resetting the filter
+     */
     @Test
     public void filterItemResetTest(){
         onView(withId(R.id.addButton)).perform(click());

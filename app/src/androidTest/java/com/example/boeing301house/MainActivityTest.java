@@ -27,6 +27,9 @@ public class MainActivityTest {
     @Rule
     public ActivityScenarioRule<MainActivity> scenario = new ActivityScenarioRule<MainActivity>(MainActivity.class);
 
+    /**
+     * Set up for test
+     */
     @BeforeClass
     public static void setup(){
         Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
@@ -35,6 +38,10 @@ public class MainActivityTest {
         editor.putBoolean("firststart", true);
         editor.commit(); // apply changes
     }
+
+    /**
+     * Testing login activity
+     */
     @Test
     public void testLoginActivity(){
         onView(withId(R.id.sign_in_button)).perform(click());
