@@ -69,5 +69,20 @@ public class ProfileTests {
         onView(withId(R.id.itemListProfileButton)).perform(click());
         onView(withId(R.id.userNameTextView)).check(matches((withText("NEW USERNAME"))));
     }
+    @Test
+    public void testDarkModeToggle() {
+        onView(withId(R.id.sign_in_button)).perform(click());
+        onView(withId(R.id.itemListProfileButton)).perform(click());
+        // Update username
+        onView(withId(R.id.toggleThemeButton)).perform(click());
+        // Check dark mode has been updated in preferences
+        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        SharedPreferences pref = targetContext.getSharedPreferences("mypref",Context.MODE_PRIVATE);
+        assertFalse(pref.getBoolean("light",true));
+        // change to light mode
+        onView(withId(R.id.toggleThemeButton)).perform(click());
+        // Check light mode updated in preferences
+        assertTrue(pref.getBoolean("light",false));
+    }
 }
 
