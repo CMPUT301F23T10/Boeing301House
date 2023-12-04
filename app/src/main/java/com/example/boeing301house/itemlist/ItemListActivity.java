@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.boeing301house.ActivityBase;
 import com.example.boeing301house.addedit.AddEditItemFragment;
 import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;

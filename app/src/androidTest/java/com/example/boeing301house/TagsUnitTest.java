@@ -3,6 +3,7 @@ package com.example.boeing301house;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.example.boeing301house.itemlist.ItemList;
+import com.example.boeing301house.itemlist.Tags;
 import com.google.firebase.FirebaseApp;
 
 import org.junit.Assert;
