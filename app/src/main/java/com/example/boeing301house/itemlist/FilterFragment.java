@@ -11,9 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.TextView;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
@@ -29,7 +27,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;

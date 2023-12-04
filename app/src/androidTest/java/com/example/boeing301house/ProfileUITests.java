@@ -2,35 +2,25 @@ package com.example.boeing301house;
 
         import static androidx.test.espresso.Espresso.onView;
         import static androidx.test.espresso.action.ViewActions.click;
-        import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-        import static androidx.test.espresso.action.ViewActions.typeText;
-        import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
+
         import static androidx.test.espresso.assertion.ViewAssertions.matches;
-        import static androidx.test.espresso.matcher.ViewMatchers.hasBackground;
-        import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
-        import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-        import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
         import static androidx.test.espresso.matcher.ViewMatchers.withId;
         import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
         import static junit.framework.TestCase.assertFalse;
         import static junit.framework.TestCase.assertTrue;
-        import static org.hamcrest.CoreMatchers.is;
 
         import android.content.Context;
         import android.content.SharedPreferences;
 
         import androidx.test.espresso.action.ViewActions;
-//import androidx.test.espresso.contrib.PickerActions;
 
         import androidx.test.ext.junit.rules.ActivityScenarioRule;
         import androidx.test.ext.junit.runners.AndroidJUnit4;
         import androidx.test.filters.LargeTest;
         import androidx.test.platform.app.InstrumentationRegistry;
 
-        import com.example.boeing301house.itemlist.ItemListActivity;
 
-        import org.hamcrest.Matchers;
         import org.junit.BeforeClass;
         import org.junit.Rule;
         import org.junit.Test;
@@ -38,7 +28,7 @@ package com.example.boeing301house;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class ProfileTests {
+public class ProfileUITests {
     @Rule
     public ActivityScenarioRule<MainActivity> scenario = new ActivityScenarioRule<MainActivity>(MainActivity.class);
     @BeforeClass
@@ -69,6 +59,9 @@ public class ProfileTests {
         onView(withId(R.id.itemListProfileButton)).perform(click());
         onView(withId(R.id.userNameTextView)).check(matches((withText("NEW USERNAME"))));
     }
+    /**
+     * Test dark mode and light mode correctly switched
+     */
     @Test
     public void testDarkModeToggle() {
         onView(withId(R.id.sign_in_button)).perform(click());

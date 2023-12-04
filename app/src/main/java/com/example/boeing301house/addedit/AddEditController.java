@@ -5,10 +5,8 @@ import android.text.Editable;
 import android.view.View;
 
 import com.example.boeing301house.DBConnection;
-import com.example.boeing301house.Item;
-import com.example.boeing301house.R;
+
 import com.example.boeing301house.itemlist.OnCompleteListener;
-import com.google.android.material.chip.Chip;
 
 import java.io.File;
 import java.util.ArrayList;

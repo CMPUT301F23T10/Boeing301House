@@ -29,7 +29,6 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-//import com.bumptech.glide.Glide;
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
 import com.example.boeing301house.scraping.GoogleSearchThread;
