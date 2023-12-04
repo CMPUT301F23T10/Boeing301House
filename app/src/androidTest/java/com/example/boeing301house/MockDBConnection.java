@@ -10,8 +10,6 @@ import java.util.UUID;
 public class MockDBConnection extends DBConnection{
     /**
      * Connects to Firebase Firestore database
-     *
-     *
      */
     public MockDBConnection() {
         super(null);

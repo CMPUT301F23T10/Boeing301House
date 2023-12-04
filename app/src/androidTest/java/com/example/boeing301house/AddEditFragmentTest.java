@@ -228,6 +228,9 @@ public class AddEditFragmentTest {
         onView(withText("SampleModel1")).check(doesNotExist());
     }
 
+    /**
+     * Tests deleting a item
+     */
     @Test
     public void testDeleteItemUI() {
         onView(withId(R.id.addButton)).perform(click());
@@ -285,6 +288,9 @@ public class AddEditFragmentTest {
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
 
+    /**
+     * Tests editing a item then confirming the changes
+     */
     @Test
     public void testEditThenConfirm() {
         onView(withId(R.id.addButton)).perform(click());
@@ -336,6 +342,9 @@ public class AddEditFragmentTest {
         // check that total is updated when item is deleted
     }
 
+    /**
+     * Tests editing a item then discarding the change. Should return the original item.
+     */
     @Test
     public void testEditThenDiscard() {
         onView(withId(R.id.addButton)).perform(click());
@@ -382,6 +391,9 @@ public class AddEditFragmentTest {
     }
 
 
+    /**
+     * Tests multi select deleting of 2 items
+     */
     @Test
     public void testLongClickDelete() {
         onView(withId(R.id.addButton)).perform(click());
@@ -418,6 +430,11 @@ public class AddEditFragmentTest {
         onView(withId(R.id.itemList)).check(matches(hasMinimumChildCount(0)));
     }
 
+    /**
+     * Tests the large image view after adding an item and clicking the photo in the
+     * @throws InterruptedException for delay
+     * @throws UiObjectNotFoundException for camera
+     */
     @Test
     public void largeImageView() throws InterruptedException, UiObjectNotFoundException {
         onView(withText("SampleModel1")).check(doesNotExist());
@@ -469,7 +486,11 @@ public class AddEditFragmentTest {
         onView(withText("Sample Comment")).check(doesNotExist());
     }
 
-
+    /**
+     * Testing firebase by adding a item then closing/clearing the app and relaunching
+     * @throws InterruptedException for delay
+     * @throws UiObjectNotFoundException for camera
+     */
     @Test
     public void firebaseTest() throws InterruptedException, UiObjectNotFoundException {
         onView(withText("SampleModel1")).check(doesNotExist());
@@ -538,6 +559,5 @@ public class AddEditFragmentTest {
 
         // assertion to check if the item is gone
         onView(withText("SampleMake1")).check(doesNotExist());
-
     }
 }
