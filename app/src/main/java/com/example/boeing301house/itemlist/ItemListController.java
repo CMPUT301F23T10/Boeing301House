@@ -2,10 +2,8 @@ package com.example.boeing301house.itemlist;
 
 import android.app.Activity;
 
-import com.example.boeing301house.ActivityBase;
 import com.example.boeing301house.DBConnection;
 import com.example.boeing301house.Item;
-import com.example.boeing301house.Tags;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 

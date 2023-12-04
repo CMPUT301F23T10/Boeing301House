@@ -15,7 +15,6 @@ import android.view.View;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
-import com.example.boeing301house.Tags;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.datepicker.CalendarConstraints;

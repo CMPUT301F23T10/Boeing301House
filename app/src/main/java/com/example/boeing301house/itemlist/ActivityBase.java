@@ -1,7 +1,8 @@
-package com.example.boeing301house;
+package com.example.boeing301house.itemlist;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.boeing301house.R;
 import com.google.android.material.snackbar.Snackbar;
 
 /**

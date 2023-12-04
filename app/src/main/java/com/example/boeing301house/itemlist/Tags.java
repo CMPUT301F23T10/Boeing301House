@@ -1,7 +1,8 @@
-package com.example.boeing301house;
+package com.example.boeing301house.itemlist;
 
 
-import com.example.boeing301house.itemlist.ItemList;
+import com.example.boeing301house.Item;
+
 import java.util.ArrayList;
 
 /**
