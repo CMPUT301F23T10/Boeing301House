@@ -25,6 +25,7 @@
             android:minHeight="?attr/actionBarSize"
             app:menu="@menu/ab_item_view_bar"
             app:navigationIcon="@drawable/ic_back_button_36dp"
+            app:navigationContentDescription="ITEM_VIEW_BACK"
             app:title="Item"
             app:titleMarginBottom="10dp"
             app:titleTextAppearance="@style/TextAppearance.Material3.DisplaySmall"
