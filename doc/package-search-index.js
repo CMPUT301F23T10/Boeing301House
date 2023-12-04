@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.boeing301house"},{"l":"com.example.boeing301house.addedit"},{"l":"com.example.boeing301house.Itemlist"},{"l":"com.example.boeing301house.Scraping"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.example.boeing301house"},{"l":"com.example.boeing301house.addedit"},{"l":"com.example.boeing301house.itemlist"},{"l":"com.example.boeing301house.itemview"},{"l":"com.example.boeing301house.scraping"}];updateSearchResults();
