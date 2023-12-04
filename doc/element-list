@@ -1,4 +1,5 @@
 com.example.boeing301house
 com.example.boeing301house.addedit
-com.example.boeing301house.Itemlist
-com.example.boeing301house.Scraping
+com.example.boeing301house.itemlist
+com.example.boeing301house.itemview
+com.example.boeing301house.scraping
