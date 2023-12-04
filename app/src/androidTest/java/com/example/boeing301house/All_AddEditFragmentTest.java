@@ -52,6 +52,9 @@ import org.junit.runner.RunWith;
 
 import java.util.regex.Pattern;
 
+/**
+ * TESTS INTENDED FOR PIXEL 7 MAKE SURE CAMERA APP IS ON THE HOME PAGE
+ */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class All_AddEditFragmentTest {
@@ -94,8 +97,6 @@ public class All_AddEditFragmentTest {
 
         executeUiAutomatorActions(device, cameraButtons, (long) THREAD_TIMEOUT);
 
-
-
         Thread.sleep(THREAD_TIMEOUT);
         UiScrollable addEditView = new UiScrollable(new UiSelector().scrollable(true));
         addEditView.scrollForward();
@@ -104,8 +105,6 @@ public class All_AddEditFragmentTest {
         Thread.sleep(THREAD_TIMEOUT);
         onView(withContentDescription("image0")).perform(click());
         onView(withContentDescription("image0")).check(doesNotExist());
-
-
     }
 
     /**
@@ -132,7 +131,6 @@ public class All_AddEditFragmentTest {
             device.pressHome();
         }
 
-
         final String pkg = "com.example.boeing301house";
 
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
@@ -141,7 +139,6 @@ public class All_AddEditFragmentTest {
         context.startActivity(intent);
 
         device.wait(Until.hasObject(By.pkg(pkg)), 2000);
-
 
         synchronized (device) {
             device.findObject(By.text("Boeing301House"));
@@ -154,18 +151,10 @@ public class All_AddEditFragmentTest {
 
             onView(withText("Add From Gallery")).perform(click());
 
-//            UiObject2 photo = device.findObject(By.descContains("jpeg"));
-//            UiObject2 photo = device.findObject(By.clazz("android.widget.ImageView").descContains("jpeg"));
-//            device.wait(Until.hasObject(By.clazz("android.widget.ImageView").descContains("jpeg")), 3000);
-
-
-//            photo.click();
-
             device.click(180, 840); // PHOTO 1
             device.wait(THREAD_TIMEOUT);
             device.click(550, 853); // PHOTO 2
             device.wait(THREAD_TIMEOUT);
-
 
             device.findObject(By.textContains("Add"))
                     .clickAndWait(Until.newWindow(), 1000);
@@ -181,17 +170,8 @@ public class All_AddEditFragmentTest {
 
             onView(withContentDescription("image0")).perform(click());
             onView(withContentDescription("image0")).check(doesNotExist());
-
         }
-
-
-
-
-
-
-
     }
-
 
     /**
      * Test add item
@@ -201,7 +181,6 @@ public class All_AddEditFragmentTest {
      */
     @Test
     public void testAdd() throws UiObjectNotFoundException, InterruptedException {
-
 
         onView(withText("SampleModel1")).check(doesNotExist());
 
@@ -220,8 +199,6 @@ public class All_AddEditFragmentTest {
 
         onView(withId(R.id.tagEditText)).perform(typeText("tag1 tag2"), closeSoftKeyboard());
 
-
-
         // add image
         onView(withContentDescription("image0")).check(doesNotExist());
 
@@ -235,21 +212,15 @@ public class All_AddEditFragmentTest {
 
         executeUiAutomatorActions(device, cameraButtons, (long) THREAD_TIMEOUT);
 
-
-
         Thread.sleep(THREAD_TIMEOUT);
         UiScrollable addEditView = new UiScrollable(new UiSelector().scrollable(true));
         addEditView.scrollForward();
         Thread.sleep(THREAD_TIMEOUT);
         onView(withContentDescription("image0")).check(matches(isDisplayed()));
 
-
-
-
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
         onView(withText("SampleModel1")).check(matches(isDisplayed()));
-
 
         onView(withId(R.id.itemList))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
@@ -258,10 +229,8 @@ public class All_AddEditFragmentTest {
 //        onData(withText("CONFIRM")).inRoot(isDialog()).perform(click());
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
         onView(withText("SampleModel1")).check(doesNotExist());
-
-
-
     }
+
     @Test
     public void testDeleteItemUI() {
         onView(withId(R.id.addButton)).perform(click());
@@ -286,7 +255,6 @@ public class All_AddEditFragmentTest {
         onView(withText("Sample Comment")).check(doesNotExist());
     }
 
-
     /**
      * Executes given ui actions
      * FROM <a href="https://medium.com/@karimelbahi/testing-capture-real-image-using-camera-with-espresso-and-ui-automator-f4420d8da143">...</a>
@@ -303,11 +271,7 @@ public class All_AddEditFragmentTest {
                 object.click();
             }
         }
-
     }
-
-
-
 
     /**
      * Select day (1-31) from material day picker
@@ -323,8 +287,6 @@ public class All_AddEditFragmentTest {
                 .perform(click());
         InstrumentationRegistry.getInstrumentation().waitForIdleSync();
     }
-
-
 
     @Test
     public void testEditThenConfirm() {
@@ -366,25 +328,6 @@ public class All_AddEditFragmentTest {
 
 
         onView(withId(R.id.itemList)).check(matches(hasDescendant(withText("$88.00"))));
-
-
-//        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
-//        UiDevice device = UiDevice.getInstance(instrumentation);
-//        device.findObject(By.textContains("$88.00"));
-//        device.findObject(By.textContains("Edited Make"));
-//        device.findObject(By.textContains("Edited SN"));
-//        device.findObject(By.textContains("Edited Comment"));
-//        device.findObject(By.textContains("Edited Description"));
-//        device.findObject(By.textContains("Edited Model"));
-        // confirm all fields have been updated
-//        onView(withText("$88.00")).check(matches(isDisplayed()));
-//        onView(withText("Edited Make")).check(matches(isDisplayed()));
-//
-//        onView(withText("Edited SN")).check(matches(isDisplayed()));
-//        onView(withText("Edited Comment")).check(matches(isDisplayed()));
-//        onView(withText("Edited Description")).check(matches(isDisplayed()));
-//        onView(withText("Edited Model")).check(matches(isDisplayed()));
-
 
         // view item and delete (clean up)
 //        onView(withText("Edited Comment")).perform(click());
@@ -478,5 +421,55 @@ public class All_AddEditFragmentTest {
         onView(withId(R.id.itemList)).check(matches(hasMinimumChildCount(0)));
     }
 
+    @Test
+    public void largeImageView() throws InterruptedException, UiObjectNotFoundException {
+        onView(withText("SampleModel1")).check(doesNotExist());
+
+        onView(withId(R.id.addButton)).perform(click());
+
+        onView(withId(R.id.makeEditText)).perform(typeText("SampleMake1"), closeSoftKeyboard());
+        onView(withId(R.id.modelEditText)).perform(typeText("SampleModel1"), closeSoftKeyboard());
+        onView(withId(R.id.valueEditText)).perform(typeText("12"), closeSoftKeyboard());
+        onView(withId(R.id.snEditText)).perform(typeText("SN1"), closeSoftKeyboard());
+        onView(withId(R.id.descEditText)).perform(typeText("SampleDesc1"), closeSoftKeyboard());
+        onView(withId(R.id.commentEditText)).perform(typeText("SampleComment1"), closeSoftKeyboard());
+        // pick date
+        onView(withId(R.id.dateEditText)).perform(click());
+        clickDialogVisibleDay(1);
+        onView(withText("OK")).perform(click());
+
+        onView(withContentDescription("image0")).check(doesNotExist());
+
+        onView(withId(R.id.itemAddEditPhotoButton)).perform((click()));
+        onView(withText("Add From Camera")).perform(click());
+        Thread.sleep(THREAD_TIMEOUT);
+
+        Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
+        UiDevice device = UiDevice.getInstance(instrumentation);
+        String[] cameraButtons = {CAMERA_BUTTON_SHUTTER, CAMERA_BUTTON_DONE};
+
+        executeUiAutomatorActions(device, cameraButtons, (long) THREAD_TIMEOUT);
+
+        Thread.sleep(THREAD_TIMEOUT);
+        UiScrollable addEditView = new UiScrollable(new UiSelector().scrollable(true));
+        addEditView.scrollForward();
+        Thread.sleep(THREAD_TIMEOUT);
+        onView(withContentDescription("image0")).check(matches(isDisplayed()));
+        Thread.sleep(THREAD_TIMEOUT);
+        onView(withText("CONFIRM")).perform(click());
+
+        // clicking the added item
+        onView(withId(R.id.itemList))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.fullscreenImage)).check(doesNotExist());
+        onView(withContentDescription("image0")).perform(click());
+        onView(withId(R.id.fullscreenImage)).check(matches(isDisplayed()));
+
+        // deleting the item
+        onView(withId(R.id.fullscreenImage)).perform(click());
+        onView(withId(R.id.itemViewDeleteButton)).perform(click());
+        onView(withText("CONFIRM")).perform(click());
+        onView(withText("Sample Comment")).check(doesNotExist());
+    }
 
 }

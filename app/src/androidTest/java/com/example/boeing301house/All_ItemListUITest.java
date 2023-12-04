@@ -48,13 +48,9 @@ public class All_ItemListUITest {
     @Rule
     public ActivityScenarioRule<ItemListActivity> scenario = new ActivityScenarioRule<ItemListActivity>(ItemListActivity.class);
 
-
-
     /**
      * Test adding and deleting tags
      */
-
-
     @Test
     public void testAddAndDeleteTags(){
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
@@ -114,7 +110,6 @@ public class All_ItemListUITest {
 
     }
 
-
     /**
      * This test is simply for testing multi-adds for tags
      */
@@ -127,7 +122,6 @@ public class All_ItemListUITest {
         onView(withId(R.id.addButton)).perform(click());
         onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("TagExampleObject1"), ViewActions.closeSoftKeyboard());
 
-
         onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model1"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
 
@@ -136,7 +130,6 @@ public class All_ItemListUITest {
         onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
         onView(withId(R.id.dateEditText)).perform(click());
         onView(withText("OK")).perform(click());
-
 
         //exiting out of the add/edit screen
         onView(withId(R.id.updateItemConfirm)).perform(click());
@@ -154,9 +147,6 @@ public class All_ItemListUITest {
         onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
         onView(withId(R.id.dateEditText)).perform(click());
         onView(withText("OK")).perform(click());
-
-
-
 
         //select both items to add the tags to
         onView(withId(R.id.updateItemConfirm)).perform(click());
@@ -204,16 +194,12 @@ public class All_ItemListUITest {
 
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
-
     }
-
 
     /**
      * This test is for filtering by the added tags to an item
      * This test will NOT verify adding/deleting tags, as it is tested in the testAddAndDeleteTags() Test
      */
-
-
     @Test
     public void testSortByTags() throws InterruptedException {
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
@@ -240,17 +226,9 @@ public class All_ItemListUITest {
         //exiting out of the add/edit screen
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
-
-
-
-
-
-
-
         //adds second object
         onView(withId(R.id.addButton)).perform(click());
         onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("TagExampleObject2"), ViewActions.closeSoftKeyboard());
-
 
         onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
@@ -261,7 +239,6 @@ public class All_ItemListUITest {
         onView(withId(R.id.dateEditText)).perform(click());
         onView(withText("OK")).perform(click());
 
-
         //adds example test tag
         onView(withId(R.id.tagEditText)).perform(ViewActions.typeText("ATestTag"), pressKey(KeyEvent.KEYCODE_ENTER), ViewActions.closeSoftKeyboard());
 
@@ -269,7 +246,6 @@ public class All_ItemListUITest {
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
         //verify that the most recent item is added to the top before it is sorted by tags
-
 
         //now, we can test sort by tag, asc and desc
         onView(withId(R.id.sortButton)).perform(click());
@@ -281,8 +257,6 @@ public class All_ItemListUITest {
                 .perform(click());
 
         onView(withText("CONFIRM")).perform(click());
-
-
 
         //this causes this error: android.support.test.espresso.PerformException: Error performing 'load adapter data' on view
         onView(withId(R.id.itemList)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
@@ -307,16 +281,10 @@ public class All_ItemListUITest {
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
     }
 
-
-
     /**
      * This test is just to make sure filtering by tags works properally
      * We use two objects here so we can make sure we are including and excluding the right items
      */
-
-
-
-
     @Test
     public void testFilterByTags(){
         Instrumentation instrumentation = InstrumentationRegistry.getInstrumentation();
@@ -338,23 +306,15 @@ public class All_ItemListUITest {
         onView(withId(R.id.dateEditText)).perform(click());
         onView(withText("OK")).perform(click());
 
-
         //adds example test tag
         onView(withId(R.id.tagEditText)).perform(ViewActions.typeText("BTestTag"), pressKey(KeyEvent.KEYCODE_ENTER), ViewActions.closeSoftKeyboard());
 
         //exiting out of the add/edit screen
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
-
-
-
-
-
-
         //adds second object
         onView(withId(R.id.addButton)).perform(click());
         onView(withId(R.id.makeEditText)).perform(ViewActions.typeText("TagExampleObject2"), ViewActions.closeSoftKeyboard());
-
 
         onView(withId(R.id.modelEditText)).perform(ViewActions.typeText("Sample Model2"), ViewActions.closeSoftKeyboard());
         onView(withId(R.id.valueEditText)).perform(ViewActions.typeText("100000"), ViewActions.closeSoftKeyboard());
@@ -364,7 +324,6 @@ public class All_ItemListUITest {
         onView(withId(R.id.descEditText)).perform(typeText("Sample Description1"), closeSoftKeyboard());
         onView(withId(R.id.dateEditText)).perform(click());
         onView(withText("OK")).perform(click());
-
 
         //adds example test tag
         onView(withId(R.id.tagEditText)).perform(ViewActions.typeText("ATestTag"), pressKey(KeyEvent.KEYCODE_ENTER), ViewActions.closeSoftKeyboard());
@@ -403,7 +362,6 @@ public class All_ItemListUITest {
 
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
-
     }
 
     @Test
@@ -434,7 +392,6 @@ public class All_ItemListUITest {
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
-
         onView(withId(R.id.itemList))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(0, longClick()));
 
@@ -447,7 +404,6 @@ public class All_ItemListUITest {
 
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
-
 
     }
 
@@ -537,7 +493,6 @@ public class All_ItemListUITest {
 
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
-
     }
 
     @Test
@@ -644,8 +599,6 @@ public class All_ItemListUITest {
         onView(withText("OK")).perform(click());
         onView(withId(R.id.updateItemConfirm)).perform(click());
 
-
-
         onView(withText("Sample Model1")).check(matches(isDisplayed()));
         onView(withText("Sample Model2")).check(matches(isDisplayed()));
 
@@ -686,6 +639,7 @@ public class All_ItemListUITest {
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
 
     }
+
     @Test
     public void filterItemResetTest(){
         onView(withId(R.id.addButton)).perform(click());
@@ -730,10 +684,4 @@ public class All_ItemListUITest {
         onView(withId(R.id.itemMultiselectDelete)).perform((click()));
         onView(withText("CONFIRM")).inRoot(isDialog()).perform(click());
     }
-
-
-
-
-
-
 }

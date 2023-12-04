@@ -61,10 +61,6 @@ public class ItemListDBUnitTest {
         itemListEx = new ItemList(FirebaseFirestore.getInstance().collection("TEST_ITEM_LIST_EXISTING"));
         itemListDef = new ItemList(connection);
         db = FirebaseFirestore.getInstance();
-//        itemListDef = new ItemList(db);
-
-
-
     }
 
     /**
@@ -122,7 +118,6 @@ public class ItemListDBUnitTest {
         latch.await(TIMEOUT, TimeUnit.SECONDS);
         assertEquals(3, itemListEx.get().size());
         assertEquals(26, itemListEx.getTotal(), 0.005);
-
     }
 
     /**
@@ -214,7 +209,6 @@ public class ItemListDBUnitTest {
                 Long.parseLong(itemListEx.get().get(0).getItemID())
                         > Long.parseLong(itemListEx.get().get(2).getItemID())
         );
-
     }
 
     /**
@@ -262,12 +256,10 @@ public class ItemListDBUnitTest {
                 itemListEx.get().get(0).getDate() > itemListEx.get().get(2).getDate()
         );
 
-
         itemListEx.sort("Date", "ASC");
         Log.d(TAG, "SORTING..... (DATE ASC)");
         latch.await(TIMEOUT, TimeUnit.SECONDS);
         assertEquals(3, itemListEx.get().size());
-
 
         Log.d(TAG, "ITEM 1: " + itemListEx.get().get(0).getItemID());
         Log.d(TAG, "ITEM 2: " + itemListEx.get().get(1).getItemID());
@@ -283,7 +275,6 @@ public class ItemListDBUnitTest {
         assertTrue(
                 itemListEx.get().get(0).getDate() < itemListEx.get().get(2).getDate()
         );
-
     }
 
     /**
@@ -331,7 +322,6 @@ public class ItemListDBUnitTest {
                 itemListEx.get().get(0).getValue() > itemListEx.get().get(2).getValue()
         );
 
-
         itemListEx.sort("Value", "ASC");
         Log.d(TAG, "SORTING..... (VALUE ASC)");
         latch.await(TIMEOUT, TimeUnit.SECONDS);
@@ -352,8 +342,6 @@ public class ItemListDBUnitTest {
         assertTrue(
                 itemListEx.get().get(0).getValue() < itemListEx.get().get(2).getValue()
         );
-
-
     }
 
     /**
@@ -494,7 +482,6 @@ public class ItemListDBUnitTest {
         itemListDef.add(mockItem1(), null);
         itemListDef.add(mockItem2(), null);
 
-
         CountDownLatch latch = new CountDownLatch(1);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
 
@@ -597,9 +584,6 @@ public class ItemListDBUnitTest {
         assertEquals(26, itemListEx.getTotal(), 0.005);
 
         itemListEx.clearFilter();
-
-
-
     }
 
     /**
@@ -652,7 +636,6 @@ public class ItemListDBUnitTest {
         latch.await(TIMEOUT, TimeUnit.SECONDS);
 
         assertEquals(0, itemListDef.getRawList().size());
-
     }
 
     /**
@@ -699,5 +682,4 @@ public class ItemListDBUnitTest {
         assertEquals(0, testList.size(), 0.05);
         assertEquals(0, itemListDef.getTotal(), 0.05);
     }
-
 }
