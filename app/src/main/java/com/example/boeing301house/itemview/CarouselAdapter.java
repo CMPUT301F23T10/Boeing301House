@@ -66,6 +66,8 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
         Glide.with(context)
                 .load(urlArray.get(position))
                 .into(holder.imageView);
+
+        holder.imageView.setContentDescription("image" + position); // for testing
     }
 
     /**
