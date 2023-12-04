@@ -49,7 +49,7 @@ public class UserProfileActivity extends AppCompatActivity {
         setSupportActionBar(topbar);
 
         TextView uuidTextView = findViewById(R.id.userIDTextView);
-        
+
         userName = findViewById(R.id.userNameTextView);
         editUsernameBtn = findViewById(R.id.editUserNameButton);
 

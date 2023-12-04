@@ -49,10 +49,10 @@ public class ProfileTests {
         editor.putBoolean("firststart", true);
         editor.commit(); // apply changes
     }
+
     /**
      * Test UUID is correctly reflected in profile on launch
      */
-
     @Test
     public void testProfileChange() {
         onView(withId(R.id.sign_in_button)).perform(click());
@@ -69,24 +69,5 @@ public class ProfileTests {
         onView(withId(R.id.itemListProfileButton)).perform(click());
         onView(withId(R.id.userNameTextView)).check(matches((withText("NEW USERNAME"))));
     }
-
-//    @Test
-//    public void testDarkModeToggle() {
-//        onView(withId(R.id.sign_in_button)).perform(click());
-//        onView(withId(R.id.itemListProfileButton)).perform(click());
-//        // Update username
-//        onView(withId(R.id.toggleThemeButton)).perform(click());
-//        // Check dark mode has been updated in preferences
-//        Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-//        SharedPreferences pref = targetContext.getSharedPreferences("mypref",Context.MODE_PRIVATE);
-//        assertFalse(pref.getBoolean("light",true));
-//        // check light mode icon is now displayed
-//        onView(withId(R.id.toggleThemeButton)).check(matches(withDrawable(R.drawable.ic_light_mode_24dp))));
-//        onView(withId(R.drawable.ic_light_mode_24dp)).check(matches(isDisplayed()));
-//        // Leave activity and come back to confirm correct icon is displayed
-//        onView(withId(R.id.closeViewButton)).perform(click());
-//        onView(withId(R.id.itemListProfileButton)).perform(click());
-//        onView(withId(R.drawable.ic_light_mode_24dp)).check(matches(isDisplayed()));
-//    }
 }
 

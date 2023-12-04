@@ -16,6 +16,4 @@ public class ProfileUITest {
     @Rule
     public ActivityScenarioRule<ItemListActivity> scenario = new ActivityScenarioRule<ItemListActivity>(ItemListActivity.class);
 
-
-
 }

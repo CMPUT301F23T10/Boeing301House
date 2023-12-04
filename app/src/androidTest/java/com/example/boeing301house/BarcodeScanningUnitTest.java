@@ -31,7 +31,6 @@ public class BarcodeScanningUnitTest {
     private static final String TAG = "BARCODE_SCANNING_TEST";
     private String barcodeInformation;
 
-
     /**
      * Test scanned barcode
      * @throws InterruptedException for waiting for async operations to complete
@@ -51,8 +50,6 @@ public class BarcodeScanningUnitTest {
                     Log.d(TAG, "INFO: " + barcodeInformation);
                 });
 
-
-
                 try {
                     UiThreadStatement.runOnUiThread(searchRunnable);
                 } catch (Throwable throwable) {
@@ -69,7 +66,5 @@ public class BarcodeScanningUnitTest {
         latch.await(TIMEOUT, TimeUnit.SECONDS);
 
         Assert.assertTrue(barcodeInformation.contains("Gel Cream"));
-
     }
-
 }

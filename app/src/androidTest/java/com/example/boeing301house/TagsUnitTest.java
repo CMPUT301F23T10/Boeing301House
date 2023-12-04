@@ -86,14 +86,6 @@ public class TagsUnitTest {
         return item;
     }
 
-//    private OnCompleteListener<String> listener = new OnCompleteListener() {
-//        public void onComplete(String tag, boolean success) {
-//            if (tag == null) {
-//                Log.d("TEST", "FAIL");
-//            }
-//        }
-//    };
-
     @Test
     public void testGetTags() throws InterruptedException {
         tags.setItemList(null);
@@ -120,8 +112,6 @@ public class TagsUnitTest {
         Assert.assertTrue(tagList.contains("tag2"));
         Assert.assertTrue(tagList.contains("tag3"));
 
-
-
         itemList.remove(mockItem1(), null);
         latch.await(TIMEOUT, TimeUnit.SECONDS);
         tags.setItemList(itemList);
@@ -136,7 +126,4 @@ public class TagsUnitTest {
         Assert.assertEquals(0, tagList.size());
 
     }
-
-
-
 }
