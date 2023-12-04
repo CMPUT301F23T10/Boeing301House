@@ -37,6 +37,12 @@ public class SearchUIRunnable implements Runnable {
         this.result = result;
         this.listener = listener;
     }
+
+    /**
+     * Implementation of the {@link Runnable} interface. Checks if a search result is available,
+     * extracts the title information, and notifies the associated listener of the search result.
+     * Logs success or failure messages accordingly.
+     */
     @Override
     public void run() {
         if (result != null) {
@@ -50,7 +56,6 @@ public class SearchUIRunnable implements Runnable {
             } else {
                 Log.d(TAG, "NONE");
             }
-
 //            String title = result.text();
 //            listener.OnSearchResult(title); // success
         } else {

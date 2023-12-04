@@ -106,9 +106,15 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
     private int top;
 
 
-
-
-
+    /**
+     * Called when the activity is first created. Responsible for initializing the activity's UI components,
+     * setting up camera functionality, and handling user interactions.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,7 +141,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
             isFlipped = !isFlipped;
         });
 
-
         shutterButton.setOnClickListener(v -> {
             Log.d(TAG, "BUTTON CLICK");
             Bitmap scannedIMG = capture();
@@ -150,20 +155,15 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
         });
 
-
-
         // getSupportActionBar().hide();
 
 //        viewFinder.setActivated(true);
 
         startCamera();
-
         holder = surfaceView.getHolder();
         holder.setFormat(PixelFormat.TRANSPARENT);
         holder.addCallback(this);
 //        drawRect(getColor(R.color.colorHighlight));
-
-
     }
 
     /**
@@ -178,8 +178,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         // generate cropped bitmap
         Bitmap cropped = Bitmap.createBitmap(fullBitmap, left, top, boxWidth, boxHeight);
 
-
-
         return cropped;
     }
 
@@ -192,7 +190,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
         InputImage inputImage = InputImage.fromBitmap(bitmap, 0);
 
-
         Task<Text> result = recognizer.process(inputImage)
                 .addOnSuccessListener(new OnSuccessListener<Text>() {
                     @Override
@@ -202,14 +199,12 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
                         resultIntent.putExtra(RETURN_SN, text.getText());
                         setResult(RESULT_OK, resultIntent);
                         finish();
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "FAILED TO READ");
-
                     }
                 });
 
@@ -263,8 +258,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
         // run in separate thread
         cameraProviderFuture.addListener((Runnable) () -> {
-
-
             try {
                 cameraProvider = (ProcessCameraProvider) cameraProviderFuture.get();
                 bindPreview();
@@ -273,9 +266,7 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
                 throw new RuntimeException(e);
             }
 
-
         }, ContextCompat.getMainExecutor(this));
-
     }
 
     /**
@@ -289,8 +280,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
 
 //        CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 //        cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-
-
         try {
             // unbind usecases for rebinding
             cameraProvider.unbindAll();
@@ -304,7 +293,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         } catch (Exception e) {
             Log.e(TAG, "USE CASE BINDING FAILED");
         }
-
     }
 
     /**
@@ -330,7 +318,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
          */
 
         int diameter;
-
         diameter = Math.min(height, width);
 
         int offset = (int) (0.05 * diameter);
@@ -359,7 +346,6 @@ public class ScannerActivity extends AppCompatActivity implements SurfaceHolder.
         boxHeight = bottom - top;
         boxWidth = right - left;
         //Changing the value of x in diameter/x will change the size of the box ; inversely proportionate to x
-
 
 //        canvas.drawRect(left, top, right, bottom, paint);
         if (barcodeRect == null) {

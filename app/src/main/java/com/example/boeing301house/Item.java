@@ -27,8 +27,6 @@ public class Item implements Parcelable {
     private double value;
     private String description;
     private long date;
-
-
     private String SN;
     private String comment;
     private boolean isSelected = false; // for multiselect
@@ -61,9 +59,6 @@ public class Item implements Parcelable {
         this.photos = new ArrayList<>();
 //        this.id = String.format(Locale.CANADA, "%s.%s", make, model);
     }
-
-
-    // TODO: finish java doc
 
     /**
      * Constructor for parcelable
@@ -183,8 +178,6 @@ public class Item implements Parcelable {
         return dateString;
     }
 
-
-
     /**
      * Getter for string rep of {@link Item} value
      * @return string rep of value
@@ -198,7 +191,6 @@ public class Item implements Parcelable {
     public void setDate(long date) {
         this.date = date;
     }
-
 
     /**
      * Getter for {@link Item} SN
@@ -264,7 +256,6 @@ public class Item implements Parcelable {
         this.id = id;
     }
 
-
     /**
      * Getter for {@link Item} ID
      * @return id itemID
@@ -323,7 +314,6 @@ public class Item implements Parcelable {
         }
     }
 
-
     /**
      * Replace tags with contents of new list of tags. (Glorified resorting method if newTags referring to same list)
      * @param newTags new list of tags
@@ -367,6 +357,14 @@ public class Item implements Parcelable {
         return 0;
     }
 
+    /**
+     * Flatten this object into a {@link Parcel}. Writes the object's fields into the parcel
+     * for later reconstruction.
+     *
+     * @param dest  The {@link Parcel} in which the object should be written.
+     * @param flags Additional flags about how the object should be written.
+     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     */
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeString(make);

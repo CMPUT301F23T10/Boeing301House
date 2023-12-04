@@ -69,6 +69,7 @@ public class CarouselAdapter extends RecyclerView.Adapter<CarouselAdapter.ViewHo
     }
 
     /**
+     * Gets the item count using the size of the array
      * @return size of array
      */
     @Override

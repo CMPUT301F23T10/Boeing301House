@@ -38,7 +38,6 @@ public class ItemListController {
         this.activity = (ActivityBase) activity; // downcast
         db = FirebaseFirestore.getInstance();
 
-
 //        // USING USER SPECIFIC ITEM LIST
         connection = new DBConnection(activity.getApplicationContext());
         itemList = new ItemList(connection);
@@ -60,7 +59,6 @@ public class ItemListController {
                     if (totalListener != null) {
                         calculateTotal(totalListener);
                     }
-
                 }
             }
         });
@@ -107,7 +105,6 @@ public class ItemListController {
     public void calculateTotal(OnCompleteListener<Double> listener) {
         double total = itemList.getTotal();
         listener.onComplete(total, true);
-
     }
 
     /**
@@ -119,8 +116,6 @@ public class ItemListController {
         selectedItems.add(item);
         // isMultiSelect = true;
     }
-
-
 
     /**
      * Item selection behavior
@@ -135,14 +130,11 @@ public class ItemListController {
             item.deselect();
             selectedItems.remove(item);
             return false;
-
         } else {
             item.select();
             selectedItems.add(item);
             return true;
-
         }
-
     }
 
     /**
@@ -310,9 +302,4 @@ public class ItemListController {
     public void setupFilter() {
         Tags.getInstance().setItemList(this.itemList);
     }
-
-
-
-
-
 }

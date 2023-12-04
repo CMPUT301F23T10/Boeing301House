@@ -45,6 +45,13 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<AddEditImageAdapte
         this.listener = listener;
     }
 
+    /**
+     * Creates a new ViewHolder instance.
+     *
+     * @param parent The parent ViewGroup.
+     * @param viewType The type of the view to be created.
+     * @return A new {@link ViewHolder} instance.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -54,6 +61,12 @@ public class AddEditImageAdapter extends RecyclerView.Adapter<AddEditImageAdapte
         return new ViewHolder(view);
     }
 
+    /**
+     * Binds the data at the specified position to the ViewHolder.
+     *
+     * @param holder The {@link ViewHolder} to bind data to.
+     * @param position The position of the item within the data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 

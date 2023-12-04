@@ -194,14 +194,13 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             //      resultIntent.putExtra ... | add item and position
             //      setResult(RESULT_OK, resultIntent)
             //      set item from list activity (update item properties again)
-            ConfirmationDialog(true);
+            ConfirmationDialog(true); // passing true because we edited the item
         } else {
             // if no edits or anything
             setResult(RESULT_CANCELED);
             // onBackPressed();
             finish();
         }
-
         return true;
     }
 
@@ -257,12 +256,6 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         // otherwise action not recognized
         return super.onOptionsItemSelected(item);
     }
-
-    //    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        return super.onOptionsItemSelected(item);
-//    }
-    // TODO: finish javadocs
 
     /**
      * Confirmation dialog allows users to confirm their changes. This can be deleting
@@ -369,7 +362,6 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         }
     }
 
-
     /**
      * Fill chip group w/ item tags
      */
@@ -390,7 +382,6 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
             });
             chipGroup.addView(newChip);
         }
-
     }
 
     /**
@@ -403,7 +394,7 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
     }
 
     /**
-     * delete images that are no longer needed from firebase
+     * Delete images that are no longer needed from firebase
      * @param keep image array attached to item
      * @param drop image array no longer attached to item
      */
@@ -433,7 +424,5 @@ public class ItemViewActivity extends AppCompatActivity implements AddEditItemFr
         storageRef.child(path).delete()
             .addOnSuccessListener(unused -> Log.d(TAG, "IMAGE DELETED"))
             .addOnFailureListener(e -> Log.d(TAG, "IMAGE NOT DELETED"));
-
-
     }
 }

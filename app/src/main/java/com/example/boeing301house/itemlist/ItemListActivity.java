@@ -85,8 +85,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_item_list);
         subTotalText = findViewById(R.id.itemListTotalText);
 
@@ -108,6 +106,12 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
 
         // Handle multiselect first step
         itemAdapter.setOnItemLongClickListener(new OnItemLongClickListener() {
+            /**
+             * Handles the long click functionality
+             * @param view item cell view
+             * @param position position in list
+             * @return
+             */
             @Override
             public boolean onItemLongClick(View view, int position) {
                 if (!isSelectMultiple) {
@@ -123,7 +127,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                     if (itemMultiSelectMode != null) {
                         return false;
                     }
-
                     itemMultiSelectMode = startActionMode(itemMultiSelectModeCallback); // TODO: convert to startSupportActionBar
                 }
                 return true;
@@ -131,6 +134,11 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         });
 
         itemAdapter.setOnItemClickListener(new OnItemClickListener() {
+            /**
+             * Handles a item click
+             * @param view item cell view
+             * @param i position in list
+             */
             @Override
             public void onItemClick(View view, int i) {
                 Item item = (Item) itemAdapter.getItemAtPosition(i);
@@ -155,10 +163,7 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                         // view.setBackgroundResource(R.drawable.bg_ripple_default); // visually deselect
 //                        view.setBackgroundColor(0);
                         view.setBackgroundTintList(ContextCompat.getColorStateList(view.getContext(), R.color.colorItemCell));
-
                     }
-
-
 //                    selectedItemViews.size();
                     itemMultiSelectMode.setTitle(String.format(Locale.CANADA,"Selected %d Items", controller.itemsSelectedSize()));
 
@@ -167,7 +172,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                         isSelectMultiple = false;
                         itemMultiSelectMode.finish(); // close contextual app bar
                     }
-
                 }
             }
         });
@@ -177,19 +181,14 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
         MaterialToolbar topbar = findViewById(R.id.itemListMaterialToolbar);
         setSupportActionBar(topbar);
 
-
         Button itemListSortButton = findViewById(R.id.sortButton);
         Button itemListFilterButton = findViewById(R.id.filterButton);
-
-
 
         //used to swap the fragment in to edit/add fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-
         //simple method below just sets the bool toggleRemove to true/false depending on the switch
         addButton = (FloatingActionButton) findViewById(R.id.addButton);
-
 
         //for launching the sort fragment
         itemListFilterButton.setOnClickListener(new View.OnClickListener() {
@@ -204,7 +203,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
             @Override
             public void onClick(View v) {
                 new SortFragment().show(getSupportFragmentManager(), "SORT");
-
             }
         });
 
@@ -238,8 +236,6 @@ public class ItemListActivity extends ActivityBase implements AddEditItemFragmen
                         .replace(R.id.itemListContent, addFrag, "LIST_TO_ADD")
                         .addToBackStack("Add Item")
                         .commit();
-
-
             }
         });
 

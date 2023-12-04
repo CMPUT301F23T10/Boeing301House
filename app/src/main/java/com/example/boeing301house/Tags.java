@@ -33,7 +33,6 @@ public class Tags {
      */
     private static Tags INSTANCE;
 
-
     /**
      * ItemList object
      */
@@ -67,8 +66,6 @@ public class Tags {
     public void setItemList(ItemList itemList) {
 //        user = connection.getUserRef(); // TODO: SWITCH TO THIS ONCE SEPARATE USERS ADDED
         this.itemList = itemList;
-
-
     }
 
     /**
@@ -91,7 +88,6 @@ public class Tags {
                 }
             }
         }
-
         return tags;
     }
 }
