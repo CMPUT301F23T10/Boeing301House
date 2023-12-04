@@ -17,10 +17,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.boeing301house.Item;
 import com.example.boeing301house.R;
-import com.example.boeing301house.databinding.FragmentSortBinding;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
